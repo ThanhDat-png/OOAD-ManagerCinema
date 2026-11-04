@@ -1,6 +1,6 @@
 # Đối chiếu S2_Nhom08_Lan3.docx
 
-Mục 3.3 quy định luồng nghiệp vụ. Khi triển khai, kiểm tra thêm sơ đồ tuần tự ở mục 3.4, luồng thay thế và điều kiện kết thúc. Các mục dưới đây mới có package, chưa triển khai nghiệp vụ.
+Mục 3.3 quy định luồng nghiệp vụ. Khi triển khai, kiểm tra thêm sơ đồ tuần tự ở mục 3.4, luồng thay thế và điều kiện kết thúc. UC01 đã được kiểm tra trên MySQL thực. UC02 đã có DAO/BUS và giao diện quản lý hồ sơ theo quyền; xem [chi tiết UC02](UC02.md). UC03 đã có quản lý phim, poster, thể loại và điều kiện ngừng chiếu được kiểm tra trên MySQL; xem [chi tiết UC03](UC03.md). UC04 đã có giao diện và xử lý lịch chiếu với kiểm tra trùng, ghế và thanh toán; xem [chi tiết UC04](UC04.md). UC05 đã có quản lý/tra cứu phòng và sơ đồ ghế, đồng bộ với lịch chiếu và bảo toàn dữ liệu vé; xem [chi tiết UC05](UC05.md). UC06 đã có quản lý giá vé, sản phẩm/giá bán và kiểm tra tồn kho; xem [chi tiết UC06](UC06.md). UC07 đã có tra cứu mã vé/QR, kiểm tra theo phòng/suất và xác nhận một lần; xem [chi tiết UC07](UC07.md). UC08 đã có bán vé, giữ ghế 5 phút, thanh toán, phát hành/in lại và tra cứu; xem [chi tiết UC08](UC08.md). UC09 đang ở mức khung. Xem [chi tiết UC01](UC01.md).
 
 ## UC01 · Đăng nhập · cinema.controller.auth
 

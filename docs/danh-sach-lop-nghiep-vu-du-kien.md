@@ -34,3 +34,31 @@ Căn cứ S2_Nhom08_Lan3.docx, mục 3.3, 3.4 và 3.5.2; đối chiếu thêm ha
 - Mục 3.5.3 của báo cáo còn thiếu mô tả nhiều bảng. Phần mang tiêu đề THANHTOAN đang ghi thuộc tính của GHE. Khi xác định thuộc tính lớp, cần đối chiếu lược đồ và quy tắc cùng đặc tả ca sử dụng, rồi chỉnh phần mô tả báo cáo.
 - 17 lớp là các lớp đối tượng nghiệp vụ dự kiến đưa vào phần danh sách lớp. Các lớp Swing, DAO, Controller/BUS và lớp kỹ thuật sẽ được thống kê riêng sau triển khai.
 - Bước tiếp theo là xác định thuộc tính và quan hệ của TaiKhoan, VaiTro, NhanVien cho UC01, đối chiếu luồng đăng nhập rồi triển khai. Class diagram cuối cùng được dựng từ code đã kiểm tra.
+
+## Cập nhật khi triển khai UC01
+
+TaiKhoan và NhanVien dùng record Java 17. VaiTro được biểu diễn bằng enum cho hai vai trò trong báo cáo. Danh sách 17 đối tượng nghiệp vụ tiếp tục dùng để đối chiếu, khi lập class diagram cần ghi đúng kiểu record/enum và quan hệ thực tế trong code.
+
+## Cập nhật UC03
+
+Phim và TheLoai đã được triển khai bằng record Java 17, quan hệ nhiều–nhiều được biểu diễn bằng danh sách TheLoai trong Phim và bảng PHIM_THELOAI. Khi làm class diagram cần lấy thuộc tính và kiểu dữ liệu thực tế từ hai record này. Xem UC03.md để đối chiếu quy tắc và các quyết định thiết kế.
+
+## Cập nhật UC04
+
+Đã triển khai SuatChieu, PhongChieu, LoaiPhong và LoaiThoiDiem bằng record Java 17. PhongChieu chứa LoaiPhong. SuatChieu lưu mã phim/phòng/loại thời điểm. Lớp đối tượng cho ghế, vé, thanh toán sẽ được bổ sung khi triển khai các ca sử dụng tương ứng; schema phụ thuộc đã có để kiểm tra điều kiện của UC04.
+
+## Cập nhật UC05
+
+Đã triển khai Ghe và LoaiGhe bằng record. Ghe chứa LoaiGhe và mã phòng. VE được bổ sung dữ liệu hàng/số/tên loại ghế tại lúc phát hành ở migration 008 để phục vụ bảo toàn lịch sử. Khi tạo model Ve và class diagram cần đối chiếu các trường này với tài liệu UC05.md.
+
+## Cập nhật UC06
+
+Đã triển khai BangGiaVe và SanPham bằng record Java 17. BangGiaVe tham chiếu LoaiGhe, LoaiPhong, LoaiThoiDiem; các giá trị tiền dùng BigDecimal. SanPham lưu tồn kho int và giá bán BigDecimal. Khi dựng class diagram cần dùng đúng thuộc tính/quan hệ từ code hiện tại.
+
+## Cập nhật UC07
+
+Đã triển khai Ve bằng record với giá đã chốt và ba thuộc tính nhãn ghế LucPhatHanh. Khi dựng class diagram cần đối chiếu model Ve hiện tại với lược đồ đã bổ sung ở UC05. Kiểu cấu hình ThoiGianVaoPhong, loại mã và các kiểu kết quả/hiển thị là thành phần hỗ trợ cho UC07.
+
+## Cập nhật UC08
+
+Đã triển khai GiaoDich, ThanhToan và GheSuatChieu bằng record Java 17. Như vậy đủ 17 kiểu đối tượng nghiệp vụ đã dự kiến: 16 record và 1 enum VaiTro; không tính BUS/DAO/Swing, kiểu cấu hình và các kiểu kết quả hỗ trợ. GiaoDich lưu mã nhân viên, ThanhToan lưu mã giao dịch, GheSuatChieu chứa Ghe cùng mã suất/giao dịch và giá/thời hạn giữ đã chốt. Class diagram cuối cùng phải lấy đúng thuộc tính/quan hệ thực tế từ code và thống kê riêng lớp hỗ trợ. Xem UC08.md.
