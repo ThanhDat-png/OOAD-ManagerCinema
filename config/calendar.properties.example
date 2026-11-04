@@ -1,0 +1,2 @@
+# Explicit holiday dates in yyyy-MM-dd, separated by commas. Blank = no configured holidays.
+holidays=

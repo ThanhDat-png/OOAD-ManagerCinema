@@ -1,0 +1,3 @@
+db.url=jdbc:mysql://localhost:3306/manager_cinema?connectTimeout=5000&socketTimeout=10000&characterEncoding=UTF-8
+db.user=cinema_app
+db.password=

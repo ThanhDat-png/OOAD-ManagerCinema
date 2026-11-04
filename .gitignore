@@ -1,2 +1,8 @@
 /out/
 /target/
+/config/database.properties
+/config/local-tools.json
+/data/posters/
+/config/calendar.properties
+/config/admission.properties
+/config/sales.properties

@@ -1,0 +1,82 @@
+-- Apply once after 001–005. Dependencies for schedule seats and sold-ticket guards.
+CREATE TABLE LOAIGHE (
+    MaLoaiGhe INT PRIMARY KEY AUTO_INCREMENT,
+    TenLoaiGhe NVARCHAR(50) NOT NULL UNIQUE
+);
+CREATE TABLE GHE (
+    MaGhe INT PRIMARY KEY AUTO_INCREMENT,
+    MaPhong VARCHAR(10) NOT NULL,
+    MaLoaiGhe INT NOT NULL,
+    HangGhe CHAR(2) NOT NULL,
+    SoGhe INT NOT NULL CHECK (SoGhe > 0),
+    TrangThai NVARCHAR(30) NOT NULL,
+    UNIQUE (MaPhong, HangGhe, SoGhe),
+    FOREIGN KEY (MaPhong) REFERENCES PHONGCHIEU(MaPhong),
+    FOREIGN KEY (MaLoaiGhe) REFERENCES LOAIGHE(MaLoaiGhe)
+);
+CREATE TABLE BANGGIAVE (
+    MaGia INT PRIMARY KEY AUTO_INCREMENT,
+    MaLoaiGhe INT NOT NULL,
+    MaLoaiThoiDiem INT NOT NULL,
+    MaLoaiPhong INT NOT NULL,
+    GiaVe DECIMAL(12,0) NOT NULL CHECK (GiaVe > 0),
+    UNIQUE (MaLoaiGhe, MaLoaiThoiDiem, MaLoaiPhong),
+    FOREIGN KEY (MaLoaiGhe) REFERENCES LOAIGHE(MaLoaiGhe),
+    FOREIGN KEY (MaLoaiThoiDiem) REFERENCES LOAITHOIDIEM(MaLoaiThoiDiem),
+    FOREIGN KEY (MaLoaiPhong) REFERENCES LOAIPHONG(MaLoaiPhong)
+);
+CREATE TABLE THANHTOAN (
+    MaThanhToan INT PRIMARY KEY AUTO_INCREMENT,
+    MaGiaoDich VARCHAR(20) NOT NULL UNIQUE,
+    PhuongThuc NVARCHAR(20) NOT NULL,
+    SoTien DECIMAL(12,0) NOT NULL CHECK (SoTien > 0),
+    ThoiGianThanhToan DATETIME NOT NULL,
+    FOREIGN KEY (MaGiaoDich) REFERENCES GIAODICH(MaGiaoDich)
+);
+CREATE TABLE GHE_SUATCHIEU (
+    MaSuat INT NOT NULL,
+    MaGhe INT NOT NULL,
+    MaGiaoDich VARCHAR(20),
+    TrangThai NVARCHAR(20) NOT NULL,
+    ThoiGianHetHanGiu DATETIME,
+    MaGia INT,
+    GiaVeChot DECIMAL(12,0) CHECK (GiaVeChot > 0),
+    PRIMARY KEY (MaSuat, MaGhe),
+    UNIQUE (MaSuat, MaGhe, MaGiaoDich),
+    CHECK (TrangThai NOT IN ('Đang giữ','Đã bán') OR MaGiaoDich IS NOT NULL),
+    FOREIGN KEY (MaSuat) REFERENCES SUATCHIEU(MaSuat),
+    FOREIGN KEY (MaGhe) REFERENCES GHE(MaGhe),
+    FOREIGN KEY (MaGiaoDich) REFERENCES GIAODICH(MaGiaoDich),
+    FOREIGN KEY (MaGia) REFERENCES BANGGIAVE(MaGia)
+);
+CREATE TABLE VE (
+    MaVe VARCHAR(20) PRIMARY KEY,
+    MaGiaoDich VARCHAR(20) NOT NULL,
+    MaSuat INT NOT NULL,
+    MaGhe INT NOT NULL,
+    MaGia INT NOT NULL,
+    MaQR VARCHAR(100) NOT NULL UNIQUE,
+    GiaVe DECIMAL(12,0) NOT NULL CHECK (GiaVe > 0),
+    TrangThai NVARCHAR(20) NOT NULL,
+    ThoiGianPhatHanh DATETIME NOT NULL,
+    UNIQUE (MaSuat, MaGhe),
+    FOREIGN KEY (MaSuat, MaGhe, MaGiaoDich) REFERENCES GHE_SUATCHIEU(MaSuat, MaGhe, MaGiaoDich),
+    FOREIGN KEY (MaGiaoDich) REFERENCES GIAODICH(MaGiaoDich),
+    FOREIGN KEY (MaGia) REFERENCES BANGGIAVE(MaGia)
+);
+DELIMITER $$
+CREATE TRIGGER ghe_suat_insert BEFORE INSERT ON GHE_SUATCHIEU FOR EACH ROW
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM GHE g JOIN SUATCHIEU s ON s.MaPhong=g.MaPhong
+                   WHERE g.MaGhe=NEW.MaGhe AND s.MaSuat=NEW.MaSuat) THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Ghe khong thuoc phong cua suat chieu';
+    END IF;
+END$$
+CREATE TRIGGER ghe_suat_update BEFORE UPDATE ON GHE_SUATCHIEU FOR EACH ROW
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM GHE g JOIN SUATCHIEU s ON s.MaPhong=g.MaPhong
+                   WHERE g.MaGhe=NEW.MaGhe AND s.MaSuat=NEW.MaSuat) THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Ghe khong thuoc phong cua suat chieu';
+    END IF;
+END$$
+DELIMITER ;
