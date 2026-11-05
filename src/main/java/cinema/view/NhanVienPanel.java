@@ -1,5 +1,7 @@
 package cinema.view;
 
+import cinema.view.ui.*;
+
 import cinema.controller.auth.PhienDangNhap;
 import cinema.controller.staff.NhanVienBUS;
 import cinema.dao.NhanVienDAO;
@@ -16,6 +18,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 public final class NhanVienPanel extends JPanel {
+    static { Theme.install(); }
     private final NhanVienBUS service;
     private final JTextField keyword = new JTextField(20);
     private final DefaultTableModel model = new DefaultTableModel(
@@ -26,6 +29,8 @@ public final class NhanVienPanel extends JPanel {
     private final JLabel status = new JLabel(" ");
     private final JPanel actions = new JPanel();
     private boolean busy;
+
+    @Override public void addNotify() { super.addNotify(); if(getClientProperty("cinema.page")==null){putClientProperty("cinema.page",true);Design.page(this,"Nhân viên","Hồ sơ và thông tin nhân viên",status);} }
 
     public NhanVienPanel(PhienDangNhap session) {
         super(new BorderLayout(8, 8));

@@ -1,5 +1,7 @@
 package cinema.view;
 
+import cinema.view.ui.*;
+
 import cinema.controller.auth.PhienDangNhap;
 import cinema.controller.schedule.LichChieuBUS;
 import cinema.dao.SuatChieuDAO;
@@ -16,6 +18,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 public final class LichChieuPanel extends JPanel {
+    static { Theme.install(); }
     private final LichChieuBUS service;
     private final JTextField dateFilter=new JTextField(12);
     private final JComboBox<String> roomFilter=new JComboBox<>();
@@ -30,6 +33,8 @@ public final class LichChieuPanel extends JPanel {
     private List<PhongChieu> rooms=List.of();
     private boolean busy;
     private record Data(List<Phim> films,List<PhongChieu> rooms,List<LoaiThoiDiem> periods,List<SuatChieu> shows) { }
+
+    @Override public void addNotify() { super.addNotify(); if(getClientProperty("cinema.page")==null){putClientProperty("cinema.page",true);Design.page(this,"Lịch chiếu","Lập lịch theo phòng · Bảo toàn các giao dịch đã bán",message);} }
 
     public LichChieuPanel(PhienDangNhap session) {
         super(new BorderLayout(8,8));

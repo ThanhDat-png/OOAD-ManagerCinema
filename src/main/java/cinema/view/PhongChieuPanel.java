@@ -1,5 +1,7 @@
 package cinema.view;
 
+import cinema.view.ui.*;
+
 import cinema.controller.auth.PhienDangNhap;
 import cinema.controller.room.PhongChieuBUS;
 import cinema.dao.*;
@@ -14,6 +16,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 public final class PhongChieuPanel extends JPanel {
+    static { Theme.install(); }
     private final PhongChieuBUS service;
     private final boolean admin;
     private final JTextField keyword=new JTextField(18);
@@ -25,6 +28,8 @@ public final class PhongChieuPanel extends JPanel {
     private List<LoaiPhong> roomTypes=List.of();
     private boolean busy;
     private record Data(List<LoaiPhong> types,List<PhongChieu> rooms) { }
+
+    @Override public void addNotify() { super.addNotify(); if(getClientProperty("cinema.page")==null){putClientProperty("cinema.page",true);Design.page(this,"Phòng chiếu","Không gian phòng và cấu trúc sơ đồ ghế",message);} }
 
     public PhongChieuPanel(PhienDangNhap session) {
         super(new BorderLayout(8,8)); admin=session.vaiTro()==VaiTro.ADMIN;

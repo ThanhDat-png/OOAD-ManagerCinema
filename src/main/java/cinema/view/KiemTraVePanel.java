@@ -1,5 +1,7 @@
 package cinema.view;
 
+import cinema.view.ui.*;
+
 import cinema.controller.admission.*;
 import cinema.controller.auth.PhienDangNhap;
 import cinema.dao.VeDAO;
@@ -20,6 +22,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 public final class KiemTraVePanel extends JPanel {
+    static { Theme.install(); }
     private final VeBUS service;
     private final JTextField date=new JTextField(LocalDate.now(ZoneId.of("Asia/Bangkok")).toString(),12);
     private final JComboBox<PhongChieu> room=new JComboBox<>();
@@ -37,6 +40,8 @@ public final class KiemTraVePanel extends JPanel {
     private Checked checked;
     private record Checked(String ticket,String room,int show) { }
     private record Context(List<PhongChieu> rooms,List<SuatChieu> shows,List<Phim> films,String selectedRoom,LocalDate date) { }
+
+    @Override public void addNotify() { super.addNotify(); if(getClientProperty("cinema.page")==null){putClientProperty("cinema.page",true);Design.page(this,"Soát vé","Tra cứu và xác nhận vé vào phòng",message);} }
 
     public KiemTraVePanel(PhienDangNhap session) {
         super(new BorderLayout(8,8)); service=new VeBUS(session,new VeDAO());

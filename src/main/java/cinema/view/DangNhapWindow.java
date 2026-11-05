@@ -1,5 +1,7 @@
 package cinema.view;
 
+import cinema.view.ui.*;
+
 import cinema.controller.auth.DangNhapBUS;
 import cinema.controller.auth.PhienDangNhap;
 import java.awt.BorderLayout;
@@ -9,6 +11,7 @@ import java.util.concurrent.ExecutionException;
 import javax.swing.*;
 
 public final class DangNhapWindow extends JFrame {
+    static { Theme.install(); }
     private final JTextField username = new JTextField(22);
     private final JPasswordField password = new JPasswordField(22);
     private final JButton submit = new JButton("Đăng nhập");

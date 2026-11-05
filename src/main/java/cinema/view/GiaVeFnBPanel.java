@@ -1,5 +1,7 @@
 package cinema.view;
 
+import cinema.view.ui.*;
+
 import cinema.controller.auth.PhienDangNhap;
 import cinema.controller.pricing.*;
 import cinema.dao.*;
@@ -15,6 +17,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 public final class GiaVeFnBPanel extends JPanel {
+    static { Theme.install(); }
     private final GiaVeBUS prices;
     private final SanPhamBUS products;
     private final DefaultTableModel priceModel=tableModel("Mã giá","Loại ghế","Loại phòng","Thời điểm","Giá vé (VND)");
@@ -29,6 +32,8 @@ public final class GiaVeFnBPanel extends JPanel {
     private List<LoaiThoiDiem> periods=List.of();
     private boolean busy;
     private record Data(List<BangGiaVe> prices,List<SanPham> products,List<LoaiGhe> seats,List<LoaiPhong> rooms,List<LoaiThoiDiem> periods) { }
+
+    @Override public void addNotify() { super.addNotify(); if(getClientProperty("cinema.page")==null){putClientProperty("cinema.page",true);Design.page(this,"Giá vé & F&B","Bảng giá, sản phẩm và tồn kho hiện tại",message);} }
 
     public GiaVeFnBPanel(PhienDangNhap session) {
         super(new BorderLayout(8,8));

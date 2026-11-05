@@ -1,5 +1,7 @@
 package cinema.view;
 
+import cinema.view.ui.*;
+
 import cinema.controller.auth.PhienDangNhap;
 import cinema.controller.sales.*;
 import cinema.dao.*;
@@ -16,6 +18,7 @@ import javax.swing.*;
 
 /** UC08: all database work runs off the event dispatch thread. */
 public final class BanVePanel extends JPanel {
+    static { Theme.install(); }
     private final BanVeBUS service;
     private final JTextField film=new JTextField(18),date=new JTextField(10),time=new JTextField(6);
     private final JComboBox<BanVeDAO.SuatBan> shows=new JComboBox<>();
@@ -55,7 +58,7 @@ public final class BanVePanel extends JPanel {
         refresh=new javax.swing.Timer(5000,event->{if(!busy && !paymentOpen && tabs.getSelectedIndex()==0 && showId!=null) reload();});
         identity(); search();
     }
-    @Override public void addNotify() { super.addNotify(); if(refresh!=null) refresh.start(); }
+    @Override public void addNotify() { super.addNotify(); if(refresh!=null) refresh.start(); if(getClientProperty("cinema.page")==null){putClientProperty("cinema.page",true);Design.page(this,"Quầy bán vé","Suất chiếu → Ghế → Thanh toán → Phát hành vé",message);} }
     @Override public void removeNotify() { refresh.stop(); super.removeNotify(); }
     private JPanel historyPanel() {
         JPanel result=new JPanel(new BorderLayout()); JPanel filters=new JPanel();

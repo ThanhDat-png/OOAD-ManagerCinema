@@ -1,5 +1,7 @@
 package cinema.view;
 
+import cinema.view.ui.*;
+
 import cinema.controller.auth.PhienDangNhap;
 import cinema.controller.film.PhimBUS;
 import cinema.controller.film.PosterStore;
@@ -22,6 +24,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
 public final class PhimPanel extends JPanel {
+    static { Theme.install(); }
     private final PhimBUS service;
     private final PosterStore posters = new PosterStore();
     private final JTextField name = new JTextField(18);
@@ -36,6 +39,8 @@ public final class PhimPanel extends JPanel {
     };
     private final JTable table = new JTable(model);
     private boolean busy;
+
+    @Override public void addNotify() { super.addNotify(); if(getClientProperty("cinema.page")==null){putClientProperty("cinema.page",true);Design.page(this,"Thư viện phim","Tìm phim, quản lý thông tin và hình ảnh",message);} }
 
     public PhimPanel(PhienDangNhap session) {
         super(new BorderLayout(8, 8));

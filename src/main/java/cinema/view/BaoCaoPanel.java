@@ -1,5 +1,7 @@
 package cinema.view;
 
+import cinema.view.ui.*;
+
 import cinema.controller.auth.PhienDangNhap;
 import cinema.controller.revenue.*;
 import cinema.dao.BaoCaoDAO;
@@ -18,6 +20,7 @@ import javax.swing.event.*;
 import javax.swing.table.DefaultTableModel;
 
 public final class BaoCaoPanel extends JPanel {
+    static { Theme.install(); }
     private final BaoCaoBUS service;
     private final JLabel status=new JLabel(" ");
     private final Map<Component,Boolean> enabled=new IdentityHashMap<>();
@@ -25,6 +28,8 @@ public final class BaoCaoPanel extends JPanel {
     private boolean busy;
     private record Muc(String ma,String ten){@Override public String toString(){return ma==null?"Tất cả":ma+" · "+ten;}}
     private record Data(String[] columns,List<Object[]> rows,String summary){ }
+
+    @Override public void addNotify() { super.addNotify(); if(getClientProperty("cinema.page")==null){putClientProperty("cinema.page",true);Design.page(this,"Báo cáo & thống kê","Dữ liệu đã thanh toán · Chỉ đọc · Giá trị lịch sử",status);} }
 
     public BaoCaoPanel(PhienDangNhap session) {
         super(new BorderLayout(8,8));service=new BaoCaoBUS(session,new BaoCaoDAO());
