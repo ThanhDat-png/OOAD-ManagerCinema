@@ -52,3 +52,7 @@ Xem [đối chiếu và hướng dẫn UC07](docs/UC07.md). Khoảng vào phòng
 ## UC08 quản lý bán vé
 
 Xem [đối chiếu và hướng dẫn UC08](docs/UC08.md). Thời hạn giữ ghế đã thống nhất là 5 phút, cấu hình config/sales.properties. Có chọn/giữ ghế, chốt giá, xác nhận thanh toán tại quầy, phát hành vé QR, xem trước/in lại và kiểm tra giao dịch. Khi chưa rõ kết quả, kiểm tra mã giao dịch trước khi thực hiện lại.
+
+## Tiến độ và phiên tiếp theo
+
+Xem [bàn giao cuối phiên](docs/PHIEN_TIEP_THEO.md) để tiếp tục UC09 và tổng rà soát đồ án.
