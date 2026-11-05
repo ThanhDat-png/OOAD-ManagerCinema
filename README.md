@@ -11,7 +11,7 @@ mvn compile exec:java
 
 Máy hiện tại đã có scripts/Local-MySql.ps1 và scripts/Run-Desktop.ps1 dùng cấu hình công cụ cục bộ. Dự án dùng JDBC và ZXing qua Maven nên cần nạp các dependency khi chạy.
 
-Đã triển khai UC01–UC08. Bước tiếp theo là UC09 theo báo cáo. Cuối mỗi phiên ghi nhận kết quả và kế hoạch; chỉ commit hoặc push khi chủ đồ án quyết định. Xem [danh mục đối chiếu](docs/doi-chieu.md).
+Đã triển khai UC01–UC09. Bước tiếp theo là tổng rà soát, kiểm tra cài mới và dựng class diagram theo code. Cuối mỗi phiên ghi nhận kết quả và kế hoạch; chỉ commit hoặc push khi chủ đồ án quyết định. Xem [danh mục đối chiếu](docs/doi-chieu.md).
 
 ## Tổ chức theo mẫu đồ án
 
@@ -56,3 +56,7 @@ Xem [đối chiếu và hướng dẫn UC08](docs/UC08.md). Thời hạn giữ g
 ## Tiến độ và phiên tiếp theo
 
 Xem [bàn giao cuối phiên](docs/PHIEN_TIEP_THEO.md) để tiếp tục UC09 và tổng rà soát đồ án.
+
+## UC09 báo cáo và thống kê
+
+Xem [đối chiếu và hướng dẫn UC09](docs/UC09.md). Admin xem doanh thu theo ngày/tháng/năm/khoảng ngày, phim, nhân viên; thống kê vé và tồn kho F&B. Có phân biệt tiền đã thu và vé chờ phát hành. Báo cáo chỉ đọc, dùng giá lịch sử.

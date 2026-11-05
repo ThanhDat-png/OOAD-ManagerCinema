@@ -62,3 +62,7 @@ Phim và TheLoai đã được triển khai bằng record Java 17, quan hệ nhi
 ## Cập nhật UC08
 
 Đã triển khai GiaoDich, ThanhToan và GheSuatChieu bằng record Java 17. Như vậy đủ 17 kiểu đối tượng nghiệp vụ đã dự kiến: 16 record và 1 enum VaiTro; không tính BUS/DAO/Swing, kiểu cấu hình và các kiểu kết quả hỗ trợ. GiaoDich lưu mã nhân viên, ThanhToan lưu mã giao dịch, GheSuatChieu chứa Ghe cùng mã suất/giao dịch và giá/thời hạn giữ đã chốt. Class diagram cuối cùng phải lấy đúng thuộc tính/quan hệ thực tế từ code và thống kê riêng lớp hỗ trợ. Xem UC08.md.
+
+## Cập nhật UC09
+
+Giữ nguyên 17 kiểu đối tượng nghiệp vụ. Không thêm thực thể BaoCao lưu trong CSDL. BaoCaoDAO có các record TongHop, TheoPhim, TheoNhanVien, ThongKeVe chứa kết quả truy vấn; BaoCaoBUS.DanhMuc là dữ liệu nạp bộ lọc. KhoangThongKe là kiểu hỗ trợ khoảng ngày, BaoCaoPanel là lớp giao diện. Khi thống kê lớp thực tế hoặc dựng class diagram, liệt kê riêng các kiểu hỗ trợ này và quan hệ sử dụng, không gộp vào danh sách 17 thực thể/kiểu nghiệp vụ dự kiến.

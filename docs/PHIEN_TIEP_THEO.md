@@ -1,40 +1,34 @@
-# Bàn giao cuối phiên 05/11/2026
+# Bàn giao sau triển khai UC09 — 05/11/2026
 
-## Trạng thái đồ án
+## Trạng thái hiện tại
 
-- Đã triển khai UC01–UC08 theo tài liệu đối chiếu docs/UC01.md đến docs/UC08.md.
-- Đã có 17 kiểu nghiệp vụ: 16 record và enum VaiTro. Class diagram cuối cùng chưa dựng.
-- UC09 vẫn là khung, chưa có xử lý hoặc màn hình thống kê hoàn chỉnh.
-- Chủ đồ án đã yêu cầu chia commit tiếng Việt, dọn repo và push trong phiên này. Các phiên sau vẫn chỉ commit/push khi có quyết định mới của chủ đồ án.
+- UC01–UC09 đã có xử lý và giao diện; tài liệu đối chiếu tại docs/UC01.md đến docs/UC09.md.
+- UC09 có doanh thu theo thời gian/phim/nhân viên; vé theo ngày phát hành/trạng thái; lọc tồn kho F&B. Chỉ Admin được truy cập. Xem UC09.md về khoản đã thu đang chờ phát hành và cách tính các tổng.
+- Giữ 17 kiểu nghiệp vụ, các record kết quả báo cáo được thống kê riêng; class diagram cuối cùng chưa dựng.
+- Chủ đồ án đã yêu cầu commit/push UC09 trong phiên này. Các phiên sau vẫn chỉ commit/push khi có quyết định mới.
 
-## Việc bắt đầu phiên sau
+## Việc tiếp theo
 
-1. Đọc lại mục 3.3.9 và sơ đồ liên quan trong S2_Nhom08_Lan3.docx, đối chiếu docs/doi-chieu.md và schema hiện tại.
-2. UC09.1: doanh thu theo ngày, tháng, năm/khoảng ngày, số giao dịch và số vé; dùng thời gian thanh toán.
-3. UC09.2: thống kê theo một/tất cả phim, dùng giá đã chốt.
-4. UC09.3: thống kê theo một/tất cả nhân viên, bảo toàn người thực hiện ghi trên giao dịch.
-5. UC09.4: vé theo thời gian phát hành, phim/suất và trạng thái hiện tại; F&B theo sản phẩm, trạng thái kinh doanh, còn/hết hàng.
-6. Kiểm thử phân quyền Admin, thời gian biên, dữ liệu rỗng trả 0 và truy vấn chỉ đọc. Kiểm tra tránh nhân đôi tiền khi join nhiều vé; xử lý rõ giao dịch đã thanh toán nhưng chưa phát hành đủ vé.
-7. Sau UC09: tổng rà soát UC01–UC09, dựng class diagram theo code, chỉnh các điểm báo cáo/CSDL chưa khớp, chuẩn bị dữ liệu và kịch bản bảo vệ, kiểm tra cài mới.
+1. Tổng rà soát từng UC01–UC09 với báo cáo gốc, gồm luồng chính, luồng phụ, phân quyền, dữ liệu trước/sau và thông báo.
+2. Chạy kịch bản xuyên suốt: phim → phòng/ghế → lịch chiếu → giá → bán vé → kiểm vé → báo cáo. Kiểm tra các trường hợp giữ ghế hết hạn, thanh toán chưa rõ, phục hồi phát hành và in lại.
+3. Kiểm tra cài mới bằng SQL 001–010 trên database trống, cấu hình MySQL/JDK/Maven và hướng dẫn chuyển máy; không ghi đè database đang dùng.
+4. Dựng class diagram từ code đã ổn định. Tách danh sách 17 kiểu nghiệp vụ và các lớp BUS/DAO/Swing/kiểu kết quả hỗ trợ; đối chiếu sơ đồ tuần tự và mô tả bảng còn thiếu/sai của báo cáo.
+5. Chuẩn bị dữ liệu demo, hướng dẫn chạy và kịch bản bảo vệ; ghi nhận giới hạn phần cứng còn cần thử.
+6. Cuối phiên tổng kết thay đổi, kiểm thử và kế hoạch. Không tự commit/push nếu chưa được yêu cầu.
 
 ## Quyết định cần giữ
 
-- Chỉ triển khai trong phạm vi đồ án và luôn đối chiếu báo cáo.
-- Giữ ghế 5 phút, tối đa đến giờ bắt đầu suất; Đang thanh toán không tự giải phóng khi hết hạn.
-- Cho vào phòng từ 15 phút trước đến 15 phút sau giờ bắt đầu.
-- Thanh toán tại quầy do nhân viên xác nhận; không tích hợp cổng thanh toán.
-- Báo cáo hiện chỉ yêu cầu tồn kho F&B, không có luồng bán hay doanh thu F&B.
-- Không đổi giá vé lịch sử theo bảng giá mới. In lại dùng vé/QR đã lưu và giữ trạng thái đã sử dụng.
+- Luôn trong phạm vi đồ án và đối chiếu S2_Nhom08_Lan3.docx.
+- Giữ ghế 5 phút, không vượt giờ bắt đầu; Đang thanh toán không tự hết hạn.
+- Vào phòng từ 15 phút trước đến 15 phút sau giờ bắt đầu.
+- Thanh toán tại quầy do nhân viên xác nhận; không tích hợp cổng ngân hàng.
+- F&B chỉ quản lý/thống kê tồn kho hiện tại, chưa có bán hay doanh thu F&B.
+- Giá lịch sử không đổi theo bảng giá mới. In lại dùng vé/QR đã lưu và giữ trạng thái đã sử dụng.
+- Báo cáo không làm thay đổi dữ liệu, không tự dọn ghế hoặc phát hành vé; thời gian/nhân viên ghi nhận tiền đã thanh toán, theo phim cộng giá VE đã phát hành.
 - Máy in và đầu đọc QR vật lý chưa thử trên thiết bị thực tế.
 
-## Cấu hình và dọn dẹp
+## Cấu hình và kiểm thử
 
-- config/*.example được lưu trong Git. database.properties, local-tools.json, calendar.properties, admission.properties và sales.properties riêng được giữ trên máy và bỏ qua bởi Git.
-- Dữ liệu MySQL nằm ngoài repo; poster tại data/posters được giữ nguyên và không đưa lên Git.
-- Đã bỏ 13 file package-info chỉ chứa mô tả khung ở các package đã có mã thực. Giữ package-info của revenue cho UC09.
-- Đã xóa out cũ; build Maven sạch tạo lại target. target chứa báo cáo/ảnh kiểm thử và được Git bỏ qua.
-- Công cụ cục bộ và file do tiện ích IDE tạo được giữ nguyên; không xem là mã nguồn để push.
+Cấu hình riêng và dữ liệu cục bộ vẫn bỏ qua bởi Git. Schema không đổi sau UC09. Tệp mẫu cấu hình và hướng dẫn thuộc repo; target chứa build, báo cáo/ảnh kiểm thử và không push. Dữ liệu kiểm thử dùng mã riêng, được dọn sau từng ca. Lệnh kiểm tra: mvn clean test '-Dcinema.mysql.tests=true'.
 
-## Kiểm tra trước push
-
-Ngày 05/11/2026: Maven clean test với cinema.mysql.tests=true đạt BUILD SUCCESS; 126 kiểm thử, 0 thất bại, 0 lỗi, 0 bỏ qua. Đã bật MySQL cục bộ trước lượt chạy xác nhận. Cấu hình riêng được Git bỏ qua; không đưa target, out, dữ liệu MySQL hoặc poster cục bộ lên Git. Đã fetch origin để kiểm tra nhánh từ xa trước khi push. Nhánh bàn giao: main, remote origin của ThanhDat-png/OOAD-ManagerCinema.
+Kết quả xác nhận ngày 05/11/2026: Maven clean test với cinema.mysql.tests=true đạt BUILD SUCCESS; 144 kiểm thử, 0 thất bại, 0 lỗi, 0 bỏ qua. UC09 bổ sung 18 kiểm thử (4 quy tắc, 12 MySQL, 2 desktop). Đã rà soát ảnh cả bốn tab và hai lựa chọn Vé/F&B. Chủ đồ án đã yêu cầu bàn giao UC09 qua GitHub sau khi xác nhận kiểm thử.
