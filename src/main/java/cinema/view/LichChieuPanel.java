@@ -57,7 +57,7 @@ public final class LichChieuPanel extends JPanel {
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); table.setAutoCreateRowSorter(true);
         add(new JScrollPane(table),BorderLayout.CENTER); add(message,BorderLayout.SOUTH);
         dateFilter.addActionListener(event -> { if(!busy) refresh(); });
-        refresh();
+        DateInputs.attach(dateFilter,false,true);refresh();
     }
 
     private void button(JPanel parent,String title,Runnable action) {
@@ -165,6 +165,7 @@ public final class LichChieuPanel extends JPanel {
                     }
                 }.execute();
             });
+            Component previous=((BorderLayout)body.getLayout()).getLayoutComponent(BorderLayout.NORTH);if(previous!=null)body.remove(previous);JLabel preview=SchedulePreview.create(this,table,film,room,day,time,existing);body.add(previous==null?preview:Design.stack(previous,preview),BorderLayout.NORTH);
             add(body); setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE); pack(); setLocationRelativeTo(LichChieuPanel.this);
         }
         private void row(JPanel panel,String label,Component value) { panel.add(new JLabel(label)); panel.add(value); }

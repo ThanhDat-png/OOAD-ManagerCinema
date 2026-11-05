@@ -171,7 +171,7 @@ public final class PhongChieuPanel extends JPanel {
                                 }
                             });
                             GridBagConstraints constraints=new GridBagConstraints(); constraints.gridx=numbers.indexOf(seat.soGhe()); constraints.gridy=rows.indexOf(seat.hangGhe());
-                            constraints.insets=new Insets(5,5,5,5); constraints.fill=GridBagConstraints.HORIZONTAL; map.add(button,constraints);
+                            constraints.insets=new Insets(Theme.XS,Theme.XS,Theme.XS,Theme.XS); constraints.fill=GridBagConstraints.HORIZONTAL; map.add(button,constraints);
                         }
                         map.revalidate(); map.repaint(); status.setText(data.seats().isEmpty()?"Phòng chưa có ghế":"Chọn ghế để xem hoặc cập nhật thông tin");
                     } catch(InterruptedException e) { Thread.currentThread().interrupt(); }

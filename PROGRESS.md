@@ -69,7 +69,7 @@ SHA-256: b14dc19699f0c1b01a66f682c01795d08e1d093028a448e0cafff1e78c96330f
 - Sprint 1: đã hoàn tất nền tảng FlatLaf và kiểm chứng; ghi nhận chi tiết bên dưới.
 - Sprint 2: đã kiểm chứng bán vé và tra cứu giao dịch; xem ghi nhận bên dưới.
 - Sprint 3: đã kiểm chứng soát vé, hồ sơ và tra cứu Nhân viên; xem ghi nhận.
-- Sprint 4: chưa bắt đầu.
+- Sprint 4: đã kiểm chứng quản lý phim/phòng/lịch và form; xem ghi nhận.
 - Sprint 5: chưa bắt đầu.
 - Sprint 6: chưa bắt đầu.
 - Sprint 7: chưa bắt đầu.
@@ -122,3 +122,9 @@ Thêm SalesViews (bảng suất/giao dịch đồng bộ model chọn cũ, chi t
 Thêm ReadOnlyViews: kết quả soát vé chữ lớn/ký hiệu, thông tin vé hai cột ưu tiên phim/phòng/ghế/suất; các kết quả chưa kiểm tra/ngoài giờ/không tồn tại cũng hiển thị trung thực. Chỉ ánh xạ thông báo BUS đã có, không tự kết luận hợp lệ từ việc tra cứu. Ô mã tự focus, Enter tra cứu; ngày chọn qua JSpinner. Hồ sơ cá nhân chỉ đọc dạng thẻ, giữ model JTable cũ; thư viện phim có ảnh thu nhỏ 2:3, fallback vector, tải poster ở SwingWorker; sơ đồ phòng dùng SeatVisual chung (trạng thái cấu trúc phòng, không giả lập trạng thái bán của suất). Menu Nhân viên đổi nhãn thành Hồ sơ cá nhân/Tra cứu phim/Tra cứu phòng/Soát vé/Bán vé tại quầy, giữ chỉ số điều hướng và tên cửa sổ để không đổi luồng.
 
 Đã chạy sạch 33/33 test: tra cứu/QR, xác nhận một lần, phân quyền, hồ sơ, phim và phòng + design system; thêm kiểm tra 4 kết quả và menu Nhân viên. Đã xem ảnh uc07-confirmed, uc02-staff, uc05-map; bỏ khối lọc trống ở hồ sơ, làm thông tin vé gọn hai cột để thấy trường vận hành. Không sửa test cũ hoặc BUS/DAO/model/config/schema. Artifact incremental đôi lúc báo thiếu class sau cập nhật view, clean build xử lý được; các lượt sau dùng clean. Sáng/tối/toàn bộ modal và DPI sẽ rà tiếp ở Sprint 7.
+
+## Sprint 4 — Quản trị phim, phòng và lịch
+
+Forms cung cấp lỗi/hướng dẫn tại trường, labelFor và date/time picker JSpinner cho form; chỉ gợi ý dữ liệu, không thay save handler hoặc quyết định của BUS. SchedulePreview đọc các hàng lịch đã tải để hiển thị giờ trả phòng có thời gian dọn và cảnh báo overlap; luôn nói rõ BUS kiểm tra lại toàn bộ khi lưu, không dùng preview để cho phép/chặn lưu, không truy vấn DB trên EDT. Đã gắn preview vào Editor và dọn listener khi đóng. Phim dùng bảng ảnh 2:3 đã có ở Sprint 3; toàn bộ thao tác cũ/tìm kiếm/lọc/ngừng chiếu vẫn giữ. Sơ đồ ghế và form phòng/ghế thống nhất component chung.
+
+Đã chạy sạch 51/51 test: phim/poster, lịch chiếu, phòng/ghế, CRUD desktop, design system và form. Thêm SchedulePreviewTest xác nhận có dọn phòng, biên liền kề không báo trùng, dữ liệu nguồn không đổi. Đã xem uc03-admin/uc03-detail/uc04-schedule/uc05-map/uc05-rooms qua các lượt kiểm tra. Không sửa test cũ, logic tạo/sửa/hủy, BUS/DAO/model/SQL. Preview chỉ là dữ liệu đang hiển thị, có thể không bao phủ mọi lịch nếu đang lọc; kiểm tra cuối ở BUS là bắt buộc và giữ nguyên. Không thêm thư viện.
