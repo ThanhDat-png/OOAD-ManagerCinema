@@ -97,7 +97,7 @@ public final class BaoCaoPanel extends JPanel {
             super(new BorderLayout(8,8));filters.setName(name+".filters");table.setName(name+".table");submit.setName(name+".run");summary.setName(name+".message");
             JPanel top=new JPanel(new BorderLayout());top.add(filters);top.add(note,BorderLayout.SOUTH);add(top,BorderLayout.NORTH);
             table.setAutoCreateRowSorter(true);table.setRowHeight(26);table.setDefaultRenderer(BigDecimal.class,new javax.swing.table.DefaultTableCellRenderer(){@Override protected void setValue(Object value){setHorizontalAlignment(SwingConstants.RIGHT);setText(value instanceof BigDecimal amount?money(amount):"");}});
-            add(new JScrollPane(table));add(summary,BorderLayout.SOUTH);
+            add(new ReportVisuals(table,summary,name));add(summary,BorderLayout.SOUTH);
         }
         void action(Runnable action){submit.addActionListener(event->{try{action.run();}catch(RuntimeException e){clear();summary.setText(message(e));}});filters.add(submit);}
         void clear(){revision++;model.setRowCount(0);summary.setText("Tiêu chí đã thay đổi. Bấm Thống kê để xem kết quả.");}
@@ -115,7 +115,7 @@ public final class BaoCaoPanel extends JPanel {
             super(new FlowLayout(FlowLayout.LEFT,6,0));start.setName(name+".from");end.setName(name+".to");
             mode=new JComboBox<>(new String[]{"Ngày","Tháng","Năm","Khoảng ngày"});mode.setName(name+".period");
             if(periods){add(mode);mode.addActionListener(event->update());}else mode.setSelectedIndex(3);
-            add(label);add(start);add(endLabel);add(end);update();
+            add(label);add(start);add(endLabel);add(end);start.putClientProperty("cinema.periodSelector",mode);DateInputs.attach(start,false,false);DateInputs.attach(end,false,false);update();
         }
         private void update(){int index=mode.getSelectedIndex();label.setText(switch(index){case 0->"Ngày yyyy-MM-dd";case 1->"Tháng yyyy-MM";case 2->"Năm yyyy";default->"Từ ngày yyyy-MM-dd";});end.setVisible(index==3);endLabel.setVisible(index==3);start.setText("");end.setText("");}
         KhoangThongKe read(){
