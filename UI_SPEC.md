@@ -252,7 +252,7 @@ Cinema Workspace: tối mặc định, bề mặt xanh than phân lớp, tím ir
 
 Mọi màu/font/spacing/radius/shadow khai báo trong cinema.view.ui.Theme; Tokens là facade kế thừa để giữ tương thích các component đã dựng, không chứa định nghĩa trùng. Dark: background #10111B, surface #191B2A, raised #222538, border #3A4058, text #F2F4FC, muted #B0B9D0, accent #B7A1FF, accentInk #181327; success #7EE2B5, warning #F5CF83, danger #FFADB4, info #9EC4FF. Light: #F3F4F8/#FFFFFF/#F7F7FC/#C3C7D3, text #1B2035, muted #555F77, accent #5637AF, accentInk #FFFFFF, semantic #146548/#785100/#A52C3D/#254E98. Kiểm tra tỷ lệ AA cho chữ chính/phụ/nút/badge.
 
-Spacing 4/8/12/16/24/32; radius 10 control, 16 card, 20 modal. Control cao 40–44, bảng hàng 44, header 44. Font Segoe UI (fallback sans), số/mã Consolas (fallback monospace), thang 11/12/14/16/20/28. Nét icon đồng bộ 1.6px, không emoji. Motion 160ms cho hover nếu có; giảm chuyển động qua cinema.ui.reducedMotion và desktop property win.clientAreaAnimation. Không cần trình duyệt/CSS prefers-reduced-motion vì đây là Swing; mặc định không có chuyển động bố cục.
+Spacing 4/8/12/16/24/32; radius 12 control, 16 card; modal dùng cùng thang spacing. Control cao 40–44, bảng hàng 44, header 44. Font Segoe UI (fallback sans), số/mã Consolas (fallback monospace), thang 11/12/14/16/20/28. Nét icon đồng bộ 1.6px, không emoji. Motion 160ms cho hover nếu có; giảm chuyển động qua cinema.ui.reducedMotion và desktop property win.clientAreaAnimation. Không cần trình duyệt/CSS prefers-reduced-motion vì đây là Swing; mặc định không có chuyển động bố cục.
 
 Theme: theme chung toàn tiến trình, toggle rõ chữ; FlatLaf 3.7.2 + UIManager; Graphics2D cho ghế, thẻ và chart. Components: button/input/select/table/modal/badge/card/status toast/empty/loading, validated field, wrap toolbar, responsive split, poster card, seat button, report chart. Theme đổi được cả cửa sổ/modal đang mở, không đổi model hoặc callback nghiệp vụ.
 
@@ -277,3 +277,7 @@ Giữ cả trạng thái Đang giữ của giao dịch khác ngoài bốn trạn
 ## An toàn Swing bổ sung
 
 Giữ nguyên khởi tạo/thứ tự và ý nghĩa cart/id/selected/showId/busy/paymentOpen/needsCheck, các run/SwingWorker, timer 5 giây, canLeave/requestClose/recover. Không sửa BUS/DAO/model. Trình bày danh sách suất và giao dịch bằng model trình bày đồng bộ với model cũ, không thêm truy vấn; tóm tắt giao dịch có cấu trúc và giữ đủ thông tin từ description. Dùng JSpinner/JFormattedTextField cho nhập ngày/giờ; chuyển xuống BUS vẫn LocalDate/LocalTime, giữ ô trống nếu được phép. Không thêm thread sleep trên EDT.
+
+## Bổ sung kiểm chứng Sprint 7
+
+Sidebar có kích thước theo UIScale, nhãn hai dòng ở chế độ gọn. AdaptivePage giữ control có thể truy cập bằng cuộn khi cửa sổ/DPI thiếu diện tích. Các chế độ ngày/tháng/năm/giờ giữ định dạng parser cũ và ô tùy chọn để trống. Xem REDESIGN_REPORT.md để phân biệt tiêu chí đã chạy và tiêu chí cần thử thiết bị/duyệt tay.

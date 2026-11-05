@@ -163,16 +163,17 @@ public final class PhongChieuPanel extends JPanel {
                         for(Ghe seat:data.seats()) {
                             seatsModel.addRow(new Object[]{seat.maGhe(),seat.hangGhe(),seat.soGhe(),seat.loaiGhe().tenLoaiGhe(),seat.trangThai()});
                             JButton button=new JButton(seat.hangGhe()+seat.soGhe()+" · "+seat.loaiGhe().tenLoaiGhe());
-                            SeatVisual.install(button,"Bảo trì".equals(seat.trangThai())?"Không khả dụng":"Trống",seat.loaiGhe().tenLoaiGhe(),false);button.setToolTipText(seat.trangThai());
+                            SeatVisual.install(button,"Bảo trì".equals(seat.trangThai())?"Không khả dụng":"Trống",seat.loaiGhe().tenLoaiGhe(),false);button.setToolTipText(seat.hangGhe()+seat.soGhe()+" · "+seat.loaiGhe().tenLoaiGhe()+" · "+seat.trangThai());
                             if("Bảo trì".equals(seat.trangThai())) button.setText(button.getText()+" · Bảo trì");
                             button.addActionListener(event -> {
                                 for(int i=0;i<seatsModel.getRowCount();i++) if(Integer.valueOf(seat.maGhe()).equals(seatsModel.getValueAt(i,0))) {
                                     int view=seatsTable.convertRowIndexToView(i); seatsTable.setRowSelectionInterval(view,view); status.setText(seat.hangGhe()+seat.soGhe()+" · "+seat.trangThai());
                                 }
                             });
-                            GridBagConstraints constraints=new GridBagConstraints(); constraints.gridx=numbers.indexOf(seat.soGhe()); constraints.gridy=rows.indexOf(seat.hangGhe());
+                            GridBagConstraints constraints=new GridBagConstraints(); constraints.gridx=numbers.indexOf(seat.soGhe())+1; constraints.gridy=rows.indexOf(seat.hangGhe());
                             constraints.insets=new Insets(Theme.XS,Theme.XS,Theme.XS,Theme.XS); constraints.fill=GridBagConstraints.HORIZONTAL; map.add(button,constraints);
                         }
+                        for(int row=0;row<rows.size();row++){GridBagConstraints label=new GridBagConstraints();label.gridx=0;label.gridy=row;label.insets=new Insets(Theme.SM,Theme.SM,Theme.SM,Theme.MD);map.add(Design.text("Hàng "+rows.get(row),"subtitle"),label);}
                         map.revalidate(); map.repaint(); status.setText(data.seats().isEmpty()?"Phòng chưa có ghế":"Chọn ghế để xem hoặc cập nhật thông tin");
                     } catch(InterruptedException e) { Thread.currentThread().interrupt(); }
                     catch(ExecutionException e) { status.setText(error(e.getCause())); }

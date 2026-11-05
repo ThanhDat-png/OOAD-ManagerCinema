@@ -44,6 +44,8 @@ public class Theme {
         for(String key:new String[]{"Label.foreground","OptionPane.messageForeground","TextField.foreground","PasswordField.foreground","TextArea.foreground","List.foreground","Table.foreground","ComboBox.foreground","TabbedPane.foreground","CheckBox.foreground","RadioButton.foreground","MenuItem.foreground"})UIManager.put(key,Tokens.text());
         UIManager.put("control",Tokens.surface());UIManager.put("text",Tokens.text());UIManager.put("nimbusBase",Tokens.accent());UIManager.put("ComboBox.background",Tokens.raised());UIManager.put("TextField.background",Tokens.raised());UIManager.put("PasswordField.background",Tokens.raised());UIManager.put("CheckBox.background",Tokens.surface());UIManager.put("RadioButton.background",Tokens.surface());
         UIManager.put("TableUI",Skin.TableUI.class.getName());
+        for(String key:new String[]{"ComboBox.buttonBackground","ComboBox.buttonEditableBackground","Spinner.buttonBackground"})UIManager.put(key,Tokens.raised());
+        UIManager.put("ComboBox.buttonArrowColor",Tokens.muted());UIManager.put("ComboBox.buttonHoverArrowColor",Tokens.accent());UIManager.put("ComboBox.buttonPressedArrowColor",Tokens.text());
         UIManager.put("Button.minimumHeight",40);UIManager.put("ToggleButton.minimumHeight",40);UIManager.put("ComboBox.minimumHeight",40);UIManager.put("Button.arc",12);UIManager.put("Component.arc",12);UIManager.put("TextComponent.arc",12);UIManager.put("Component.focusWidth",1);UIManager.put("Component.focusColor",Tokens.accent());UIManager.put("Component.arrowType","chevron");UIManager.put("Component.borderColor",Tokens.border());UIManager.put("Component.minimumHeight",40);UIManager.put("Component.minimumWidth",48);UIManager.put("TabbedPane.tabType","card");
         UIManager.put("Table.selectionBackground",Tokens.tone(Tokens.accent()));UIManager.put("Table.selectionForeground",Tokens.text());UIManager.put("Table.gridColor",Tokens.border());UIManager.put("TableHeader.background",Tokens.raised());UIManager.put("TableHeader.foreground",Tokens.muted());UIManager.put("List.selectionBackground",Tokens.tone(Tokens.accent()));UIManager.put("List.selectionForeground",Tokens.accent());UIManager.put("ScrollBar.width",10);UIManager.put("SplitPane.dividerSize",8);UIManager.put("TabbedPane.selected",Tokens.raised());
     }
@@ -68,6 +70,7 @@ public class Theme {
             if(c.getAccessibleContext()!=null&&c.getAccessibleContext().getAccessibleName()==null){if(c instanceof AbstractButton b)c.getAccessibleContext().setAccessibleName(b.getText());if(c instanceof JTextComponent t&&t.getToolTipText()!=null)c.getAccessibleContext().setAccessibleName(t.getToolTipText());}
             if(!Boolean.TRUE.equals(c.getClientProperty("cinema.observed"))){c.putClientProperty("cinema.observed",true);c.addFocusListener(new FocusAdapter(){public void focusGained(FocusEvent e){c.repaint();}public void focusLost(FocusEvent e){c.repaint();}});c.addContainerListener(new ContainerAdapter(){public void componentAdded(ContainerEvent e){apply(e.getChild());}});}
         }
+        if(component instanceof JComponent c&&c.getClientProperty("cinema.statusRefresh") instanceof Runnable refresh)refresh.run();
         if(component instanceof Container container)for(Component child:container.getComponents())apply(child);
     }
     private static void modal(JDialog dialog){

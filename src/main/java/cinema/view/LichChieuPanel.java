@@ -40,7 +40,7 @@ public final class LichChieuPanel extends JPanel {
         super(new BorderLayout(8,8));
         service=new LichChieuBUS(session,new SuatChieuDAO());
         setBorder(BorderFactory.createEmptyBorder(12,12,12,12));
-        JPanel top=new JPanel(new GridLayout(0,1,4,4));
+        JPanel top=new JPanel();top.setLayout(new BoxLayout(top,BoxLayout.Y_AXIS));
         JPanel filters=new JPanel();
         filters.add(new JLabel("Ngày (yyyy-MM-dd, trống để xem tất cả)")); filters.add(dateFilter);
         roomFilter.addItem("Tất cả phòng"); filters.add(roomFilter);
