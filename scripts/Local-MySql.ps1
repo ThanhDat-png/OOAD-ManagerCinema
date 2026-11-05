@@ -1,7 +1,9 @@
 ﻿param([ValidateSet('Start','Stop','Status')][string]$Action='Status')
 $ErrorActionPreference='Stop'
 $repo=Split-Path $PSScriptRoot
-$config=Get-Content -LiteralPath (Join-Path $repo 'config/local-tools.json') -Raw|ConvertFrom-Json
+$toolsPath=Join-Path $repo 'config/local-tools.json'
+if(-not (Test-Path -LiteralPath $toolsPath)){throw 'Script này dành cho MySQL ZIP riêng. Xem docs/CAI_DAT.md để cấu hình hoặc dùng dịch vụ MySQL đã cài.'}
+$config=Get-Content -LiteralPath $toolsPath -Raw|ConvertFrom-Json
 $admin=Join-Path $config.mysqlBin 'mysqladmin.exe'
 $server=Join-Path $config.mysqlBin 'mysqld.exe'
 $clientArg="--defaults-extra-file=$($config.mysqlAdminConfig)"

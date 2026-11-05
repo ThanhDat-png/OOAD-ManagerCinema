@@ -10,3 +10,4 @@
 /hs_err_pid*.log
 .DS_Store
 Thumbs.db
+/config/mysql-client.cnf

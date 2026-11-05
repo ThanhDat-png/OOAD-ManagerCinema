@@ -3,15 +3,15 @@ Object-Oriented Analysis and Design (OOAD) course project developed using Java, 
 
 ## Chạy đồ án với JDK 17 và Maven (PowerShell)
 
-Thiết lập MySQL/JDBC theo [UC01](docs/UC01.md) và [UC02](docs/UC02.md), áp dụng schema đến Database/010_san_pham.sql, rồi chạy:
+Cài mới/chuyển máy theo [hướng dẫn cài đặt](docs/CAI_DAT.md): tạo database mới, nhập SQL 001–010, tạo tài khoản JDBC và cấu hình riêng, rồi chạy:
 
 ~~~powershell
 mvn compile exec:java
 ~~~
 
-Máy hiện tại đã có scripts/Local-MySql.ps1 và scripts/Run-Desktop.ps1 dùng cấu hình công cụ cục bộ. Dự án dùng JDBC và ZXing qua Maven nên cần nạp các dependency khi chạy.
+Run-Desktop.ps1 dùng Maven trong PATH nếu chưa có cấu hình công cụ cục bộ. Local-MySql.ps1 chỉ dành cho MySQL ZIP riêng; máy dùng dịch vụ MySQL không cần script này. Dự án dùng JDBC và ZXing qua Maven nên cần nạp các dependency khi chạy.
 
-Đã triển khai UC01–UC09. Bước tiếp theo là tổng rà soát, kiểm tra cài mới và dựng class diagram theo code. Cuối mỗi phiên ghi nhận kết quả và kế hoạch; chỉ commit hoặc push khi chủ đồ án quyết định. Xem [danh mục đối chiếu](docs/doi-chieu.md).
+Đã triển khai UC01–UC09. Đã kiểm tra cài mới theo CAI_DAT.md. Các việc còn lại là tổng rà soát và dựng class diagram theo code. Cuối mỗi phiên ghi nhận kết quả và kế hoạch; chỉ commit hoặc push khi chủ đồ án quyết định. Xem [danh mục đối chiếu](docs/doi-chieu.md).
 
 ## Tổ chức theo mẫu đồ án
 
@@ -19,7 +19,7 @@ Mở pom.xml trong IDE dưới dạng dự án Maven với JDK 17, chạy cinema
 
 Trong cinema, view hiển thị dữ liệu, controller điều phối các UC01–UC09, model mô tả đối tượng, dao thực hiện truy vấn và db quản lý kết nối JDBC. Các lớp cụ thể được bổ sung cùng nghiệp vụ tương ứng.
 
-Database/001_tai_khoan.sql là phần đầu của schema MySQL 8, gồm ba bảng liên quan đến UC01 theo trang 01 của sơ đồ LuocDo_CSDL_RapChieuPhim (2).drawio. Chạy script một lần trong database trống đã chọn. Phiên triển khai UC01 cần đối chiếu thêm các quy tắc ở trang 02 trước khi hoàn thiện ràng buộc và kết nối DAO.
+Database/001–010 tạo schema và danh mục demo MySQL 8. Có thể dùng scripts/Import-Database.ps1 để nhập đúng thứ tự vào database chưa tồn tại, theo CAI_DAT.md. Không nhập lại lên database đang dùng.
 
 ## UC01 đăng nhập
 

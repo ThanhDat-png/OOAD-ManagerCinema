@@ -32,3 +32,7 @@
 Cấu hình riêng và dữ liệu cục bộ vẫn bỏ qua bởi Git. Schema không đổi sau UC09. Tệp mẫu cấu hình và hướng dẫn thuộc repo; target chứa build, báo cáo/ảnh kiểm thử và không push. Dữ liệu kiểm thử dùng mã riêng, được dọn sau từng ca. Lệnh kiểm tra: mvn clean test '-Dcinema.mysql.tests=true'.
 
 Kết quả xác nhận ngày 05/11/2026: Maven clean test với cinema.mysql.tests=true đạt BUILD SUCCESS; 144 kiểm thử, 0 thất bại, 0 lỗi, 0 bỏ qua. UC09 bổ sung 18 kiểm thử (4 quy tắc, 12 MySQL, 2 desktop). Đã rà soát ảnh cả bốn tab và hai lựa chọn Vé/F&B. Chủ đồ án đã yêu cầu bàn giao UC09 qua GitHub sau khi xác nhận kiểm thử.
+
+## Cập nhật mục kiểm tra cài mới — 05/11/2026
+
+Đã hoàn tất riêng mục 2 theo yêu cầu: bản sao sạch, database trống riêng, SQL 001–010 với 18 bảng/6 trigger/22 khóa ngoại; 144/144 kiểm thử đạt bằng tài khoản ứng dụng quyền dữ liệu. Database và cấu hình đang dùng không đổi. Đã bổ sung CAI_DAT.md, script nhập mới từ chối database tồn tại, mẫu cấu hình và launcher dùng Maven PATH. Đã dọn tài nguyên thử. Phần khôi phục dữ liệu cũ và máy vật lý khác chưa được kiểm chứng trong lần cài mới này. Chủ đồ án đã yêu cầu commit/push phần cài đặt; sau đó dừng và chờ thông báo mới. Dừng tại đây, chờ chủ đồ án chỉ định; chưa thực hiện class diagram hoặc các mục còn lại.

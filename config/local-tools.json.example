@@ -1,0 +1,6 @@
+{
+  "maven": "C:/Tools/apache-maven/bin/mvn.cmd",
+  "mysqlBin": "C:/Tools/mysql/bin",
+  "mysqlDefaults": "C:/CinemaRuntime/my.ini",
+  "mysqlAdminConfig": "C:/CinemaRuntime/admin.cnf"
+}
