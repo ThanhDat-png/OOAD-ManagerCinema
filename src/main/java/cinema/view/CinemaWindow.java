@@ -88,6 +88,13 @@ public final class CinemaWindow {
                 } catch(IllegalArgumentException e) { JOptionPane.showMessageDialog(frame,e.getMessage()); }
                 return;
             }
+            if (session.vaiTro() == VaiTro.ADMIN && menu.getSelectedIndex() == 5) {
+                try {
+                    JFrame reports=new JFrame("Báo cáo và thống kê");reports.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                    reports.add(new BaoCaoPanel(session));reports.setSize(1380,760);reports.setLocationRelativeTo(frame);reports.setVisible(true);
+                } catch(IllegalArgumentException e){JOptionPane.showMessageDialog(frame,e.getMessage());}
+                return;
+            }
             if (menu.getSelectedIndex() != 0) {
                 JOptionPane.showMessageDialog(frame, "Chức năng đang được hoàn thiện.");
                 return;
