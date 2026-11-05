@@ -37,6 +37,7 @@ public final class GiaVeFnBPanel extends JPanel {
 
     public GiaVeFnBPanel(PhienDangNhap session) {
         super(new BorderLayout(8,8));
+        productTable.putClientProperty("cinema.stockTable",true);
         prices=new GiaVeBUS(session,new BangGiaVeDAO()); products=new SanPhamBUS(session,new SanPhamDAO());
         setBorder(BorderFactory.createEmptyBorder(12,12,12,12));
         JTabbedPane tabs=new JTabbedPane();

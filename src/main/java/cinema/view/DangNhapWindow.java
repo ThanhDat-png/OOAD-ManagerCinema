@@ -4,7 +4,7 @@ import cinema.view.ui.*;
 
 import cinema.controller.auth.DangNhapBUS;
 import cinema.controller.auth.PhienDangNhap;
-import java.awt.BorderLayout;
+import java.awt.*;
 import java.awt.GridLayout;
 import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
@@ -15,23 +15,21 @@ public final class DangNhapWindow extends JFrame {
     private final JTextField username = new JTextField(22);
     private final JPasswordField password = new JPasswordField(22);
     private final JButton submit = new JButton("Đăng nhập");
-    private final JLabel message = new JLabel("Nhập tài khoản đã được cấp để đăng nhập.");
+    private final JLabel message = new Design.WrappingLabel("Nhập tài khoản đã được cấp để đăng nhập.");
 
     public DangNhapWindow(DangNhapBUS service) {
         super("Đăng nhập — Quản lý rạp chiếu phim");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        JPanel fields = new JPanel(new GridLayout(0, 1, 6, 6));
-        fields.setBorder(BorderFactory.createEmptyBorder(20, 24, 20, 24));
-        fields.add(new JLabel("Tên đăng nhập"));
-        fields.add(username);
-        fields.add(new JLabel("Mật khẩu"));
-        fields.add(password);
-        fields.add(submit);
-        add(fields, BorderLayout.CENTER);
-        add(message, BorderLayout.SOUTH);
+
+        JPanel stage=new JPanel(new BorderLayout());stage.putClientProperty("cinema.background","canvas");JPanel tools=new JPanel(new FlowLayout(FlowLayout.RIGHT));tools.putClientProperty("cinema.background","canvas");tools.setBorder(BorderFactory.createEmptyBorder(16,24,0,24));tools.add(Theme.toggleButton());stage.add(tools,BorderLayout.NORTH);
+        JPanel center=new JPanel(new GridBagLayout());center.putClientProperty("cinema.background","canvas");Design.Card card=new Design.Card(new BorderLayout(16,24));card.setPreferredSize(new Dimension(480,470));JLabel brand=Design.text("CINEMA WORKSPACE","heading");brand.setIcon(new Icons("film",24));brand.setIconTextGap(12);card.add(Design.stack(brand,Design.text("Đăng nhập","title"),Design.text("Sử dụng tài khoản nội bộ đã được cấp.","subtitle")),BorderLayout.NORTH);
+        JPanel fields=new JPanel(new GridBagLayout());GridBagConstraints c=new GridBagConstraints();c.gridx=0;c.weightx=1;c.fill=GridBagConstraints.HORIZONTAL;c.anchor=GridBagConstraints.WEST;c.insets=new Insets(4,0,8,0);
+        JLabel userLabel=Design.text("Tên đăng nhập","subtitle");userLabel.setLabelFor(username);c.gridy=0;fields.add(userLabel,c);c.gridy=1;fields.add(username,c);JLabel passwordLabel=Design.text("Mật khẩu","subtitle");passwordLabel.setLabelFor(password);c.gridy=2;fields.add(passwordLabel,c);JPanel secret=new JPanel(new BorderLayout(0,4));secret.add(password);JLabel required=Design.text("Vui lòng nhập mật khẩu.","error");required.setVisible(false);secret.add(required,BorderLayout.SOUTH);c.gridy=3;fields.add(secret,c);Forms.bind(username,"Tên đăng nhập");Forms.password(password,required);
+        card.add(fields);submit.setMaximumSize(new Dimension(Integer.MAX_VALUE,Theme.s(40)));Design.status(message);card.add(Design.stack(message,submit),BorderLayout.SOUTH);center.add(card);stage.add(center);setContentPane(stage);Theme.apply(stage);SwingUtilities.invokeLater(()->username.requestFocusInWindow());
         getRootPane().setDefaultButton(submit);
         submit.addActionListener(event -> authenticate(service));
-        setSize(640, 310);
+        setSize(960, 680);
+        setMinimumSize(new Dimension(640,600));
         setLocationRelativeTo(null);
     }
 
