@@ -32,7 +32,7 @@ public final class Shell extends JPanel {
         Theme.apply(this);
     }
     public static void attach(JFrame frame,PhienDangNhap session,String[] functions,IntConsumer navigate){
-        Container old=frame.getContentPane();JList<String> menu=new JList<>(functions);for(int i=0;i<functions.length;i++)if(frame.getTitle().equals(functions[i]))menu.setSelectedIndex(i);
+        Container old=frame.getContentPane();JList<String> menu=new JList<>(functions);for(int i=0;i<functions.length;i++)if(frame.getTitle().equals(functions[i])||frame.getTitle().equals("Quản lý bán vé")&&functions[i].equals("Bán vé tại quầy")||frame.getTitle().equals("Kiểm tra và xác nhận vé")&&functions[i].equals("Soát vé")||frame.getTitle().equals("Thông tin cá nhân")&&functions[i].equals("Hồ sơ cá nhân"))menu.setSelectedIndex(i);
         frame.setContentPane(new Shell(session,(JComponent)old,menu,navigate,frame.getTitle()));Dimension screen=Toolkit.getDefaultToolkit().getScreenSize();frame.setSize(Math.min(1366,screen.width-40),Math.min(820,screen.height-56));frame.setMinimumSize(new Dimension(960,620));Theme.apply(frame);
     }
     public static JPanel home(PhienDangNhap session,String[] functions,IntConsumer navigate,JButton open){

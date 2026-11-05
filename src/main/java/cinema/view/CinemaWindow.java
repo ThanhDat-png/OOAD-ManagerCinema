@@ -18,8 +18,8 @@ public final class CinemaWindow {
         String[] functions = session.vaiTro() == VaiTro.ADMIN
                 ? new String[]{"Quản lý nhân viên", "Quản lý phim", "Quản lý lịch chiếu",
                     "Quản lý phòng chiếu", "Quản lý giá vé và F&B", "Báo cáo và thống kê"}
-                : new String[]{"Xem thông tin nhân viên", "Tra cứu phim", "Tra cứu phòng chiếu",
-                    "Kiểm tra, xác nhận vé", "Quản lý bán vé"};
+                : new String[]{"Hồ sơ cá nhân", "Tra cứu phim", "Tra cứu phòng chiếu",
+                    "Soát vé", "Bán vé tại quầy"};
         JList<String> menu = new JList<>(functions);
         menu.setSelectedIndex(0);
 

@@ -124,7 +124,7 @@ public final class PhongChieuPanel extends JPanel {
         SeatMap(String id) {
             super(SwingUtilities.getWindowAncestor(PhongChieuPanel.this),"Sơ đồ ghế",Dialog.ModalityType.APPLICATION_MODAL); roomId=id;
             JPanel body=new JPanel(new BorderLayout(8,8)); body.setBorder(BorderFactory.createEmptyBorder(12,12,12,12));
-            JPanel header=new JPanel(new GridLayout(0,1,4,4)); header.add(summary); header.add(actions); body.add(header,BorderLayout.NORTH);
+            JPanel header=new JPanel(new GridLayout(0,1,4,4)); header.add(summary); header.add(actions);header.add(SeatVisual.screen());header.add(SeatVisual.legend("Trống","Không khả dụng")); body.add(header,BorderLayout.NORTH);
             if(admin) {
                 seatButton("Thêm ghế",() -> editSeat(null,false));
                 seatButton("Cập nhật ghế",() -> selectedSeat(seat -> editSeat(seat,false)));
@@ -163,7 +163,7 @@ public final class PhongChieuPanel extends JPanel {
                         for(Ghe seat:data.seats()) {
                             seatsModel.addRow(new Object[]{seat.maGhe(),seat.hangGhe(),seat.soGhe(),seat.loaiGhe().tenLoaiGhe(),seat.trangThai()});
                             JButton button=new JButton(seat.hangGhe()+seat.soGhe()+" · "+seat.loaiGhe().tenLoaiGhe());
-                            button.setToolTipText(seat.trangThai());
+                            SeatVisual.install(button,"Bảo trì".equals(seat.trangThai())?"Không khả dụng":"Trống",seat.loaiGhe().tenLoaiGhe(),false);button.setToolTipText(seat.trangThai());
                             if("Bảo trì".equals(seat.trangThai())) button.setText(button.getText()+" · Bảo trì");
                             button.addActionListener(event -> {
                                 for(int i=0;i<seatsModel.getRowCount();i++) if(Integer.valueOf(seat.maGhe()).equals(seatsModel.getValueAt(i,0))) {

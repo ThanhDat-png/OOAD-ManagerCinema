@@ -30,7 +30,7 @@ public final class NhanVienPanel extends JPanel {
     private final JPanel actions = new JPanel();
     private boolean busy;
 
-    @Override public void addNotify() { super.addNotify(); if(getClientProperty("cinema.page")==null){putClientProperty("cinema.page",true);Design.page(this,"Nhân viên","Hồ sơ và thông tin nhân viên",status);} }
+    @Override public void addNotify() { super.addNotify(); if(getClientProperty("cinema.page")==null){putClientProperty("cinema.page",true);Design.page(this,Boolean.TRUE.equals(getClientProperty("cinema.personal"))?"Hồ sơ cá nhân":"Nhân viên","Hồ sơ và thông tin nhân viên",status);} }
 
     public NhanVienPanel(PhienDangNhap session) {
         super(new BorderLayout(8, 8));
@@ -52,6 +52,7 @@ public final class NhanVienPanel extends JPanel {
             keyword.addActionListener(event -> refresh());
             refresh();
         } else {
+            putClientProperty("cinema.personal",true);Component old=((BorderLayout)getLayout()).getLayoutComponent(BorderLayout.CENTER);remove(old);add(ReadOnlyViews.profile(table),BorderLayout.CENTER);
             String id = session.nhanVien() == null ? null : session.nhanVien().maNV();
             run(() -> service.detail(id), employee -> showRows(List.of(employee)));
         }
@@ -87,7 +88,7 @@ public final class NhanVienPanel extends JPanel {
                     + "\nNgày sinh: " + e.ngaySinh() + "\nSố điện thoại: " + e.soDienThoai()
                     + "\nEmail: " + e.email() + "\nĐịa chỉ: " + e.diaChi() + "\nChức vụ: " + e.chucVu(), 9, 36);
             text.setEditable(false);
-            JOptionPane.showMessageDialog(this, new JScrollPane(text), "Thông tin nhân viên", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, ReadOnlyViews.info(text,"Thông tin nhân viên"), "Thông tin nhân viên", JOptionPane.INFORMATION_MESSAGE);
         });
     }
 

@@ -46,18 +46,11 @@ public final class KiemTraVePanel extends JPanel {
     public KiemTraVePanel(PhienDangNhap session) {
         super(new BorderLayout(8,8)); service=new VeBUS(session,new VeDAO());
         setBorder(BorderFactory.createEmptyBorder(12,12,12,12));
-        JPanel top=new JPanel(new GridLayout(0,1,6,6)); JPanel location=new JPanel();
-        location.add(new JLabel("Ngày (yyyy-MM-dd)")); location.add(date); location.add(new JLabel("Phòng đang kiểm soát")); location.add(room);
-        controls.add(date); controls.add(room); button(location,"Tải suất chiếu",this::reloadContext); top.add(location);
-        JPanel schedule=new JPanel(); schedule.add(new JLabel("Suất đang kiểm soát")); show.setPreferredSize(new Dimension(720,28)); schedule.add(show); controls.add(show); top.add(schedule);
-        JPanel input=new JPanel(); input.add(codeType); input.add(code); controls.add(codeType); controls.add(code);
-        button(input,"Tra cứu vé",this::lookup); button(input,"Đọc QR từ ảnh",this::readImage); top.add(input);
-        JPanel actions=new JPanel(); button(actions,"Kiểm tra tính hợp lệ",this::check);
-        confirm.setEnabled(false); confirm.addActionListener(event -> confirm()); actions.add(confirm);
-        button(actions,"Hủy xác nhận",this::cancelCheck); top.add(actions);
-        top.add(new JLabel("Cho phép vào từ "+service.window().truocPhut()+" phút trước đến "+service.window().sauPhut()+" phút sau giờ bắt đầu."));
-        add(top,BorderLayout.NORTH); detail.setEditable(false); detail.setLineWrap(true); detail.setWrapStyleWord(true);
-        add(new JScrollPane(detail),BorderLayout.CENTER); add(message,BorderLayout.SOUTH);
+
+        JPanel top=Design.stack();JPanel location=new JPanel(new Design.Wrap());location.add(SalesViews.field("Ngày kiểm soát",date));room.setPreferredSize(new Dimension(200,40));location.add(SalesViews.field("Phòng kiểm soát",room));show.setPreferredSize(new Dimension(340,40));location.add(SalesViews.field("Suất đang kiểm soát",show));controls.add(date);controls.add(room);controls.add(show);button(location,"Tải suất chiếu",this::reloadContext);top.add(location);
+        JPanel input=new JPanel(new Design.Wrap());code.putClientProperty("cinema.text","scan");code.putClientProperty("JTextField.placeholderText","Nhập mã vé hoặc quét QR");code.setToolTipText("Nhập mã rồi nhấn Enter để tra cứu");input.add(codeType);input.add(code);controls.add(codeType);controls.add(code);button(input,"Tra cứu vé",this::lookup);button(input,"Đọc QR từ ảnh",this::readImage);top.add(input);
+        JPanel actions=new JPanel(new Design.Wrap());button(actions,"Kiểm tra tính hợp lệ",this::check);confirm.setEnabled(false);confirm.addActionListener(event->confirm());confirm.putClientProperty("cinema.role","primary");actions.add(confirm);button(actions,"Hủy xác nhận",this::cancelCheck);top.add(actions);top.add(Design.text("Cho phép vào từ "+service.window().truocPhut()+" phút trước đến "+service.window().sauPhut()+" phút sau giờ bắt đầu.","subtitle"));
+        add(top,BorderLayout.NORTH);detail.setEditable(false);detail.setLineWrap(true);detail.setWrapStyleWord(true);add(new ReadOnlyViews.Gate(detail,message),BorderLayout.CENTER);add(message,BorderLayout.SOUTH);DateInputs.attach(date,false,false);SwingUtilities.invokeLater(()->code.requestFocusInWindow());
         show.setRenderer(new DefaultListCellRenderer() {
             @Override public Component getListCellRendererComponent(JList<?> list,Object value,int index,boolean selected,boolean focus) {
                 JLabel label=(JLabel)super.getListCellRendererComponent(list,value,index,selected,focus);

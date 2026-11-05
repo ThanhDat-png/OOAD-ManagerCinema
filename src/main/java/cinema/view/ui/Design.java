@@ -24,6 +24,7 @@ public final class Design {
         if(!(root.getLayout() instanceof BorderLayout layout))return;
         Component top=layout.getLayoutComponent(BorderLayout.NORTH);if(top!=null)root.remove(top);
         JPanel head=stack(text(title,"title"),text(subtitle,"subtitle"));
+        if(top instanceof JPanel panel&&panel.getComponentCount()==0)top=null;
         if(top!=null){Card filters=new Card(new BorderLayout());filters.setAlignmentX(Component.LEFT_ALIGNMENT);filters.add(top);head.add(filters);}
         root.add(head,BorderLayout.NORTH);root.setBorder(BorderFactory.createEmptyBorder(24,24,16,24));
         if(status!=null){status(status);status.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(1,0,0,0,Tokens.border()),BorderFactory.createEmptyBorder(12,4,4,4)));status.getAccessibleContext().setAccessibleName("Thông báo trạng thái");for(Component c:all(root))if(c instanceof JTable table){table.putClientProperty("cinema.stateLabel",status);status.addPropertyChangeListener("text",e->table.repaint());}}

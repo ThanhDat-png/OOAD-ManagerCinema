@@ -38,6 +38,7 @@ public final class PhimPanel extends JPanel {
         @Override public boolean isCellEditable(int row, int column) { return false; }
     };
     private final JTable table = new JTable(model);
+    private final PosterCells posterCells=new PosterCells(table,posters);
     private boolean busy;
 
     @Override public void addNotify() { super.addNotify(); if(getClientProperty("cinema.page")==null){putClientProperty("cinema.page",true);Design.page(this,"Thư viện phim","Tìm phim, quản lý thông tin và hình ảnh",message);} }
@@ -94,6 +95,7 @@ public final class PhimPanel extends JPanel {
             for (Phim film : films) model.addRow(new Object[]{film.maPhim(), film.tenPhim(), film.thoiLuong(),
                     film.theLoai().stream().map(TheLoai::tenTheLoai).collect(Collectors.joining(", ")),
                     film.ngayKhoiChieu(), film.gioiHanTuoi(), film.trangThai(), film.dinhDangChieu()});
+            posterCells.update(films);
             message.setText(films.isEmpty() ? "Không tìm thấy phim phù hợp" : "Số phim: " + films.size());
         });
     }

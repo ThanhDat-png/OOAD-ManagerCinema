@@ -68,7 +68,7 @@ SHA-256: b14dc19699f0c1b01a66f682c01795d08e1d093028a448e0cafff1e78c96330f
 - Giai đoạn 0: xong khảo sát ảnh/code/baseline, chốt hướng, tạo hai tài liệu. Chưa sửa code giao diện tại mốc này.
 - Sprint 1: đã hoàn tất nền tảng FlatLaf và kiểm chứng; ghi nhận chi tiết bên dưới.
 - Sprint 2: đã kiểm chứng bán vé và tra cứu giao dịch; xem ghi nhận bên dưới.
-- Sprint 3: chưa bắt đầu.
+- Sprint 3: đã kiểm chứng soát vé, hồ sơ và tra cứu Nhân viên; xem ghi nhận.
 - Sprint 4: chưa bắt đầu.
 - Sprint 5: chưa bắt đầu.
 - Sprint 6: chưa bắt đầu.
@@ -116,3 +116,9 @@ Thêm Theme (toàn bộ token), Tokens facade, Skin/Icons/Design/Shell; page chr
 Thêm SalesViews (bảng suất/giao dịch đồng bộ model chọn cũ, chi tiết có cấu trúc), SeatVisual (4 trạng thái + đánh dấu giao dịch hiện tại, ký hiệu, loại ghế, chú giải đồ họa/màn hình), DateInputs (JSpinner trong popup ghi lại ô nhập cũ). BanVePanel chỉ đổi cây component, renderer và bố cục thanh toán; giữ nguyên cart/id/selected/showId/busy/paymentOpen/needsCheck, thứ tự run/hold/quote/payment/issue/recover/cancel, timer 5000ms, canLeave/requestClose. Các JTextArea/JComboBox/JList cũ giữ làm nguồn binding nội bộ, không còn là trình bày chính. Không thêm truy vấn DB; đọc ảnh/nghiệp vụ vẫn theo SwingWorker hiện có.
 
 Đã chạy 28/28: SalesMySQLTest 18, SalesDesktopMySQLTest 2, InVeTest 2, DesignSystemTest 3, SalesPresentationTest 3. Kiểm chứng thực tế bán từ chọn/giữ/tính tiền đến thanh toán/preview QR, phục hồi giữ/đóng thanh toán, lịch sử và chống trùng; các test cũ không sửa. Ba test mới xác minh summary giữ đủ trường, selection adapter và ghế không đổi availability. Đã xem target/uc08-sales.png và uc08-preview.png; lần ảnh đầu ghế bị đẩy xuống, đã thu gọn danh sách suất và đưa Chọn suất sang bên, ảnh mới thấy ghế cùng giỏ và nút. Tổng tiền luôn nổi bật, chi tiết cuộn dọc. Máy in vật lý chưa kiểm tra, preview/QR có test. Sáng/tối + resize toàn bộ màn sẽ xác minh thêm tại Sprint 7.
+
+## Sprint 3 — Soát vé và tra cứu Nhân viên
+
+Thêm ReadOnlyViews: kết quả soát vé chữ lớn/ký hiệu, thông tin vé hai cột ưu tiên phim/phòng/ghế/suất; các kết quả chưa kiểm tra/ngoài giờ/không tồn tại cũng hiển thị trung thực. Chỉ ánh xạ thông báo BUS đã có, không tự kết luận hợp lệ từ việc tra cứu. Ô mã tự focus, Enter tra cứu; ngày chọn qua JSpinner. Hồ sơ cá nhân chỉ đọc dạng thẻ, giữ model JTable cũ; thư viện phim có ảnh thu nhỏ 2:3, fallback vector, tải poster ở SwingWorker; sơ đồ phòng dùng SeatVisual chung (trạng thái cấu trúc phòng, không giả lập trạng thái bán của suất). Menu Nhân viên đổi nhãn thành Hồ sơ cá nhân/Tra cứu phim/Tra cứu phòng/Soát vé/Bán vé tại quầy, giữ chỉ số điều hướng và tên cửa sổ để không đổi luồng.
+
+Đã chạy sạch 33/33 test: tra cứu/QR, xác nhận một lần, phân quyền, hồ sơ, phim và phòng + design system; thêm kiểm tra 4 kết quả và menu Nhân viên. Đã xem ảnh uc07-confirmed, uc02-staff, uc05-map; bỏ khối lọc trống ở hồ sơ, làm thông tin vé gọn hai cột để thấy trường vận hành. Không sửa test cũ hoặc BUS/DAO/model/config/schema. Artifact incremental đôi lúc báo thiếu class sau cập nhật view, clean build xử lý được; các lượt sau dùng clean. Sáng/tối/toàn bộ modal và DPI sẽ rà tiếp ở Sprint 7.
