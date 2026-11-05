@@ -11,6 +11,7 @@ import javax.swing.*;
 public final class Shell extends JPanel {
     private final JPanel sidebar=new JPanel(new BorderLayout(8,16));
     private final JLabel account;
+    private final JLabel pageTitle;
     public Shell(PhienDangNhap session,JComponent content,JList<String> menu,IntConsumer navigate,String title){
         super(new BorderLayout(0,0));Theme.install();
         sidebar.setBorder(BorderFactory.createEmptyBorder(Theme.s(Theme.XL),Theme.s(Theme.LG),20,Theme.s(Theme.LG)));sidebar.setPreferredSize(new Dimension(Theme.s(236),0));
@@ -25,12 +26,13 @@ public final class Shell extends JPanel {
         JScrollPane navigation=new JScrollPane(menu);navigation.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);sidebar.add(navigation,BorderLayout.CENTER);
         JButton theme=Theme.toggleButton();JButton exit=new JButton("Đăng xuất",new Icons("exit"));exit.addActionListener(e->logout());sidebar.add(Design.stack(theme,exit),BorderLayout.SOUTH);add(sidebar,BorderLayout.WEST);
         JPanel workspace=new JPanel(new BorderLayout());JPanel bar=new JPanel(new BorderLayout(16,0));bar.setBorder(BorderFactory.createEmptyBorder(Theme.s(Theme.LG),Theme.s(Theme.XL),Theme.s(Theme.LG),Theme.s(Theme.XL)));
-        bar.add(Design.text(title,"heading"),BorderLayout.WEST);JTextField search=new Design.SearchField(22,"Tìm chức năng · Ctrl+K");search.setToolTipText("Tìm chức năng được phép · Ctrl+K");search.getAccessibleContext().setAccessibleName("Tìm chức năng");search.setText("");search.setBorder(new Skin.ControlBorder());search.addActionListener(e->{String text=search.getText().trim().toLowerCase();for(int i=0;i<menu.getModel().getSize();i++)if(menu.getModel().getElementAt(i).toLowerCase().contains(text)){menu.setSelectedIndex(i);navigate.accept(i);break;}});bar.add(search,BorderLayout.EAST);
+        pageTitle=Design.text(title,"heading");bar.add(pageTitle,BorderLayout.WEST);JTextField search=new Design.SearchField(22,"Tìm chức năng · Ctrl+K");search.setToolTipText("Tìm chức năng được phép · Ctrl+K");search.getAccessibleContext().setAccessibleName("Tìm chức năng");search.setText("");search.setBorder(new Skin.ControlBorder());search.addActionListener(e->{String text=search.getText().trim().toLowerCase();for(int i=0;i<menu.getModel().getSize();i++)if(menu.getModel().getElementAt(i).toLowerCase().contains(text)){menu.setSelectedIndex(i);navigate.accept(i);break;}});bar.add(search,BorderLayout.EAST);
         JScrollPane pageScroll=new JScrollPane(new AdaptivePage(content));pageScroll.setBorder(BorderFactory.createEmptyBorder());workspace.add(pageScroll,BorderLayout.CENTER);workspace.add(bar,BorderLayout.NORTH);add(workspace,BorderLayout.CENTER);
         getInputMap(WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke(KeyEvent.VK_K,java.awt.event.InputEvent.CTRL_DOWN_MASK),"cinema.search");getActionMap().put("cinema.search",new AbstractAction(){public void actionPerformed(ActionEvent e){search.requestFocusInWindow();}});
         addComponentListener(new ComponentAdapter(){public void componentResized(ComponentEvent e){int width=getWidth()<Theme.s(1120)?Theme.s(190):Theme.s(236);sidebar.setPreferredSize(new Dimension(width,0));revalidate();}});
         Theme.apply(this);
     }
+    public void setPageTitle(String title){pageTitle.setText(title);}
     public static void attach(JFrame frame,PhienDangNhap session,String[] functions,IntConsumer navigate){
         Container old=frame.getContentPane();JList<String> menu=new JList<>(functions);for(int i=0;i<functions.length;i++)if(frame.getTitle().equals(functions[i])||frame.getTitle().equals("Quản lý bán vé")&&functions[i].equals("Bán vé tại quầy")||frame.getTitle().equals("Kiểm tra và xác nhận vé")&&functions[i].equals("Soát vé")||frame.getTitle().equals("Thông tin cá nhân")&&functions[i].equals("Hồ sơ cá nhân"))menu.setSelectedIndex(i);
         frame.setContentPane(new Shell(session,(JComponent)old,menu,navigate,frame.getTitle()));Dimension screen=Toolkit.getDefaultToolkit().getScreenSize();frame.setSize(Math.min(1366,screen.width-40),Math.min(820,screen.height-56));frame.setMinimumSize(new Dimension(960,620));Theme.apply(frame);

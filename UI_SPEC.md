@@ -281,3 +281,7 @@ Giữ nguyên khởi tạo/thứ tự và ý nghĩa cart/id/selected/showId/busy
 ## Bổ sung kiểm chứng Sprint 7
 
 Sidebar có kích thước theo UIScale, nhãn hai dòng ở chế độ gọn. AdaptivePage giữ control có thể truy cập bằng cuộn khi cửa sổ/DPI thiếu diện tích. Các chế độ ngày/tháng/năm/giờ giữ định dạng parser cũ và ô tùy chọn để trống. Xem REDESIGN_REPORT.md để phân biệt tiêu chí đã chạy và tiêu chí cần thử thiết bị/duyệt tay.
+
+## Điều hướng một cửa sổ — cập nhật theo phản hồi người dùng
+
+Một JFrame và một Shell cho mỗi phiên đăng nhập; sidebar/topbar giữ nguyên đối tượng khi chuyển chức năng bằng CardLayout. Không tạo cửa sổ chính mới từ menu. Biểu mẫu/chi tiết/thanh toán vẫn là JDialog. Giữ panel bán vé trong cây component kể cả khi ẩn để bảo toàn state và timer; đóng ứng dụng/đăng xuất gọi requestClose. Các màn khác tải lại khi mở lại để cập nhật danh mục, không tạo lại nếu bấm đúng mục đang mở. Đây là quyết định mới thay giả định giữ cửa sổ chức năng riêng trong lịch sử PROGRESS.md.

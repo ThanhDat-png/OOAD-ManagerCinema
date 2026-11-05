@@ -1,12 +1,12 @@
 # Báo cáo redesign Java Swing
 
-Ngày kiểm chứng: 05/11/2026. Nhánh: ui-redesign. Không push lên GitHub.
+Ngày kiểm chứng: 05/11/2026. Nhánh bàn giao: main, tích hợp từ ui-redesign theo yêu cầu người dùng.
 
 ## 1. Hướng thiết kế
 
 Cinema Workspace dùng nền xanh than, bề mặt phân lớp, điểm nhấn tím iris; sáng/tối giữ cùng cấu trúc. Chọn hướng này để tập trung vào thao tác tại quầy, phân biệt trạng thái và đọc bảng nhanh. Học phân vùng, thẻ, sidebar và mật độ từ đủ 8 ảnh tham khảo; không sao chép nội dung, logo hoặc tài sản ảnh. Đối chiếu SHA-256 cuối kỳ: cả 8 ảnh không đổi; thư mục Reference_UIUX không được add vào Git.
 
-Theme tập trung palette, font Segoe UI/Consolas, 6 cỡ chữ, thang spacing và kích thước. FlatLaf được tinh chỉnh bằng token; icon, ghế và biểu đồ vẽ vector/Graphics2D. Không có hiệu ứng kính hoặc chuyển động nặng. Các cửa sổ chức năng vẫn giữ vòng đời cũ để bảo toàn giao dịch đang xử lý.
+Theme tập trung palette, font Segoe UI/Consolas, 6 cỡ chữ, thang spacing và kích thước. FlatLaf được tinh chỉnh bằng token; icon, ghế và biểu đồ vẽ vector/Graphics2D. Không có hiệu ứng kính hoặc chuyển động nặng. Sau phản hồi thử nghiệm, hệ thống dùng một JFrame và một Shell cho mỗi phiên. Chuyển chức năng bằng CardLayout trong vùng nội dung; panel bán vé được giữ gắn với cửa sổ để bảo toàn giao dịch và timer.
 
 ## 2. Các màn đã thay giao diện
 
@@ -26,11 +26,11 @@ Các chữ “đạt” dưới đây áp dụng cho bằng chứng được li�
 4. **Phim/phòng/lịch — đạt trong môi trường kiểm thử.** Test MySQL và desktop CRUD, phân quyền, ràng buộc hủy/sửa suất và ghế. SchedulePreviewTest kiểm tra dọn phòng và biên thời gian liền kề; preview chỉ gợi ý từ các hàng đang tải, BUS vẫn kiểm tra cuối cùng. Ảnh uc03/04/05, các form sprint7.
 5. **Giá/F&B/nhân viên/đăng nhập — đạt trong môi trường kiểm thử.** Pricing, staff và đăng nhập giữ dữ liệu lịch sử, xác nhận thao tác nguy hiểm, trạng thái khóa/sai thông tin; form có hướng dẫn/lỗi tại trường và cảnh báo hết tồn. Ảnh uc06 và sprint5/login-dark/light.
 6. **Báo cáo — đạt trong môi trường kiểm thử.** 23 kiểm thử liên quan ở sprint, kiểm thử desktop chạy đủ loại; snapshot dữ liệu trước/sau không đổi, Nhân viên bị từ chối. KPI/chart lấy từ model bảng hiện có. Ảnh uc09-time/film/staff/tickets/stock.
-7. **Đồng nhất — đạt một phần.** Đã mở thật 2 trang chủ và 11 cửa sổ chức năng ở 1366×768, đổi sáng/tối, kiểm tra model và chụp ảnh; mở form nhân viên/phim/tạo lịch trong hai theme. Có kiểm thử palette, tablet, date/time picker và scale 150%. Chưa duyệt tay hết mọi nhánh hộp thoại bằng chuột/Tab, chưa kiểm tra nhiều màn hình có DPI khác nhau. Không tuyên bố đã nghiệm thu đầy đủ các trường hợp đó.
+7. **Đồng nhất — đạt một phần.** Đã mở thật 2 trang chủ và 11 màn chức năng ở 1366×768, đổi sáng/tối, kiểm tra model và chụp ảnh; mở form nhân viên/phim/tạo lịch trong hai theme. Có kiểm thử palette, tablet, date/time picker và scale 150%. Chưa duyệt tay hết mọi nhánh hộp thoại bằng chuột/Tab, chưa kiểm tra nhiều màn hình có DPI khác nhau. Không tuyên bố đã nghiệm thu đầy đủ các trường hợp đó.
 
 ### Kết quả kiểm thử cuối
 
-Đã chạy bằng POM gốc: mvn clean test -Dcinema.mysql.tests=true — 161/161 đạt, 0 lỗi, 0 bỏ qua (02:26 phút). Sau đó chạy lại 5/5 kiểm thử cửa sổ/date picker/design system ở FlatLaf scale 150% đạt. Không còn cảnh báo RowSorter trong lượt cuối. Log cục bộ: work/redesign-final-all.log và work/redesign-s7-dpi-final.log trong workspace làm việc.
+Bản điều hướng một cửa sổ: POM gốc, mvn clean test -Dcinema.mysql.tests=true — 162/162 đạt, 0 lỗi, 0 bỏ qua (02:30 phút), log workspace work/single-window-all.log. Lượt DPI 150% trước đó của Sprint 7 đạt 5/5; chưa chạy lại lượt DPI sau điều chỉnh điều hướng. Không còn cảnh báo RowSorter trong lượt cuối.
 
 Kiểm thử mở JFrame/JDialog thật trên Windows; ảnh bằng Window.paint/BufferedImage từ các cửa sổ này. Viền/titlebar do Windows vẽ không nằm trong ảnh client Swing. Không dùng ảnh mockup để coi là bằng chứng chạy ứng dụng.
 
@@ -40,7 +40,7 @@ Git đối chiếu với cfd13ba: không sửa controller/BUS, DAO, model, db, s
 
 Những thay đổi điều phối ở view cần biết:
 
-- Shell gọi lại callback mở màn cũ; đăng xuất hỏi xác nhận và tôn trọng requestClose của bán vé.
+- CinemaWindow điều hướng trong một cửa sổ, giữ Shell/sidebar/topbar. Chỉ các biểu mẫu/chi tiết/thanh toán vẫn dùng JDialog. Đóng cửa sổ và đăng xuất đều tôn trọng requestClose của bán vé, kể cả khi bán vé đang ẩn.
 - SalesViews đồng bộ bảng trình bày với JComboBox/JList/JTextArea cũ, giữ nguồn binding nội bộ; không thêm truy vấn.
 - BanVePanel giữ cart/id/selected/showId/busy/paymentOpen/needsCheck, run/SwingWorker, canLeave/requestClose/recover, timer và thứ tự nghiệp vụ. Chỉ bố cục, renderer, Enter tìm kiếm và ngày giờ thay đổi.
 - DateInputs ghi định dạng văn bản cũ về ô nhập; parser cuối vẫn LocalDate/LocalTime/YearMonth như trước, giữ trường hợp để trống.
@@ -54,7 +54,7 @@ Chỉ thêm com.formdev:flatlaf:3.7.2 qua Maven, để có LAF sáng/tối, tr�
 
 ## 6. Giả định và khác biệt có chủ đích
 
-- Giữ cửa sổ chức năng riêng với cùng shell thay vì tái tạo màn bên trong một cửa sổ; tránh mất giỏ, timer hoặc hook đóng cửa sổ cũ.
+- Theo phản hồi của người dùng: một cửa sổ chính, sidebar/topbar cố định. Màn bán vé được cache nguyên đối tượng trong CardLayout, không removeNotify khi chuyển đi, timer giữ nguyên. Các màn quản lý/tra cứu được tạo lại khi quay lại để tải danh mục mới bằng cơ chế SwingWorker sẵn có; bấm lại mục đang mở không tạo lại.
 - “Đang chọn” là lựa chọn tại UI; “Đang giữ” là trạng thái server; ghế giao dịch hiện tại có dấu riêng, không gộp thành trống.
 - Sơ đồ cấu trúc phòng chỉ biết Trống/Không khả dụng; trạng thái giữ/bán thuộc một suất chỉ thể hiện ở quầy bán vé.
 - Tồn kho chỉ đếm sản phẩm còn/hết hàng, không cộng lẫn ly/hộp/chai. Biểu đồ doanh thu giữ thứ tự hàng và ghi rõ khi chỉ vẽ 6 dòng đầu; bảng bên dưới đầy đủ.
@@ -84,4 +84,8 @@ Kiểm thử MySQL cần database kiểm thử có danh mục demo và cấu hì
 
 Cũng có thể chạy scripts/Run-Desktop.ps1 theo hướng dẫn cũ. Nút “Giao diện sáng/tối” nằm ở đăng nhập và cuối sidebar, đổi theme cho các cửa sổ đang mở. Enter tìm/đăng nhập theo màn; Ctrl+K đưa focus vào tìm chức năng. Giữ nguyên tên gọi và quyền truy cập nghiệp vụ.
 
-Ảnh bằng chứng được sinh lại bằng các test desktop, LoginLayoutTest và RedesignReviewMySQLTest trong target; không commit artifact build. Hai tài liệu nền là UI_SPEC.md và PROGRESS.md. Mỗi sprint có commit riêng trên ui-redesign; nhánh chính không bị commit và chưa push.
+Ảnh bằng chứng được sinh lại bằng các test desktop, LoginLayoutTest và RedesignReviewMySQLTest trong target; không commit artifact build. Hai tài liệu nền là UI_SPEC.md và PROGRESS.md. Mỗi sprint có commit riêng trên ui-redesign; người dùng đã yêu cầu tích hợp toàn bộ vào main và push lên GitHub.
+
+## Điều chỉnh sau khi người dùng thử — điều hướng một cửa sổ
+
+Không còn tạo JFrame cho mỗi chức năng. RedesignReviewMySQLTest đã đổi kỳ vọng kiến trúc sang đúng một frame và cùng đối tượng menu ở mọi màn, không giảm các kiểm tra nội dung/theme. SingleWindowNavigationMySQLTest giữ ghế thật trên fixture, chuyển sang hồ sơ rồi quay lại và xác nhận cùng Shell/panel bán vé, timer vẫn chạy, giao dịch/ghế/hạn giữ trong CSDL không đổi. BanVePanel/BUS/DAO/model/config không sửa. Phần điều chỉnh này được đưa vào lần bàn giao main theo yêu cầu người dùng. Kết quả lượt kiểm thử cuối xem PROGRESS.md.

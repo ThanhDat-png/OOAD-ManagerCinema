@@ -1,10 +1,10 @@
 package cinema.view;
 
 import cinema.view.ui.*;
-
 import cinema.controller.auth.PhienDangNhap;
 import cinema.model.VaiTro;
-import java.awt.BorderLayout;
+import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 
 public final class CinemaWindow {
@@ -12,115 +12,107 @@ public final class CinemaWindow {
 
     public static void open(PhienDangNhap session) {
         Theme.install();
-        JFrame frame = new JFrame("Quản lý rạp chiếu phim — " + session.vaiTro().getTen());
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        new Workspace(session).show();
+    }
 
-        String[] functions = session.vaiTro() == VaiTro.ADMIN
-                ? new String[]{"Quản lý nhân viên", "Quản lý phim", "Quản lý lịch chiếu",
-                    "Quản lý phòng chiếu", "Quản lý giá vé và F&B", "Báo cáo và thống kê"}
-                : new String[]{"Hồ sơ cá nhân", "Tra cứu phim", "Tra cứu phòng chiếu",
-                    "Soát vé", "Bán vé tại quầy"};
-        JList<String> menu = new JList<>(functions);
-        menu.setSelectedIndex(0);
+    /** A session owns one frame and one shell; changing pages never closes a sale. */
+    private static final class Workspace {
+        private final PhienDangNhap session;
+        private final JFrame frame;
+        private final String[] functions;
+        private final JList<String> menu;
+        private final CardLayout layout=new CardLayout();
+        private final JPanel pages=new JPanel(layout);
+        private final Shell shell;
+        private JPanel current;
+        private BanVePanel sales;
+        private int selected=-1;
 
-        JButton open = new JButton("Mở chức năng");
-        open.addActionListener(event -> {
-            if (menu.getSelectedIndex() == 1) {
-                JFrame films = new JFrame(session.vaiTro() == VaiTro.ADMIN ? "Quản lý phim" : "Tra cứu phim");
-                films.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                films.add(new PhimPanel(session));
-                films.setSize(1200, 620);
-                films.setLocationRelativeTo(frame);
-                Shell.attach(films,session,functions,index -> {menu.setSelectedIndex(index);open.doClick();});
-                films.setVisible(true);
-                return;
-            }
-            if (session.vaiTro() == VaiTro.ADMIN && menu.getSelectedIndex() == 2) {
-                try {
-                    JFrame schedule = new JFrame("Quản lý lịch chiếu");
-                    schedule.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                    schedule.add(new LichChieuPanel(session));
-                    schedule.setSize(1280, 620);
-                    schedule.setLocationRelativeTo(frame);
-                    Shell.attach(schedule,session,functions,index -> {menu.setSelectedIndex(index);open.doClick();});
-                schedule.setVisible(true);
-                } catch (IllegalArgumentException e) {
-                    JOptionPane.showMessageDialog(frame, e.getMessage());
+        Workspace(PhienDangNhap session) {
+            this.session=session;
+            boolean admin=session.vaiTro()==VaiTro.ADMIN;
+            functions=admin
+                    ?new String[]{"Quản lý nhân viên","Quản lý phim","Quản lý lịch chiếu",
+                        "Quản lý phòng chiếu","Quản lý giá vé và F&B","Báo cáo và thống kê"}
+                    :new String[]{"Hồ sơ cá nhân","Tra cứu phim","Tra cứu phòng chiếu",
+                        "Soát vé","Bán vé tại quầy"};
+            frame=new JFrame("Quản lý rạp chiếu phim — "+session.vaiTro().getTen());
+            menu=new JList<>(functions);
+            menu.setSelectedIndex(0);
+            JButton open=new JButton("Mở chức năng");
+            open.addActionListener(event->navigate(menu.getSelectedIndex()));
+            pages.add(Shell.home(session,functions,this::navigate,open),"home");
+            shell=new Shell(session,pages,menu,this::navigate,"Điều hướng chức năng");
+            frame.setContentPane(shell);
+            frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+            frame.addWindowListener(new WindowAdapter() {
+                @Override public void windowClosing(WindowEvent event) {
+                    if(sales!=null&&!sales.requestClose())return;
+                    frame.dispose();
                 }
+            });
+            Dimension screen=Toolkit.getDefaultToolkit().getScreenSize();
+            frame.setSize(Math.min(1366,screen.width-40),Math.min(820,screen.height-56));
+            frame.setMinimumSize(new Dimension(960,620));
+            frame.setLocationRelativeTo(null);
+        }
+
+        void show() { frame.setVisible(true); }
+
+        private void navigate(int index) {
+            if(index<0||index>=functions.length)return;
+            if(index==selected){menu.setSelectedIndex(index);return;}
+            JPanel next;
+            try { next=page(index); }
+            catch(IllegalArgumentException error) {
+                menu.setSelectedIndex(selected<0?0:selected);
+                JOptionPane.showMessageDialog(frame,error.getMessage());
                 return;
             }
-            if ((session.vaiTro() == VaiTro.ADMIN && menu.getSelectedIndex() == 3)
-                    || (session.vaiTro() == VaiTro.NHAN_VIEN && menu.getSelectedIndex() == 2)) {
-                JFrame rooms = new JFrame(session.vaiTro() == VaiTro.ADMIN ? "Quản lý phòng chiếu" : "Tra cứu phòng chiếu");
-                rooms.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                rooms.add(new PhongChieuPanel(session));
-                rooms.setSize(1200, 620);
-                rooms.setLocationRelativeTo(frame);
-                Shell.attach(rooms,session,functions,index -> {menu.setSelectedIndex(index);open.doClick();});
-                rooms.setVisible(true);
-                return;
-            }
-            if (session.vaiTro() == VaiTro.ADMIN && menu.getSelectedIndex() == 4) {
-                JFrame pricing = new JFrame("Quản lý giá vé và F&B");
-                pricing.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                pricing.add(new GiaVeFnBPanel(session));
-                pricing.setSize(1280, 620);
-                pricing.setLocationRelativeTo(frame);
-                Shell.attach(pricing,session,functions,index -> {menu.setSelectedIndex(index);open.doClick();});
-                pricing.setVisible(true);
-                return;
-            }
-            if (session.vaiTro() == VaiTro.NHAN_VIEN && menu.getSelectedIndex() == 3) {
-                try {
-                    KiemTraVePanel panel = new KiemTraVePanel(session);
-                    JFrame admission = new JFrame("Kiểm tra và xác nhận vé");
-                    admission.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                    admission.add(panel);
-                    admission.setSize(1280, 680);
-                    admission.setLocationRelativeTo(frame);
-                    Shell.attach(admission,session,functions,index -> {menu.setSelectedIndex(index);open.doClick();});
-                admission.setVisible(true);
-                } catch (IllegalArgumentException e) {
-                    JOptionPane.showMessageDialog(frame, e.getMessage());
-                }
-                return;
-            }
-            if (session.vaiTro() == VaiTro.NHAN_VIEN && menu.getSelectedIndex() == 4) {
-                try {
-                    BanVePanel panel=new BanVePanel(session); JFrame sales=new JFrame("Quản lý bán vé");
-                    sales.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-                    sales.addWindowListener(new java.awt.event.WindowAdapter() {
-                        @Override public void windowClosing(java.awt.event.WindowEvent event) { if(panel.requestClose()) sales.dispose(); }
-                    });
-                    sales.add(panel); sales.setSize(1320,760); sales.setLocationRelativeTo(frame); Shell.attach(sales,session,functions,index -> {menu.setSelectedIndex(index);open.doClick();});
-                sales.setVisible(true);
-                } catch(IllegalArgumentException e) { JOptionPane.showMessageDialog(frame,e.getMessage()); }
-                return;
-            }
-            if (session.vaiTro() == VaiTro.ADMIN && menu.getSelectedIndex() == 5) {
-                try {
-                    JFrame reports=new JFrame("Báo cáo và thống kê");reports.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                    reports.add(new BaoCaoPanel(session));reports.setSize(1380,760);reports.setLocationRelativeTo(frame);Shell.attach(reports,session,functions,index -> {menu.setSelectedIndex(index);open.doClick();});
-                reports.setVisible(true);
-                } catch(IllegalArgumentException e){JOptionPane.showMessageDialog(frame,e.getMessage());}
-                return;
-            }
-            if (menu.getSelectedIndex() != 0) {
-                JOptionPane.showMessageDialog(frame, "Chức năng đang được hoàn thiện.");
-                return;
-            }
-            JFrame staff = new JFrame(session.vaiTro() == VaiTro.ADMIN ? "Quản lý nhân viên" : "Thông tin cá nhân");
-            staff.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            staff.add(new NhanVienPanel(session));
-            staff.setSize(1180, 520);
-            staff.setLocationRelativeTo(frame);
-            Shell.attach(staff,session,functions,index -> {menu.setSelectedIndex(index);open.doClick();});
-                staff.setVisible(true);
-        });
-        frame.setContentPane(new Shell(session,Shell.home(session,functions,index -> {menu.setSelectedIndex(index);open.doClick();},open),menu,index -> {menu.setSelectedIndex(index);open.doClick();},"Điều hướng chức năng"));
-        frame.setSize(1320, 800);
-        frame.setMinimumSize(new java.awt.Dimension(960,620));
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
+            // Reopen read/manage screens to refresh their existing catalogue queries.
+            // Keep the sale attached even while hidden: its timer/state/lifecycle stay intact.
+            if(current!=null&&current!=sales)pages.remove(current);
+            String key=next==sales?"sales":"current";
+            if(next.getParent()!=pages)pages.add(next,key);
+            layout.show(pages,key);
+            current=next;
+            selected=index;
+            menu.setSelectedIndex(index);
+            shell.setPageTitle(functions[index]);
+            shell.putClientProperty("cinema.activePage",next);
+            frame.setTitle(windowTitle(index));
+            pages.revalidate();
+            pages.repaint();
+        }
+
+        private JPanel page(int index) {
+            if(session.vaiTro()==VaiTro.ADMIN)return switch(index) {
+                case 0->new NhanVienPanel(session);
+                case 1->new PhimPanel(session);
+                case 2->new LichChieuPanel(session);
+                case 3->new PhongChieuPanel(session);
+                case 4->new GiaVeFnBPanel(session);
+                case 5->new BaoCaoPanel(session);
+                default->throw new IllegalArgumentException("Chức năng không hợp lệ");
+            };
+            return switch(index) {
+                case 0->new NhanVienPanel(session);
+                case 1->new PhimPanel(session);
+                case 2->new PhongChieuPanel(session);
+                case 3->new KiemTraVePanel(session);
+                case 4->{if(sales==null)sales=new BanVePanel(session);yield sales;}
+                default->throw new IllegalArgumentException("Chức năng không hợp lệ");
+            };
+        }
+
+        private String windowTitle(int index) {
+            if(session.vaiTro()==VaiTro.ADMIN)return functions[index];
+            return switch(index) {
+                case 0->"Thông tin cá nhân";
+                case 3->"Kiểm tra và xác nhận vé";
+                case 4->"Quản lý bán vé";
+                default->functions[index];
+            };
+        }
     }
 }

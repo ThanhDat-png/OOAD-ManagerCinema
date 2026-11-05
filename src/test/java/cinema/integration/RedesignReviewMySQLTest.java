@@ -31,7 +31,8 @@ class RedesignReviewMySQLTest {
             for(int i=0;i<count;i++){
                 final int index=i;
                 SwingUtilities.invokeAndWait(()->{menu.setSelectedIndex(index);button(home,"Mở chức năng").doClick();});
-                JFrame child=frames().stream().filter(f->f!=home).findFirst().orElseThrow();
+                assertEquals(1,frames().size(),"Điều hướng không được tạo JFrame mới");
+                JFrame child=home;assertSame(menu,Design.all(child).stream().filter(c->c instanceof JList<?> l&&Boolean.TRUE.equals(l.getClientProperty("cinema.nav"))).findFirst().orElseThrow());
                 await(()->Design.all(child).stream().noneMatch(c->c instanceof JLabel l&&l.getText()!=null&&l.getText().startsWith("Đang tải")));
                 SwingUtilities.invokeAndWait(()->review(child,user+"-"+index));
                 if(session.vaiTro()==VaiTro.ADMIN&&i<5){
@@ -39,7 +40,7 @@ class RedesignReviewMySQLTest {
                     JButton add=Design.all(child).stream().filter(c->c instanceof JButton b&&action.equals(b.getText())&&b.isEnabled()).map(c->(JButton)c).findFirst().orElse(null);
                     if(add!=null&&!action.isBlank()){SwingUtilities.invokeLater(add::doClick);await(()->java.util.Arrays.stream(Window.getWindows()).anyMatch(w->w instanceof JDialog&&w.isShowing()));SwingUtilities.invokeAndWait(()->{for(Window w:Window.getWindows())if(w instanceof JDialog dialog&&w.isShowing()){capture(dialog,user+"-form-"+index+"-dark");Theme.toggle();capture(dialog,user+"-form-"+index+"-light");Theme.toggle();dialog.dispose();}});}
                 }
-                SwingUtilities.invokeAndWait(child::dispose);
+
             }
             SwingUtilities.invokeAndWait(home::dispose);
         }
