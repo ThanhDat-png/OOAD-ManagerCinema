@@ -6,3 +6,7 @@
 /config/calendar.properties
 /config/admission.properties
 /config/sales.properties
+*.class
+/hs_err_pid*.log
+.DS_Store
+Thumbs.db
