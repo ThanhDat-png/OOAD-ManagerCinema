@@ -67,7 +67,7 @@ SHA-256: b14dc19699f0c1b01a66f682c01795d08e1d093028a448e0cafff1e78c96330f
 
 - Giai đoạn 0: xong khảo sát ảnh/code/baseline, chốt hướng, tạo hai tài liệu. Chưa sửa code giao diện tại mốc này.
 - Sprint 1: đã hoàn tất nền tảng FlatLaf và kiểm chứng; ghi nhận chi tiết bên dưới.
-- Sprint 2: chưa bắt đầu.
+- Sprint 2: đã kiểm chứng bán vé và tra cứu giao dịch; xem ghi nhận bên dưới.
 - Sprint 3: chưa bắt đầu.
 - Sprint 4: chưa bắt đầu.
 - Sprint 5: chưa bắt đầu.
@@ -110,3 +110,9 @@ FlatLaf 3.7.2 (com.formdev:flatlaf qua Maven): nền LAF sáng/tối, combo/spin
 Thêm Theme (toàn bộ token), Tokens facade, Skin/Icons/Design/Shell; page chrome, sidebar theo vai trò, người dùng, đăng xuất, tìm điều hướng, đổi sáng/tối trên mọi cửa sổ. Theme cập nhật cây component lúc chạy; bảng có renderer/số/nhãn trạng thái, form dài dùng GridBag và cuộn, toolbar wrap và focus. Java/Maven giữ nguyên. Đã kiểm tra AA hai palette qua 3 test design system. Trước FlatLaf: đủ 147/147 đạt; sau FlatLaf build sạch và 141 test đầu đều đạt, VM thoát ở test đăng nhập vì thanh titlebar FlatLaf thêm nút close vào cây Swing. Đã giữ titlebar Windows ngoài cây Swing (không sửa test), chạy lại 6/6 test đăng nhập + design system đều đạt. Sẽ chạy bộ đầy đủ trên revision cuối ở Sprint 7. Có ảnh màn Admin thật target/uc02-admin.png và theme dark/light/tablet target/ui-redesign/sprint1; đã xem để chỉnh title, nền phân lớp, header bảng. Lỗi incremental artifact sau các lần ngắt được giải quyết bằng clean; không đổi lớp nghiệp vụ.
 
 Điều phối UI: CinemaWindow giữ open cùng các nhánh/nút cũ; Shell gọi lại các callback đó. Đăng xuất hỏi xác nhận và tôn trọng requestClose trước đóng cửa sổ. Không thêm API, không đổi BUS/DAO/model/config/SQL, không đổi test cũ. Chưa nghiệm thu phần chuyên biệt từng màn; tiếp tục Sprint 2.
+
+## Sprint 2 — Bán vé và kiểm tra giao dịch
+
+Thêm SalesViews (bảng suất/giao dịch đồng bộ model chọn cũ, chi tiết có cấu trúc), SeatVisual (4 trạng thái + đánh dấu giao dịch hiện tại, ký hiệu, loại ghế, chú giải đồ họa/màn hình), DateInputs (JSpinner trong popup ghi lại ô nhập cũ). BanVePanel chỉ đổi cây component, renderer và bố cục thanh toán; giữ nguyên cart/id/selected/showId/busy/paymentOpen/needsCheck, thứ tự run/hold/quote/payment/issue/recover/cancel, timer 5000ms, canLeave/requestClose. Các JTextArea/JComboBox/JList cũ giữ làm nguồn binding nội bộ, không còn là trình bày chính. Không thêm truy vấn DB; đọc ảnh/nghiệp vụ vẫn theo SwingWorker hiện có.
+
+Đã chạy 28/28: SalesMySQLTest 18, SalesDesktopMySQLTest 2, InVeTest 2, DesignSystemTest 3, SalesPresentationTest 3. Kiểm chứng thực tế bán từ chọn/giữ/tính tiền đến thanh toán/preview QR, phục hồi giữ/đóng thanh toán, lịch sử và chống trùng; các test cũ không sửa. Ba test mới xác minh summary giữ đủ trường, selection adapter và ghế không đổi availability. Đã xem target/uc08-sales.png và uc08-preview.png; lần ảnh đầu ghế bị đẩy xuống, đã thu gọn danh sách suất và đưa Chọn suất sang bên, ảnh mới thấy ghế cùng giỏ và nút. Tổng tiền luôn nổi bật, chi tiết cuộn dọc. Máy in vật lý chưa kiểm tra, preview/QR có test. Sáng/tối + resize toàn bộ màn sẽ xác minh thêm tại Sprint 7.

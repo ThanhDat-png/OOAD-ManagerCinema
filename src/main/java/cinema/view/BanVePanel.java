@@ -40,20 +40,17 @@ public final class BanVePanel extends JPanel {
     public BanVePanel(PhienDangNhap session) {
         super(new BorderLayout(8,8)); service=new BanVeBUS(session,new BanVeDAO()); service.employeeId();
         setBorder(BorderFactory.createEmptyBorder(10,10,10,10)); seats.setLayout(new BoxLayout(seats,BoxLayout.Y_AXIS));
-        JPanel selling=new JPanel(new BorderLayout(6,6)),top=new JPanel(new GridLayout(0,1));
-        JPanel filters=new JPanel(); filters.add(new JLabel("Phim")); filters.add(film); filters.add(new JLabel("Ngày yyyy-MM-dd")); filters.add(date);
-        filters.add(new JLabel("Giờ HH:mm")); filters.add(time); button(filters,"Tìm suất",this::search); top.add(filters);
-        JPanel schedule=new JPanel(); shows.setPreferredSize(new Dimension(750,28)); schedule.add(shows); button(schedule,"Chọn suất",this::choose); top.add(schedule);
-        top.add(identity); top.add(new JLabel("Giữ ghế "+service.holdMinutes()+" phút, tối đa đến giờ bắt đầu. Đang thanh toán sẽ tiếp tục giữ ghế."));
-        selling.add(top,BorderLayout.NORTH);
-        cartText.setEditable(false); cartText.setLineWrap(true); cartText.setWrapStyleWord(true);
-        JSplitPane split=new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,new JScrollPane(seats),new JScrollPane(cartText)); split.setResizeWeight(.6); selling.add(split);
-        JPanel actions=new JPanel(new GridLayout(2,5,4,4)); button(actions,"Kiểm tra mã hiện tại",this::recover); button(actions,"Cập nhật ghế",this::reload); button(actions,"Giữ ghế / đổi ghế",this::hold);
-        button(actions,"Tính tiền",()->{if(savedSelection())run(()->service.quote(id),this::display);});
-        button(actions,"Thanh toán / tiếp tục",this::payment);
-        button(actions,"Hủy giao dịch",this::cancel);
-        button(actions,"Phát hành / in lại",()->run(()->service.issue(id),this::preview));
-        button(actions,"Giao dịch mới",this::newTransaction); selling.add(actions,BorderLayout.SOUTH);
+
+        JPanel selling=new JPanel(new BorderLayout(Theme.MD,Theme.MD));
+        JPanel top=Design.stack(identity,Design.text("01 Suất chiếu   /   02 Chọn ghế   /   03 Giữ ghế   /   04 Tính tiền   /   05 Thanh toán   /   06 Phát hành","subtitle"));selling.add(top,BorderLayout.NORTH);
+        JPanel filters=new JPanel(new Design.Wrap());filters.add(SalesViews.field("Tên phim",film));filters.add(SalesViews.field("Ngày chiếu",date));filters.add(SalesViews.field("Giờ chiếu",time));button(filters,"Tìm suất",this::search);
+        JPanel schedule=new JPanel(new BorderLayout(Theme.SM,Theme.SM));schedule.add(new SalesViews.Shows(shows,this::choose));JPanel chooseAction=new JPanel(new FlowLayout(FlowLayout.RIGHT));button(chooseAction,"Chọn suất",this::choose);schedule.add(chooseAction,BorderLayout.EAST);
+        JPanel searchArea=new JPanel(new BorderLayout(Theme.SM,Theme.SM));searchArea.add(filters,BorderLayout.NORTH);searchArea.add(schedule);
+        JPanel main=new JPanel(new BorderLayout(Theme.SM,Theme.SM));main.add(searchArea,BorderLayout.NORTH);main.add(new JScrollPane(seats));
+        cartText.setEditable(false);cartText.setLineWrap(true);cartText.setWrapStyleWord(true);
+        JSplitPane split=new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,main,new SalesViews.Details(cartText,"Tóm tắt giao dịch"));split.setResizeWeight(.65);split.setDividerLocation(.65);selling.add(split);
+        JPanel actions=new JPanel(new GridLayout(2,4,Theme.SM,Theme.SM));button(actions,"Giữ ghế / đổi ghế",this::hold);button(actions,"Tính tiền",()->{if(savedSelection())run(()->service.quote(id),this::display);});button(actions,"Thanh toán / tiếp tục",this::payment);button(actions,"Phát hành / in lại",()->run(()->service.issue(id),this::preview));button(actions,"Kiểm tra mã hiện tại",this::recover);button(actions,"Cập nhật ghế",this::reload);button(actions,"Hủy giao dịch",this::cancel);button(actions,"Giao dịch mới",this::newTransaction);selling.add(actions,BorderLayout.SOUTH);
+        for(JTextField field:List.of(film,date,time))field.addActionListener(event->{if(!busy)search();});DateInputs.attach(date,false,true);DateInputs.attach(time,true,true);DateInputs.attach(from,false,true);DateInputs.attach(to,false,true);
         tabs.addTab("Bán vé",selling); tabs.addTab("Kiểm tra giao dịch",historyPanel()); add(tabs); add(message,BorderLayout.SOUTH);
         refresh=new javax.swing.Timer(5000,event->{if(!busy && !paymentOpen && tabs.getSelectedIndex()==0 && showId!=null) reload();});
         identity(); search();
@@ -79,7 +76,7 @@ public final class BanVePanel extends JPanel {
             String key=history.getSelectedValue().giaoDich().maGiaoDich(); inspected=null;
             run(()->new Detail(service.inspect(key),service.savedTickets(key)),detail->{inspected=detail.cart(); historyText.setText(description(inspected)+"\nVé đã lưu:\n"+detail.tickets().stream().map(v->v.ve().maVe()+" · "+v.ve().trangThai()).reduce("",(a,b)->a+b+"\n"));});
         }});
-        historyText.setEditable(false); JSplitPane split=new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,new JScrollPane(history),new JScrollPane(historyText)); split.setResizeWeight(.45); result.add(split);
+        historyText.setEditable(false); JSplitPane split=new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,new SalesViews.Transactions(history),new SalesViews.Details(historyText,"Chi tiết giao dịch")); split.setResizeWeight(.45); result.add(split);
         JPanel actions=new JPanel(); button(actions,"Tiếp tục giao dịch đã chọn",()->{
             if(inspected==null) {error(new IllegalArgumentException("Vui lòng chọn giao dịch"));return;}
             if(!inspected.giaoDich().maNV().equalsIgnoreCase(service.employeeId())) {error(new IllegalArgumentException("Chỉ nhân viên tạo được tiếp tục giao dịch"));return;}
@@ -122,16 +119,16 @@ public final class BanVePanel extends JPanel {
     private void renderSeats(List<GheSuatChieu> rows) {
         seats.removeAll(); boolean editable=cart==null || "Chờ thanh toán".equals(cart.giaoDich().trangThai());
         Set<Integer> selectable=new HashSet<>();
-        JLabel screen=new JLabel("MÀN HÌNH — Xanh lá: trống · Vàng: đang giữ · Đỏ: đã bán · Xám: không khả dụng");screen.setAlignmentX(Component.LEFT_ALIGNMENT);seats.add(screen);
+        JComponent screen=SeatVisual.screen();screen.setAlignmentX(Component.LEFT_ALIGNMENT);seats.add(screen);JPanel legend=SeatVisual.legend();legend.setAlignmentX(Component.LEFT_ALIGNMENT);seats.add(legend);
         Map<String,JPanel> rowsByName=new LinkedHashMap<>();
         for(var row:rows) {
             var g=row.ghe(); boolean own=id.equals(row.maGiaoDich());
             boolean free="Sẵn sàng sử dụng".equals(g.trangThai()) && ("Trống".equals(row.trangThai()) || own && "Đang giữ".equals(row.trangThai()));
             if(free) selectable.add(g.maGhe());
             String state=!"Sẵn sàng sử dụng".equals(g.trangThai())?"Không khả dụng":row.trangThai();
-            JPanel line=rowsByName.computeIfAbsent(g.hangGhe(),name->{JPanel panel=new JPanel(new FlowLayout(FlowLayout.LEFT,6,6));panel.setAlignmentX(Component.LEFT_ALIGNMENT);panel.setMaximumSize(new Dimension(Integer.MAX_VALUE,60));panel.add(new JLabel("Hàng "+name));seats.add(panel);return panel;});
+            JPanel line=rowsByName.computeIfAbsent(g.hangGhe(),name->{JPanel panel=new JPanel(new FlowLayout(FlowLayout.LEFT,6,6));panel.setAlignmentX(Component.LEFT_ALIGNMENT);panel.setMaximumSize(new Dimension(Integer.MAX_VALUE,Theme.s(100)));panel.add(new JLabel("Hàng "+name));seats.add(panel);return panel;});
             JToggleButton chair=new JToggleButton(g.hangGhe()+g.soGhe(),selected.contains(g.maGhe()));chair.setPreferredSize(new Dimension(82,42));
-            chair.setBackground(switch(state){case "Trống"->new Color(176,222,181);case "Đang giữ"->new Color(247,221,134);case "Đã bán"->new Color(233,163,163);default->Color.LIGHT_GRAY;});
+            SeatVisual.install(chair,state,g.loaiGhe().tenLoaiGhe(),own);
             chair.putClientProperty("seatId",g.maGhe()); chair.setEnabled(editable && free); chair.setToolTipText(g.loaiGhe().tenLoaiGhe()+" · "+state+(own?" · Giao dịch này":""));
             chair.addActionListener(event->{if(chair.isSelected()) selected.add(g.maGhe());else selected.remove(g.maGhe());message.setText("Bấm Giữ ghế / đổi ghế để xác nhận lựa chọn trước khi tính tiền/thanh toán");}); line.add(chair);
         }
@@ -157,8 +154,8 @@ public final class BanVePanel extends JPanel {
     }
     private void paymentDialog() {
         paymentOpen=true; JDialog dialog=new JDialog(SwingUtilities.getWindowAncestor(this),"Xác nhận thanh toán tại quầy",Dialog.ModalityType.APPLICATION_MODAL);
-        JPanel content=new JPanel(new GridLayout(0,1,8,8));content.setBorder(BorderFactory.createEmptyBorder(14,14,14,14));
-        content.add(new JLabel("Giao dịch "+id+" · Tổng tiền "+cart.giaoDich().tongTien().toPlainString()+" VND"));
+        JPanel content=Design.stack();content.setBorder(BorderFactory.createEmptyBorder(Theme.XL,Theme.XL,Theme.XL,Theme.XL));
+        content.add(Design.text("Xác nhận khoản đã nhận tại quầy","heading"));content.add(new JLabel("Giao dịch "+id));content.add(Design.text(cart.giaoDich().tongTien().toPlainString()+" VND","title"));
         JComboBox<String> method=new JComboBox<>();method.addItem("Chọn phương thức");BanVeBUS.PHUONG_THUC.forEach(method::addItem);content.add(method);
         JTextField amount=new JTextField(cart.giaoDich().tongTien().toPlainString());content.add(new JLabel("Số tiền đã nhận / xác nhận"));content.add(amount);
         JCheckBox received=new JCheckBox("Đã nhận đủ tiền hoặc đã kiểm tra thanh toán thành công tại quầy");content.add(received);
@@ -194,7 +191,7 @@ public final class BanVePanel extends JPanel {
         return true;
     }
     private void display(BanVeDAO.GioHang value) {cart=value;needsCheck=false;id=value.giaoDich().maGiaoDich();identity();cartText.setText(description(value));
-        if(!"Chờ thanh toán".equals(value.giaoDich().trangThai()))for(Component row:seats.getComponents())if(row instanceof Container container)for(Component chair:container.getComponents())if(chair instanceof JToggleButton button){button.setEnabled(false);Object key=button.getClientProperty("seatId");if(value.ghe().stream().anyMatch(g->Objects.equals(key,g.ghe().maGhe()) && "Đã bán".equals(g.trangThai()))){button.setSelected(false);button.setBackground(new Color(233,163,163));button.setToolTipText("Đã bán · Giao dịch này");}}}
+        if(!"Chờ thanh toán".equals(value.giaoDich().trangThai()))for(Component row:seats.getComponents())if(row instanceof Container container)for(Component chair:container.getComponents())if(chair instanceof JToggleButton button){button.setEnabled(false);Object key=button.getClientProperty("seatId");if(value.ghe().stream().anyMatch(g->Objects.equals(key,g.ghe().maGhe()) && "Đã bán".equals(g.trangThai()))){button.setSelected(false);SeatVisual.state(button,"Đã bán");button.setToolTipText("Đã bán · Giao dịch này");}}}
     private void identity() {identity.setText("Mã giao dịch hiện tại: "+id+" — Lưu mã này để tra cứu nếu mất kết nối.");}
     private static String description(BanVeDAO.GioHang value) {
         var g=value.giaoDich();StringBuilder text=new StringBuilder("Giao dịch: "+g.maGiaoDich()+"\nTạo lúc: "+g.thoiGianTao()+"\nNhân viên: "+g.maNV()+"\nTrạng thái: "+g.trangThai()+"\nPhim: "+value.tenPhim()+"\n");
