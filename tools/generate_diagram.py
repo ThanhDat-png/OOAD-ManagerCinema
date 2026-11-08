@@ -20,7 +20,7 @@ def build_drawio():
 
 
     def add_class_box(root, cid, name, attrs, methods, x, y, w, h_attr, h_meth):
-        start_size = 38 if '\n' in name else 28
+        start_size = 40 if '\n' in name else 28
         total_h = start_size + h_attr + 8 + h_meth
         hdr_style = f"swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize={start_size};horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=0;whiteSpace=wrap;rounded=0;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1;fontSize=12;fontColor=#000000;"
         cls_cell = ET.SubElement(root, 'mxCell', {
@@ -290,10 +290,10 @@ def build_drawio():
         ET.SubElement(pkg, 'mxGeometry', {'x': str(x), 'y': str(y), 'width': str(w), 'height': str(h), 'as': 'geometry'})
         return pkg
 
-    def add_design_box(root, cid, stereotype, name, methods, x, y, w, h, subtitle=''):
+    def add_design_box(root, cid, stereotype, name, methods, x, y, w, h):
         hdr_val = f"«{stereotype}»\n{name}" if stereotype else name
         lines_count = len(hdr_val.split('\n'))
-        start_size = 28 if lines_count == 1 else (38 if lines_count == 2 else 18 * lines_count)
+        start_size = 28 if lines_count == 1 else (40 if lines_count == 2 else 20 * lines_count)
 
         hdr_style = f"swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize={start_size};horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=0;whiteSpace=wrap;rounded=0;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1;fontSize=12;fontColor=#000000;"
         cls_cell = ET.SubElement(root, 'mxCell', {
@@ -410,7 +410,7 @@ def build_drawio():
 
     # LAYER 4: DTO / Domain Model Layer (cinema.model)
     y_m1 = 1430
-    h_m1 = 140
+    h_m1 = 150
     add_design_box(root2, 'm_TaiKhoan', 'record', 'TaiKhoan', ['maTK: int', 'tenDangNhap: String', 'matKhauHash: String', 'trangThai: String', 'vaiTro: VaiTro', 'nhanVien: NhanVien'], 60, y_m1, 290, h_m1)
     add_design_box(root2, 'm_VaiTro', 'enumeration', 'VaiTro', ['ADMIN', 'NHAN_VIEN', '+ fromDatabase(s): VaiTro'], 380, y_m1, 250, h_m1)
     add_design_box(root2, 'm_NhanVien', 'record', 'NhanVien', ['maNV: String, hoTen: String', 'ngaySinh: LocalDate', 'soDienThoai, email: String', 'diaChi, chucVu: String'], 660, y_m1, 290, h_m1)

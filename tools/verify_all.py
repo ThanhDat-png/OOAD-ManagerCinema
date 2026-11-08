@@ -257,6 +257,39 @@ def verify_diagram():
             assert "swimlane" in b_style, f"Box {b_id} on {page_name} must use swimlane style, got: {b_style}"
     print("  ✓ All boxes on Page 1 and Page 2 use swimlane style")
 
+    # Verify Page 2 body compartments: align=left, spacingLeft=8, startSize, and height clearance
+    p2_classes = [c for c in p2_root.findall("mxCell") if c.attrib.get("vertex") == "1" and c.attrib.get("parent") == "1" and not c.attrib.get("id").startswith("pkg_")]
+    assert len(p2_classes) == 55, f"Expected 55 design classes on Page 2, found {len(p2_classes)}"
+    for cls in p2_classes:
+        cid = cls.attrib.get("id")
+        body_id = f"{cid}_body"
+        assert body_id in cells_by_id, f"{body_id} missing on Page 2"
+        body_cell = cells_by_id[body_id]
+        b_style = body_cell.attrib.get("style", "")
+        assert "align=left" in b_style, f"{body_id} missing align=left"
+        assert "spacingLeft=8" in b_style, f"{body_id} missing spacingLeft=8"
+
+        # Check startSize accommodating multi-line headers
+        c_style = cls.attrib.get("style", "")
+        m = re.search(r'startSize=(\d+)', c_style)
+        assert m, f"startSize missing in {cid}"
+        start_size = int(m.group(1))
+        hdr_lines = len(cls.attrib.get("value", "").split("\n"))
+        if hdr_lines == 1:
+            assert start_size >= 28, f"{cid} startSize {start_size} < 28 for single-line header"
+        elif hdr_lines == 2:
+            assert start_size >= 40, f"{cid} startSize {start_size} < 40 for two-line header"
+        else:
+            assert start_size >= 20 * hdr_lines, f"{cid} startSize {start_size} < {20 * hdr_lines} for {hdr_lines}-line header"
+
+        # Check body compartment height clearance
+        b_geom = body_cell.find("mxGeometry")
+        body_h = float(b_geom.attrib.get("height", 0))
+        lines = body_cell.attrib.get("value", "").split("\n") if body_cell.attrib.get("value") else []
+        needed_h = len(lines) * 15 + 4
+        assert body_h >= needed_h, f"{body_id} height {body_h} is insufficient for {len(lines)} lines (needed ~{needed_h})"
+    print("  ✓ All 55 Page 2 design classes: swimlane headers, align=left, spacingLeft=8, and height clearance verified")
+
     c1 = check_collisions('SoDoLop_PhanTich')
     c2 = check_collisions('SoDoLop_ThietKe_3Tang')
     assert len(c1) == 0, f"Page 1 has {len(c1)} collisions: {c1}"
@@ -268,7 +301,8 @@ def verify_diagram():
 
     # Assert that no fake Unicode dashes and no subtitle parentheses appear in diagram
     assert "─" not in content, "Found fake Unicode dash line '─' in diagram"
-    assert re.search(r'&#10;\([^)]+\)', content) is None, "Found subtitle in parentheses in diagram"
+    assert re.search(r'(?:&#10;|\n)\s*\([^)]+\)', content) is None, "Found subtitle in parentheses in diagram"
+    assert re.search(r'\([^)]*(?:UC\d\d|cinema\.controller|database\.properties|Quản lý|Màn hình|Lập lịch|Phòng và|Giá vé|Soát vé|Bán vé|Thống kê|Khung chính|Thư viện|Bảo mật|Lưu trữ|Quy tắc|Xác thực|Định dạng|Lọc)[^)]*\)', content) is None, "Found subtitle keyword pattern in diagram"
     for kw in ['(Màn hình', '(Quản lý', '(Lập lịch', '(Phòng và', '(Giá vé', '(Soát vé', '(Bán vé', '(Thống kê', '(Khung chính', '(Thư viện', '(cinema.controller', '(Bảo mật', '(Lưu trữ', '(Quy tắc', '(Xác thực', '(Định dạng', '(Lọc', '(config/database.properties']:
         assert kw not in content, f"Found subtitle keyword '{kw}' in diagram"
     print("  ✓ Zero fake Unicode dashes '─' and zero subtitle parentheses verified across diagram")
