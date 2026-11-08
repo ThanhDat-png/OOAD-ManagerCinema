@@ -344,7 +344,7 @@ def build_drawio():
     add_package_frame(root2, 'pkg_bus', 'TẦNG NGHIỆP VỤ - package cinema.controller.*', 40, 380, 2720, 310, fill='#EBF8FF', stroke='#3182CE')
 
     add_design_box(root2, 'b_DangNhap', '', 'DangNhapBUS', ['+ login(username, password): PhienDangNhap'], 60, 420, 230, 105, fill='#ffffff', stroke='#3182CE', subtitle='cinema.controller.auth')
-    add_design_box(root2, 'b_NhanVien', '', 'NhanVienBUS', ['+ search(keyword): List<NhanVien>', '+ create(input): NhanVien', '+ update(input): void', '+ delete(id): void', '+ detail(id): NhanVien'], 310, 420, 230, 125, fill='#ffffff', stroke='#3182CE', subtitle='cinema.controller.staff')
+    add_design_box(root2, 'b_NhanVien', '', 'NhanVienBUS', ['+ search(keyword): List<NhanVien>', '+ create(input): NhanVien', '+ update(input): void', '+ delete(id): void', '+ detail(id): NhanVien'], 310, 420, 230, 135, fill='#ffffff', stroke='#3182CE', subtitle='cinema.controller.staff')
     add_design_box(root2, 'b_Phim', '', 'PhimBUS', ['+ genres(): List<TheLoai>', '+ search(name, genre, status): List<Phim>', '+ create(input, image): Phim', '+ rename(id, name): void', '+ stop(id): void'], 560, 420, 230, 135, fill='#ffffff', stroke='#3182CE', subtitle='cinema.controller.film')
     add_design_box(root2, 'b_LichChieu', '', 'LichChieuBUS', ['+ list(date, room): List<SuatChieu>', '+ create(film, room, start): SuatChieu', '+ changeFilm(id, film): SuatChieu', '+ cancel(id): void'], 810, 420, 230, 120, fill='#ffffff', stroke='#3182CE', subtitle='cinema.controller.schedule')
     add_design_box(root2, 'b_PhongChieu', '', 'PhongChieuBUS', ['+ search(text, type, state): List<PhongChieu>', '+ create(name, type, clean, state): PhongChieu', '+ seats(room): List<Ghe>', '+ addSeat(room, row, num, type, state): Ghe'], 1060, 420, 230, 125, fill='#ffffff', stroke='#3182CE', subtitle='cinema.controller.room')
@@ -453,7 +453,7 @@ def build_drawio():
     add_p2_edge(root2, 'b_BanVe', 'd_BanVe', label='«call»', points=[(2310, 480), (2310, 720), (2120, 720)])
     add_p2_edge(root2, 'b_BaoCao', 'd_BaoCao', label='«call»', points=[(2565, 480), (2565, 720), (2370, 720)])
 
-    # Layer 3 (DAO) -> Database Singleton via dedicated routing in the open band (y=895)
+    # Layer 3 (DAO) -> Database Utility via dedicated routing in the open band (y=895)
     # DAOs to the left of Database (x <= 1180): drop to y=895, turn right to Database
     # DAOs to the right of Database (x >= 1520): drop to y=895, turn left to Database
     dao_sources = [

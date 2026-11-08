@@ -498,7 +498,7 @@
           <mxGeometry x="60" y="420" width="230" height="105" as="geometry" />
         </mxCell>
         <mxCell id="b_NhanVien" value="&amp;lt;b&amp;gt;NhanVienBUS&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;span style='font-size:10px;color:#718096;'&amp;gt;cinema.controller.staff&amp;lt;/span&amp;gt;&amp;lt;hr style='margin:4px 0;'&amp;gt;&amp;lt;div style='text-align:left;font-size:10px;padding:2px 4px;'&amp;gt;+ search(keyword): List&lt;NhanVien&gt;&amp;lt;br&amp;gt;+ create(input): NhanVien&amp;lt;br&amp;gt;+ update(input): void&amp;lt;br&amp;gt;+ delete(id): void&amp;lt;br&amp;gt;+ detail(id): NhanVien&amp;lt;/div&amp;gt;" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=top;fillColor=#ffffff;strokeColor=#3182CE;fontSize=11;spacingTop=6;" vertex="1" parent="1">
-          <mxGeometry x="310" y="420" width="230" height="125" as="geometry" />
+          <mxGeometry x="310" y="420" width="230" height="135" as="geometry" />
         </mxCell>
         <mxCell id="b_Phim" value="&amp;lt;b&amp;gt;PhimBUS&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;span style='font-size:10px;color:#718096;'&amp;gt;cinema.controller.film&amp;lt;/span&amp;gt;&amp;lt;hr style='margin:4px 0;'&amp;gt;&amp;lt;div style='text-align:left;font-size:10px;padding:2px 4px;'&amp;gt;+ genres(): List&lt;TheLoai&gt;&amp;lt;br&amp;gt;+ search(name, genre, status): List&lt;Phim&gt;&amp;lt;br&amp;gt;+ create(input, image): Phim&amp;lt;br&amp;gt;+ rename(id, name): void&amp;lt;br&amp;gt;+ stop(id): void&amp;lt;/div&amp;gt;" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=top;fillColor=#ffffff;strokeColor=#3182CE;fontSize=11;spacingTop=6;" vertex="1" parent="1">
           <mxGeometry x="560" y="420" width="230" height="135" as="geometry" />
