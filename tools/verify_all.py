@@ -182,6 +182,13 @@ def verify_diagram():
     assert len(c2) == 0, f"Page 2 has {len(c2)} collisions: {c2}"
     print("  ✓ Geometry check: 0 box-edge intersections on Page 1 and Page 2")
 
+    import re
+    with open("docs/SoDoLop_RapChieuPhim.drawio", encoding="utf-8") as f:
+        content = f.read()
+    html_tags = re.findall(r'&lt;/?(b|i|br|span|div|hr|font)\b[^&]*?&gt;', content, re.IGNORECASE)
+    assert len(html_tags) == 0, f"Found HTML tags in diagram: {set(html_tags)}"
+    print("  ✓ Zero HTML tag leakage verified across all pages")
+
 def verify_statuses():
     print("\n=== 2. VERIFYING STATUS VALUES IN DOCS ===")
     status_rules = [
