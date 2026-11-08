@@ -1,0 +1,2151 @@
+﻿Môn: Phân tích thiết kế hướng đối tượng
+Đề tài: Hệ thống quản lý rạp chiếu phim
+
+
+Giảng viên: ThS. Hoàng Mạnh Hà
+	Nhóm thực hiện:
+	
+
+	Lớp: DCT124C1
+	Lê Văn Hiếu
+	3124411091
+	
+
+	Văn Nguyễn Thành Đạt
+	3124411067
+	
+
+	Dương Gia Phát
+	3124411212
+	
+
+	Cái Trần Minh Tiến
+	3124411309
+	
+
+Thành phố Hồ Chí Minh Tháng 9 Năm 2026
+
+
+MỤC LỤC
+CHƯƠNG I: TỔNG QUAN ĐỀ TÀI        6
+1. Lý do chọn đề tài        6
+2. Phương pháp nghiên cứu        6
+3. Áp dụng thực tiễn        7
+CHƯƠNG II: CƠ SỞ LÝ LUẬN        8
+2.1 Tổng quan về hệ thống Quản lý rạp phim        8
+2.1.1 Đăng nhập        8
+2.1.2 Quản lý nhân viên        8
+2.1.3 Quản lý phim        9
+2.1.4 Quản lý lịch chiếu        10
+2.1.5 Quản lý phòng chiếu        10
+2.1.6 Quản lý giá vé và F&B        11
+2.1.7 Kiểm tra và xác nhận vé        12
+2.1.8 Quản lý bán vé        13
+2.1.9 Báo cáo và thống kê        13
+2.2. Xác định yêu cầu        14
+2.2.1. Vấn đề        14
+2.2.2. Yêu cầu chức năng        15
+2.2.3. Yêu cầu phi chức năng        16
+2.3. Bảng mô tả nghiệp vụ        16
+2.4. Mục tiêu của hệ thống quản lý rạp chiếu phim        18
+2.5. Ý nghĩa và khó khăn của việc nghiên cứu đề tài        19
+CHƯƠNG III: PHÂN TÍCH VÀ THIẾT KẾ HỆ THỐNG        21
+3.1. BFD        21
+3.2. Use-case        22
+Usecase tổng quát        22
+3.2.1. Use-case đăng nhập        24
+3.2.2. Use-case Quản lý nhân viên        25
+3.2.3. Use-case Quản lý phim        26
+3.2.4. Use-case Quản lý lịch chiếu        27
+3.2.5. Use-case Quản lý phòng chiếu        28
+3.2.6. Use-case Quản lý giá và F&B        29
+3.2.7. Use-case Kiểm tra và xác nhận vé        30
+3.2.8. Use-case Quản lý bán vé        31
+3.2.9. Use-case Báo cáo và thống kê        32
+3.3 Đặc tả usecase        32
+3.3.1. Use-case Đăng nhập        32
+3.3.2. Use-case Quản lý nhân viên (UC02)        34
+3.3.2.1. Thêm nhân viên        35
+3.3.2.2. Sửa nhân viên        36
+3.3.2.3. Xóa nhân viên        37
+3.3.2.4. Xem thông tin chi tiết nhân viên        38
+3.3.2.5. Tìm kiếm nhân viên        39
+3.3.3. Use-case Quản lý phim (UC03)        41
+3.3.3.1. Thêm phim        41
+3.3.3.2. Sửa tên phim        42
+3.3.3.3. Cập nhật poster phim        43
+3.3.3.4. Cập nhật thể loại phim        44
+3.3.3.5. Ngừng chiếu phim        45
+3.3.3.6. Tra cứu phim        46
+3.3.4. Use-case Quản lý lịch chiếu (UC04)        48
+3.3.4.1. Tạo suất chiếu        48
+3.3.4.2. Cập nhật phim chiếu        50
+3.3.4.3. Thay đổi phòng chiếu        51
+3.3.4.4. Đổi ngày chiếu        52
+3.3.4.5. Đổi giờ chiếu        54
+3.3.4.6. Kiểm tra lịch trùng        55
+3.3.4.7. Hủy suất chiếu        56
+3.3.5. Use-case Quản lý phòng chiếu (UC05)        58
+3.3.5.1. Thêm ghế        58
+3.3.5.2. Cập nhật thông tin ghế        59
+3.3.5.3. Phân loại ghế        61
+3.3.5.4. Thêm phòng chiếu        62
+3.3.5.5. Tra cứu phòng chiếu        63
+3.3.5.6. Cập nhật thông tin phòng chiếu        64
+3.3.5.7. Cập nhật trạng thái phòng chiếu        65
+3.3.6. Use-case Quản lý giá vé và F&B (UC06)        66
+3.3.6.1. Thiết lập giá vé        67
+3.3.6.2. Sửa giá vé        68
+3.3.6.3. Thêm sản phẩm        68
+3.3.6.4. Cập nhật sản phẩm        70
+3.3.6.5. Quản lý giá bán        71
+3.3.6.6. Kiểm tra tồn kho        72
+3.3.7. Use-case Kiểm tra, xác nhận vé (UC07)        73
+3.3.7.1. Tra cứu vé        73
+3.3.7.2. Kiểm tra tính hợp lệ        74
+3.3.7.3. Cập nhật trạng thái        75
+3.3.8. Use-case Quản lý bán vé (UC08)        77
+3.3.8.1. Tìm suất chiếu        77
+3.3.8.2. Kiểm tra ghế trống        78
+3.3.8.3. Tính tiền        79
+3.3.8.4. Thanh toán        80
+3.3.8.5. Phát hành vé        82
+3.3.8.6. Kiểm tra giao dịch        83
+3.3.9. Use-case Báo cáo và thống kê doanh thu (UC09)        84
+3.3.9.1. Doanh thu theo thời gian        84
+3.3.9.2. Doanh thu theo phim        85
+3.3.9.3. Doanh thu theo nhân viên        86
+3.3.9.4. Thống kê theo vé và F&B        87
+3.4. Sequence Diagram        89
+3.4.1. Đăng nhập        89
+3.4.2. Quản lý nhân viên        91
+3.4.2.1 Thêm nhân viên        91
+3.4.2.2 Sửa nhân viên        92
+3.4.2.3 Xóa nhân viên        93
+3.4.2.4 Xem thông tin chi tiết nhân viên        94
+3.4.2.5 Tìm kiếm nhân viên        94
+3.4.3. Kiểm tra phim        95
+3.4.3.1. Thêm phim        95
+3.4.3.2. Sửa tên phim        96
+3.4.3.3. Cập nhật poster phim        97
+3.4.3.4. Cập nhật thể loại phim        98
+3.4.3.5. Ngừng chiếu phim        99
+3.4.3.6. Tra cứu phim        100
+3.4.4. Quản lý lịch chiếu        101
+3.4.4.1. Tạo suất chiếu        101
+3.4.4.2. Cập nhật phim chiếu        103
+3.4.4.3. Thay đổi phòng chiếu        105
+3.4.4.4. Đổi ngày chiếu        107
+3.4.4.5. Đổi giờ chiếu        109
+3.4.4.6. Kiểm tra lịch trùng        111
+3.4.4.7. Hủy suất chiếu        112
+3.4.5. Quản lý phòng chiếu        114
+3.4.5.1. Thêm ghế        114
+3.4.5.2. Cập nhật thông tin ghế        116
+3.4.5.3. Phân loại ghế        118
+3.4.5.4. Thêm phòng chiếu        120
+3.4.5.5. Tra cứu phòng chiếu        121
+3.4.5.6. Cập nhật thông tin phòng chiếu        122
+3.4.5.7. Cập nhật trạng thái phòng chiếu        124
+3.4.6. Quản lý giá vé & F&B        126
+3.4.6.1. Thiết lập giá vé        126
+3.4.6.2. Sửa giá vé        128
+3.4.6.3. Thêm sản phẩm        130
+3.4.6.4. Cập nhật sản phẩm        132
+3.4.6.5. Quản lý giá bán        134
+3.4.6.6. Kiểm tra tồn kho        136
+3.4.7. Kiểm tra và xác nhận vé        138
+3.4.7.1. Tra cứu vé        138
+3.4.7.2. Kiểm tra tính hợp lệ của vé        139
+3.4.7.3. Cập nhật trạng thái vé        141
+3.4.8. Quản lý bán vé        143
+3.4.8.1. Tìm suất chiếu        143
+3.4.8.2. Kiểm tra ghế trống        145
+3.4.8.3. Tính tiền        147
+3.4.8.4. Thanh toán        149
+3.4.8.5. Phát hành vé        151
+3.4.8.6. Kiểm tra giao dịch        153
+3.4.9. Báo cáo thống kê        155
+3.4.9.1 Doanh thu theo thời gian        155
+3.4.9.2 Doanh thu theo phim        156
+3.4.9.3 Doanh thu theo nhân viên        157
+3.4.9.4 Thống kê theo vé và F&B        158
+
+
+CHƯƠNG I: TỔNG QUAN ĐỀ TÀI
+1. Lý do chọn đề tài
+Hoạt động quản lý rạp chiếu phim cần phối hợp nhiều nghiệp vụ như quản lý nhân viên, phim, lịch chiếu, phòng chiếu, giá vé, sản phẩm F&B, bán vé và kiểm soát vé. Khi dữ liệu được quản lý thủ công hoặc bằng các công cụ rời rạc, nhân viên khó theo dõi tình trạng ghế giữa các quầy, dễ bán trùng ghế, xếp trùng lịch phòng và tổng hợp doanh thu thiếu chính xác.
+Việc xây dựng hệ thống quản lý tập trung giúp lưu trữ thống nhất dữ liệu và hỗ trợ các thao tác nghiệp vụ tại rạp. Admin có thể quản lý hồ sơ nhân viên, danh mục phim, lịch chiếu, phòng chiếu, sơ đồ ghế, bảng giá vé, thông tin và tồn kho sản phẩm F&B. Nhân viên được hỗ trợ tìm suất chiếu, chọn ghế, tính tiền, xác nhận thanh toán, phát hành vé và kiểm tra vé tại cửa phòng chiếu. Dữ liệu giao dịch được lưu để phục vụ tra cứu và thống kê doanh thu bán vé.
+Xuất phát từ nhu cầu đó, nhóm lựa chọn đề tài “Phân tích và thiết kế hệ thống quản lý rạp chiếu phim”. Đề tài tập trung xác định yêu cầu, mô hình hóa các chức năng và xây dựng đặc tả nghiệp vụ cho hệ thống nội bộ với hai tác nhân chính là Admin và Nhân viên.
+2. Phương pháp nghiên cứu
+Nhóm nghiên cứu tài liệu và tìm hiểu quy trình quản lý rạp chiếu phim để xác định các yêu cầu của hệ thống. Phạm vi nghiên cứu gồm chín nhóm chức năng: đăng nhập, quản lý nhân viên, quản lý phim, quản lý lịch chiếu, quản lý phòng chiếu, quản lý giá vé và F&B, kiểm tra và xác nhận vé, quản lý bán vé, báo cáo và thống kê.
+Trên cơ sở các yêu cầu đã xác định, nhóm áp dụng kiến thức phân tích và thiết kế hướng đối tượng để xây dựng biểu đồ phân rã chức năng, biểu đồ Use Case và các bảng đặc tả. Các mô hình thể hiện chức năng của hệ thống và sự tương tác giữa Admin, Nhân viên với từng nghiệp vụ.
+Nhóm đối chiếu nội dung mô tả, sơ đồ và đặc tả nhằm bảo đảm thống nhất về phạm vi, quyền sử dụng và điều kiện xử lý. Các ràng buộc được chú trọng gồm kiểm tra trùng lịch phòng, kiểm soát ghế theo từng suất chiếu, giữ ghế khi bán vé, bảo toàn giá trị giao dịch đã hoàn tất và ngăn vé được xác nhận sử dụng nhiều lần.
+3. Áp dụng thực tiễn
+Kết quả phân tích có thể làm tài liệu tham khảo cho việc xây dựng phần mềm quản lý rạp chiếu phim. Các yêu cầu, sơ đồ và đặc tả giúp người phát triển xác định chức năng, quyền truy cập và các điều kiện nghiệp vụ cần xử lý.
+Hệ thống hướng đến hỗ trợ hoạt động nội bộ của các rạp quy mô nhỏ và vừa, giúp quản lý tập trung dữ liệu, tổ chức lịch chiếu, theo dõi phòng và ghế, thực hiện bán vé, kiểm soát vé và tổng hợp doanh thu. Việc quản lý danh mục, giá bán và số lượng tồn kho F&B hỗ trợ Admin theo dõi sản phẩm tại rạp.
+Trong phạm vi đồ án môn học, nhóm tập trung xây dựng các mô hình và đặc tả làm cơ sở cho những bước thiết kế, triển khai tiếp theo.
+CHƯƠNG II: CƠ SỞ LÝ LUẬN
+2.1 Tổng quan về hệ thống Quản lý rạp phim
+Hệ thống quản lý rạp chiếu phim là hệ thống thông tin được xây dựng nhằm hỗ trợ công tác quản lý và vận hành các hoạt động nội bộ của rạp chiếu phim. Hệ thống giúp quản lý tập trung thông tin nhân viên, phim, lịch chiếu, phòng chiếu, giá vé, sản phẩm F&B, hoạt động bán vé, kiểm tra vé và thống kê doanh thu.
+Hệ thống được thiết kế phục vụ hai nhóm người sử dụng chính là Admin (Quản trị viên) và Nhân viên. Trong đó, Admin chịu trách nhiệm quản lý dữ liệu, cấu hình các hoạt động vận hành và theo dõi báo cáo; Nhân viên thực hiện các nghiệp vụ bán vé, thanh toán, phát hành vé và kiểm tra vé tại rạp.
+Dựa trên sơ đồ phân rã chức năng (BFD), hệ thống được chia thành 9 nhóm chức năng chính như sau:
+2.1.1 Đăng nhập
+Chức năng đăng nhập được xây dựng nhằm xác thực người sử dụng trước khi truy cập vào hệ thống quản lý rạp chiếu phim. Chức năng này áp dụng cho cả Admin và Nhân viên.
+Đăng nhập hệ thống: Người sử dụng nhập thông tin tài khoản và mật khẩu đã được cấp để truy cập vào hệ thống.
+Xác thực thông tin đăng nhập: Hệ thống kiểm tra thông tin tài khoản và mật khẩu với dữ liệu được lưu trữ trong cơ sở dữ liệu, đồng thời xác định tình trạng hoạt động của tài khoản.
+Truy cập hệ thống: Khi thông tin đăng nhập hợp lệ, hệ thống cho phép người sử dụng truy cập vào các chức năng tương ứng với vai trò được cấp. Trường hợp thông tin không hợp lệ, hệ thống hiển thị thông báo lỗi và yêu cầu nhập lại.
+Chức năng này giúp đảm bảo chỉ những người có tài khoản hợp lệ mới có thể truy cập và thực hiện các nghiệp vụ quản lý tại rạp.
+2.1.2 Quản lý nhân viên
+Chức năng quản lý nhân viên do Admin thực hiện nhằm quản lý thông tin và hồ sơ của các nhân viên đang làm việc tại rạp chiếu phim.
+Cập nhật thông tin nhân viên: Cho phép quản lý và điều chỉnh các thông tin liên quan đến nhân viên như họ tên, ngày sinh, số điện thoại, email, địa chỉ và chức vụ.
+Thêm nhân viên: Cho phép Admin tạo hồ sơ nhân viên mới, nhập các thông tin cần thiết và lưu trữ vào hệ thống để phục vụ công tác quản lý.
+Sửa nhân viên: Cho phép Admin chỉnh sửa thông tin của nhân viên khi có thay đổi hoặc phát hiện thông tin chưa chính xác.
+Xóa nhân viên: Cho phép Admin thực hiện xóa hồ sơ nhân viên không còn được quản lý trong danh sách hiện tại, đồng thời đảm bảo không làm ảnh hưởng đến những dữ liệu nghiệp vụ cần được lưu trữ.
+Xem chi tiết thông tin nhân viên: Hiển thị đầy đủ thông tin của một nhân viên được lựa chọn, giúp Admin theo dõi và kiểm tra hồ sơ và nhân viên có thể xem thông tin của mình.
+Tìm kiếm nhân viên: Hỗ trợ tìm kiếm nhân viên theo mã nhân viên, họ tên, số điện thoại hoặc các tiêu chí phù hợp để nhanh chóng xác định hồ sơ cần quản lý.
+Chức năng này giúp tập trung thông tin nhân sự, hạn chế sai sót trong quá trình quản lý và hỗ trợ Admin tra cứu dữ liệu nhân viên một cách thuận tiện.
+2.1.3 Quản lý phim
+Chức năng quản lý phim do Admin thực hiện nhằm cập nhật và quản lý danh sách các bộ phim được sử dụng trong hoạt động chiếu phim tại rạp.
+Thêm phim: Cho phép Admin thêm bộ phim mới vào hệ thống với các thông tin như mã phim, tên phim, thời lượng, thể loại, đạo diễn, ngày khởi chiếu, giới hạn độ tuổi và hình ảnh áp phích.
+Cập nhật thông tin phim: Cho phép Admin cập nhật dữ liệu của các bộ phim đã được lưu trữ trong hệ thống khi có thay đổi hoặc bổ sung thông tin.
+Sửa tên phim: Cho phép thay đổi tên của bộ phim trong trường hợp thông tin ban đầu chưa chính xác hoặc cần điều chỉnh theo thông tin chính thức.
+Cập nhật poster phim: Cho phép Admin thay đổi hình ảnh áp phích của bộ phim để đảm bảo thông tin hình ảnh được cập nhật chính xác.
+Cập nhật thể loại phim: Cho phép điều chỉnh thông tin thể loại của bộ phim nhằm phục vụ việc phân loại và tra cứu phim.
+Ngừng chiếu phim: Cho phép Admin chuyển trạng thái của một bộ phim sang ngừng chiếu khi phim không còn được khai thác tại rạp.
+Tra cứu phim: Hỗ trợ tìm kiếm thông tin phim dựa trên tên phim, thể loại hoặc trạng thái chiếu, giúp Admin nhanh chóng xác định thông tin cần sử dụng.
+Chức năng quản lý phim giúp duy trì dữ liệu phim chính xác, hỗ trợ việc lập lịch chiếu và cung cấp thông tin cần thiết cho các nghiệp vụ bán vé.
+2.1.4 Quản lý lịch chiếu
+Chức năng quản lý lịch chiếu do Admin thực hiện nhằm tổ chức, điều chỉnh và kiểm soát lịch trình chiếu phim tại các phòng chiếu của rạp.
+Tạo suất chiếu: Cho phép Admin thiết lập một suất chiếu mới bằng cách lựa chọn bộ phim, phòng chiếu, ngày chiếu và giờ chiếu. Hệ thống lưu trữ thông tin suất chiếu để phục vụ quản lý và bán vé.
+Cập nhật suất chiếu: Cho phép Admin điều chỉnh thông tin của suất chiếu đã được tạo khi có sự thay đổi trong kế hoạch hoạt động của rạp.
+Cập nhật phim chiếu: Cho phép thay đổi bộ phim được gán cho một suất chiếu, đồng thời kiểm tra các điều kiện liên quan trước khi lưu thay đổi.
+Thay đổi phòng chiếu: Cho phép Admin chuyển suất chiếu sang phòng chiếu khác khi cần thiết, đảm bảo phòng chiếu mới đáp ứng các yêu cầu về thời gian và điều kiện hoạt động.
+Đổi ngày chiếu: Cho phép thay đổi ngày tổ chức suất chiếu theo kế hoạch vận hành của rạp.
+Đổi giờ chiếu: Cho phép điều chỉnh thời gian bắt đầu suất chiếu, bảo đảm không ảnh hưởng đến các suất chiếu khác trong cùng phòng.
+Kiểm tra lịch trùng: Hệ thống đối chiếu thời gian bắt đầu, thời gian kết thúc dự kiến của các suất chiếu trong cùng phòng chiếu để phát hiện và ngăn chặn tình trạng trùng lịch.
+Hủy suất chiếu: Cho phép Admin hủy một suất chiếu khi có sự thay đổi trong kế hoạch chiếu phim, đồng thời kiểm tra các điều kiện liên quan đến vé đã bán trước khi thực hiện.
+Chức năng này giúp rạp sử dụng phòng chiếu hợp lý, tránh xung đột về thời gian và đảm bảo tính chính xác của lịch chiếu phục vụ hoạt động bán vé.
+2.1.5 Quản lý phòng chiếu
+Chức năng quản lý phòng chiếu do Admin thực hiện nhằm quản lý thông tin phòng chiếu, sơ đồ ghế và trạng thái hoạt động của các phòng chiếu trong rạp.
+Quản lý sơ đồ ghế: Cho phép Admin thiết lập và quản lý cách bố trí ghế trong từng phòng chiếu. Các vị trí ghế được xác định theo hàng và số thứ tự để phục vụ quá trình lựa chọn ghế khi bán vé.
+Thêm ghế: Cho phép Admin bổ sung vị trí ghế mới vào sơ đồ ghế của phòng chiếu, bảo đảm mỗi ghế có mã và vị trí xác định.
+Cập nhật thông tin ghế: Cho phép chỉnh sửa các thông tin liên quan đến ghế như mã ghế, vị trí và tình trạng sử dụng khi có thay đổi.
+Phân loại ghế: Cho phép phân chia các vị trí ghế thành những loại khác nhau như ghế thường, ghế VIP và ghế đôi để phục vụ quản lý và áp dụng giá vé.
+Thêm phòng chiếu: Cho phép Admin khai báo phòng chiếu mới với các thông tin như mã phòng, tên phòng, loại phòng chiếu và sức chứa.
+Tra cứu phòng chiếu: Cho phép tìm kiếm và xem thông tin các phòng chiếu đang được quản lý, bao gồm thông tin phòng, số lượng ghế và trạng thái hoạt động.
+Cập nhật thông tin phòng chiếu: Cho phép Admin điều chỉnh các thông tin của phòng chiếu khi có thay đổi về tên phòng, loại phòng hoặc thông số quản lý.
+Cập nhật trạng thái phòng chiếu: Cho phép thay đổi trạng thái phòng chiếu như đang hoạt động, tạm ngừng hoạt động hoặc bảo trì để hỗ trợ việc quản lý và sắp xếp suất chiếu.
+Chức năng này giúp đảm bảo thông tin phòng chiếu và sơ đồ ghế được quản lý nhất quán, hỗ trợ việc lập lịch chiếu và xác định tình trạng ghế trong quá trình bán vé.
+2.1.6 Quản lý giá vé và F&B
+Chức năng quản lý giá vé và F&B do Admin thực hiện nhằm thiết lập giá vé, quản lý danh mục sản phẩm ăn uống và kiểm soát số lượng hàng hóa tại rạp chiếu phim.
+a. Quản lý vé
+Quản lý vé: Cho phép Admin quản lý thông tin giá vé và các quy định về giá được áp dụng trong hoạt động bán vé tại rạp.
+Thiết lập giá vé: Cho phép Admin cấu hình các mức giá vé theo từng tiêu chí như loại ghế, loại phòng chiếu và thời điểm chiếu. Hệ thống sử dụng bảng giá này để xác định số tiền vé trong quá trình bán hàng.
+Sửa giá vé: Cho phép Admin điều chỉnh các mức giá vé đã thiết lập khi có thay đổi về chính sách giá của rạp. Việc cập nhật phải đảm bảo không làm sai lệch thông tin của những giao dịch đã hoàn tất.
+b. Quản lý F&B
+Quản lý F&B: Cho phép Admin quản lý danh mục các sản phẩm ăn uống được kinh doanh tại rạp như bắp rang, nước uống và các combo.
+Thêm sản phẩm: Cho phép Admin thêm các sản phẩm F&B mới vào hệ thống với thông tin như mã sản phẩm, tên sản phẩm, đơn giá và số lượng tồn kho ban đầu.
+Cập nhật sản phẩm: Cho phép Admin chỉnh sửa tên, mô tả, đơn vị tính, tình trạng kinh doanh và cập nhật số lượng tồn kho theo số lượng thực tế đã kiểm tra.
+Quản lý giá bán: Cho phép Admin thiết lập và điều chỉnh giá bán của từng sản phẩm F&B nhằm đảm bảo mức giá được cập nhật chính xác.
+Kiểm tra tồn kho: Cho phép Admin theo dõi số lượng sản phẩm hiện có trong kho, xác định những sản phẩm còn hàng hoặc đã hết hàng để phục vụ hoạt động quản lý.
+Chức năng này giúp rạp quản lý thống nhất bảng giá vé và dữ liệu sản phẩm F&B, hỗ trợ tính tiền vé, theo dõi giá bán và số lượng tồn kho sản phẩm.
+2.1.7 Kiểm tra và xác nhận vé
+Chức năng kiểm tra và xác nhận vé do Nhân viên thực hiện tại khu vực kiểm soát vé trước khi khách hàng vào phòng chiếu.
+Tra cứu vé: Cho phép Nhân viên tìm kiếm thông tin vé thông qua mã vé hoặc quét mã QR được in trên vé. Hệ thống truy xuất dữ liệu tương ứng để hiển thị thông tin phim, suất chiếu, phòng chiếu, vị trí ghế và trạng thái vé.
+Kiểm tra tính hợp lệ: Hệ thống đối chiếu thông tin vé với dữ liệu lưu trữ để xác định vé có tồn tại hay không, đã được thanh toán hay chưa, có đúng suất chiếu được phép vào phòng hay không và vé đã được sử dụng hay chưa.
+Cập nhật trạng thái: Sau khi vé được xác nhận hợp lệ, Nhân viên thực hiện xác nhận để hệ thống cập nhật trạng thái vé sang đã sử dụng. Việc cập nhật trạng thái giúp ngăn chặn trường hợp một vé được sử dụng nhiều lần.
+Chức năng này hỗ trợ Nhân viên kiểm soát vé nhanh chóng, giảm sai sót trong quá trình kiểm tra và đảm bảo chỉ những vé hợp lệ mới được sử dụng để vào phòng chiếu.
+2.1.8 Quản lý bán vé
+Chức năng quản lý bán vé do Nhân viên thực hiện tại quầy bán vé của rạp. Chức năng này hỗ trợ quá trình lựa chọn suất chiếu, kiểm tra ghế trống, tính tiền, thanh toán, phát hành vé và tra cứu giao dịch.
+Tìm suất chiếu: Cho phép Nhân viên tra cứu danh sách các suất chiếu theo tên phim, ngày chiếu hoặc giờ chiếu để lựa chọn suất chiếu phù hợp với nhu cầu của khách hàng.
+Kiểm tra ghế trống: Hệ thống hiển thị sơ đồ ghế tương ứng với suất chiếu đã chọn, thể hiện tình trạng ghế còn trống, ghế đã bán hoặc ghế không khả dụng. Nhân viên dựa vào thông tin này để lựa chọn vị trí ghế theo yêu cầu của khách hàng.
+Tính tiền vé: Hệ thống tính tổng số tiền cần thanh toán dựa trên số lượng vé, loại ghế và mức giá vé đã được thiết lập. Kết quả tính tiền được hiển thị để Nhân viên thông báo cho khách hàng trước khi xác nhận thanh toán.
+Thanh toán: Cho phép Nhân viên thực hiện nghiệp vụ thanh toán sau khi khách hàng đồng ý mua vé. Hệ thống ghi nhận phương thức thanh toán như tiền mặt, chuyển khoản hoặc thẻ và cập nhật kết quả giao dịch.
+Phát hành vé: Sau khi giao dịch thanh toán được xác nhận thành công, hệ thống tạo vé tương ứng với suất chiếu và vị trí ghế đã chọn. Vé được cung cấp mã vé hoặc mã QR và có thể được in tại quầy để giao cho khách hàng.
+Tra cứu giao dịch: Cho phép Nhân viên tìm kiếm và xem lại thông tin các giao dịch bán vé đã được thực hiện, bao gồm thời gian giao dịch, số lượng vé, tổng tiền thanh toán và trạng thái giao dịch.
+Chức năng quản lý bán vé giúp chuẩn hóa quy trình bán vé tại quầy, đảm bảo thông tin ghế và giao dịch được ghi nhận chính xác. Đồng thời, dữ liệu bán vé được lưu trữ nhằm hỗ trợ công tác kiểm tra vé và thống kê doanh thu của rạp.
+2.1.9 Báo cáo và thống kê
+Chức năng báo cáo và thống kê do Admin thực hiện nhằm tổng hợp dữ liệu hoạt động kinh doanh và hỗ trợ việc theo dõi, đánh giá hiệu quả vận hành của rạp chiếu phim.
+Doanh thu theo thời gian: Hệ thống tổng hợp doanh thu từ các giao dịch đã hoàn tất theo ngày, tháng, năm hoặc khoảng thời gian được lựa chọn. Thông tin giúp Admin theo dõi sự biến động doanh thu trong từng giai đoạn.
+Doanh thu theo phim: Cho phép thống kê doanh thu bán vé và số lượng vé đã bán của từng bộ phim. Thông tin này hỗ trợ đánh giá hiệu quả kinh doanh của các bộ phim đang được khai thác tại rạp.
+Doanh thu theo nhân viên: Cho phép tổng hợp doanh thu phát sinh từ các giao dịch do từng Nhân viên thực hiện. Kết quả thống kê hỗ trợ Admin kiểm tra, đối chiếu và đánh giá hoạt động bán vé.
+Thống kê vé và F&B: Hệ thống tổng hợp dữ liệu về số lượng vé được phát hành, tình trạng sử dụng vé và thông tin sản phẩm F&B. Các số liệu được trình bày dưới dạng bảng thống kê để hỗ trợ công tác theo dõi và phân tích hoạt động kinh doanh.
+Chức năng báo cáo và thống kê giúp Admin nắm bắt tình hình hoạt động của rạp, kiểm soát doanh thu và cung cấp cơ sở dữ liệu phục vụ việc đưa ra các quyết định quản lý phù hợp.
+2.2. Xác định yêu cầu
+2.2.1. Vấn đề
+Qua khảo sát thực tế tại các rạp chiếu phim khi chưa có hệ thống phần mềm quản lý nội bộ tập trung, một số vấn đề thường gặp gồm:
+
+
+* Bán trùng ghế: Nhân viên tại các quầy khác nhau dễ chọn trùng một vị trí ghế trong cùng một thời điểm do thiếu cơ chế khóa ghế tức thời trên hệ thống chung.
+* Xếp trùng lịch phòng chiếu: Việc xếp lịch chiếu thủ công trên bảng tính dễ dẫn đến sai sót chồng chéo khung giờ sử dụng phòng chiếu giữa các bộ phim.
+* Khó khăn trong quản lý giá vé và F&B: Việc quản lý bảng giá vé bằng công cụ rời rạc dễ dẫn đến áp dụng sai mức giá khi bán vé. Thông tin, giá bán và số lượng tồn kho sản phẩm F&B không được cập nhật tập trung cũng gây khó khăn cho việc tra cứu và theo dõi sản phẩm.
+* Soát vé chậm và khó kiểm soát: Kiểm tra vé giấy thủ công bằng mắt thường tốn nhiều thời gian và không ngăn chặn được trường hợp vé không hợp lệ hoặc vé đã được sử dụng
+* Thống kê doanh thu chậm: Người quản lý phải tổng hợp thủ công các giao dịch bán vé để tính doanh thu theo thời gian, theo phim và theo nhân viên, dễ sai lệch số liệu và mất nhiều công sức.
+2.2.2. Yêu cầu chức năng
+Hệ thống quản lý rạp chiếu phim được xây dựng nhằm đáp ứng 9 yêu cầu chức năng nội bộ cốt lõi, bao gồm:
+Đăng nhập: Cho phép Admin và Nhân viên đăng nhập vào hệ thống, xác thực thông tin tài khoản và truy cập các chức năng phù hợp với vai trò được phân quyền.
+Quản lý nhân viên: Cho phép Admin thêm, sửa, xóa, cập nhật thông tin nhân viên, xem chi tiết hồ sơ và tìm kiếm nhân viên trong hệ thống.
+Quản lý phim: Cho phép Admin thêm phim, cập nhật thông tin phim, sửa tên phim, cập nhật poster, thể loại phim, ngừng chiếu phim và tra cứu danh sách phim tại rạp.
+Quản lý lịch chiếu: Cho phép Admin tạo và cập nhật suất chiếu, thay đổi phim chiếu, phòng chiếu, ngày chiếu, giờ chiếu, kiểm tra lịch trùng và hủy suất chiếu khi đáp ứng các điều kiện quy định.
+Quản lý phòng chiếu: Cho phép Admin thêm và cập nhật thông tin phòng chiếu, quản lý sơ đồ ghế, thêm ghế, cập nhật thông tin ghế, phân loại ghế, tra cứu phòng chiếu và cập nhật trạng thái hoạt động của phòng chiếu.
+Quản lý giá vé và F&B: Cho phép Admin quản lý, thiết lập và điều chỉnh giá vé; quản lý danh mục sản phẩm F&B, thêm và cập nhật sản phẩm, quản lý giá bán và kiểm tra số lượng tồn kho.
+Kiểm tra và xác nhận vé: Cho phép Nhân viên tra cứu vé bằng mã vé hoặc mã QR, kiểm tra tính hợp lệ của vé và cập nhật trạng thái vé sau khi xác nhận để tránh sử dụng vé nhiều lần.
+Quản lý bán vé: Cho phép Nhân viên tìm kiếm suất chiếu, kiểm tra tình trạng ghế trống, tính tiền vé, thực hiện thanh toán, phát hành vé có mã QR và tra cứu thông tin các giao dịch bán vé tại quầy.
+Báo cáo và thống kê: Cho phép Admin tổng hợp và thống kê doanh thu theo thời gian, theo phim, theo nhân viên, đồng thời thống kê số lượng vé và sản phẩm F&B nhằm hỗ trợ theo dõi, đánh giá hiệu quả hoạt động kinh doanh của rạp.
+2.2.3. Yêu cầu phi chức năng
+Thời gian phản hồi: Hệ thống cần đảm bảo các thao tác đăng nhập, tra cứu phim, tìm suất chiếu, kiểm tra ghế trống, tính tiền vé và tra cứu giao dịch có thời gian phản hồi nhanh, mục tiêu dưới 1 giây trong điều kiện hoạt động bình thường. Các thao tác thanh toán và phát hành vé cần được xử lý kịp thời, hạn chế thời gian chờ của khách hàng tại quầy.
+Độ chính xác và nhất quán dữ liệu: Hệ thống phải đảm bảo tính chính xác của thông tin phim, lịch chiếu, phòng chiếu, giá vé, trạng thái ghế và dữ liệu giao dịch. Khi nhiều nhân viên thực hiện bán vé đồng thời, hệ thống phải kiểm tra và kiểm soát trạng thái ghế để ngăn chặn tình trạng bán trùng ghế trong cùng một suất chiếu. Dữ liệu thanh toán và phát hành vé phải được ghi nhận nhất quán.
+An toàn và bảo mật: Hệ thống phải xác thực tài khoản đăng nhập, bảo vệ mật khẩu bằng hàm băm an toàn và phân quyền truy cập theo vai trò Admin và Nhân viên. Admin được thực hiện các chức năng quản lý nhân viên, phim, lịch chiếu, phòng chiếu, giá vé, sản phẩm F&B và xem báo cáo thống kê. Nhân viên được xem thông tin cá nhân, tra cứu phim, tra cứu phòng chiếu, thực hiện nghiệp vụ bán vé và kiểm tra, xác nhận vé. Nhân viên không được chỉnh sửa dữ liệu quản lý hoặc truy cập báo cáo thống kê.
+Tính ổn định và tin cậy: Hệ thống cần hoạt động ổn định trong suốt thời gian mở cửa của rạp, đặc biệt trong các khung giờ cao điểm có nhiều giao dịch bán vé. Dữ liệu về suất chiếu, vé, thanh toán và sản phẩm F&B phải được lưu trữ đầy đủ, đảm bảo không bị mất hoặc sai lệch khi xảy ra lỗi. Hệ thống cần có cơ chế sao lưu và phục hồi dữ liệu khi cần thiết.
+Tính dễ sử dụng: Giao diện hệ thống cần được thiết kế trực quan, dễ hiểu và phù hợp với từng vai trò người sử dụng. Các chức năng tìm suất chiếu, lựa chọn ghế, tính tiền, thanh toán và phát hành vé phải được bố trí hợp lý để Nhân viên thao tác nhanh chóng. Giao diện quản lý dành cho Admin cần hỗ trợ tìm kiếm, cập nhật thông tin và theo dõi báo cáo thuận tiện, hạn chế sai sót trong quá trình sử dụng.
+2.3. Bảng mô tả nghiệp vụ
+STT
+	Chức năng chính
+	Quyền sử dụng
+	Mô tả nghiệp vụ
+	1
+	Đăng nhập
+	Admin, Nhân viên
+	Người sử dụng nhập tài khoản và mật khẩu đã được cấp. Hệ thống xác thực thông tin, kiểm tra trạng thái tài khoản và cho phép truy cập các chức năng tương ứng với vai trò.
+	2
+	Quản lý nhân viên
+	Admin; Nhân viên được xem thông tin cá nhân
+	Admin thêm, sửa, xóa hồ sơ nhân viên, xem thông tin chi tiết và tìm kiếm nhân viên. Nhân viên được xem thông tin của bản thân. Việc xóa hồ sơ phải bảo đảm giữ lại dữ liệu lịch sử liên quan đến các nghiệp vụ đã phát sinh.
+	3
+	Quản lý phim
+	Admin; Nhân viên được tra cứu
+	Admin thêm phim, cập nhật thông tin phim như tên phim, poster và thể loại; thiết lập ngừng chiếu và tra cứu phim. Nhân viên tra cứu thông tin phim phục vụ hoạt động bán vé.
+	4
+	Quản lý lịch chiếu
+	Admin
+	Admin tạo suất chiếu, cập nhật phim, phòng chiếu, ngày chiếu và giờ chiếu. Hệ thống kiểm tra xung đột thời gian sử dụng phòng, có tính đến thời lượng phim và thời gian dọn phòng. Việc cập nhật hoặc hủy suất chiếu phải đáp ứng các điều kiện liên quan đến vé đã bán.
+	5
+	Quản lý phòng chiếu
+	Admin; Nhân viên được tra cứu
+	Admin thêm phòng chiếu, cập nhật thông tin và trạng thái hoạt động của phòng; quản lý sơ đồ ghế, thêm ghế, cập nhật thông tin và phân loại ghế. Nhân viên tra cứu phòng chiếu phục vụ công việc. Việc thay đổi phòng hoặc sơ đồ ghế phải bảo đảm không làm sai lệch dữ liệu suất chiếu và vé đã phát sinh.
+	6
+	Quản lý giá vé và F&B
+	Admin
+	Admin thiết lập và điều chỉnh giá vé theo các tiêu chí áp dụng; thêm, cập nhật sản phẩm F&B, quản lý giá bán và kiểm tra số lượng tồn kho. Việc thay đổi giá phải bảo đảm giữ nguyên giá trị của các giao dịch đã hoàn tất.
+	7
+	Kiểm tra và xác nhận vé
+	Nhân viên
+	Nhân viên tra cứu vé bằng mã vé hoặc mã QR. Hệ thống kiểm tra vé tồn tại, đã thanh toán, đúng suất chiếu được phép vào phòng và chưa sử dụng. Khi xác nhận thành công, hệ thống chuyển trạng thái vé sang “Đã sử dụng” để ngăn việc sử dụng lại.
+	8
+	Quản lý bán vé
+	Nhân viên
+	Nhân viên tìm suất chiếu, kiểm tra ghế trống và chọn ghế theo yêu cầu của khách. Hệ thống tính tiền theo bảng giá; Nhân viên xác nhận thanh toán để hệ thống ghi nhận giao dịch, cập nhật ghế đã bán và phát hành vé có mã vé hoặc mã QR. Nhân viên được tra cứu giao dịch đã thực hiện. Hệ thống phải kiểm soát trạng thái ghế để tránh bán trùng giữa các quầy.
+	9
+	Báo cáo và thống kê
+	Admin
+	Admin xem doanh thu bán vé theo thời gian, theo phim và theo nhân viên; thống kê số lượng, trạng thái vé và thông tin danh mục, số lượng tồn kho F&B. Dữ liệu được tổng hợp từ các giao dịch và thông tin lưu trữ, không làm thay đổi dữ liệu nghiệp vụ gốc.
+	2.4. Mục tiêu của hệ thống quản lý rạp chiếu phim
+Hệ thống được xây dựng nhằm đạt được các mục tiêu sau:
+* Tập trung dữ liệu quản lý: Lưu trữ thống nhất thông tin nhân viên, phim, phòng chiếu, sơ đồ ghế, lịch chiếu, giá vé và sản phẩm F&B, giúp việc cập nhật và tra cứu thuận tiện, hạn chế sai lệch dữ liệu.
+* Hỗ trợ quản lý lịch chiếu: Cho phép tạo, cập nhật và hủy suất chiếu theo các điều kiện nghiệp vụ; kiểm tra xung đột thời gian sử dụng phòng, có tính đến thời lượng phim và thời gian dọn phòng.
+* Chuẩn hóa quy trình bán vé: Hỗ trợ Nhân viên tìm suất chiếu, kiểm tra và chọn ghế, tính tiền, xác nhận thanh toán và phát hành vé; kiểm soát trạng thái ghế để ngăn chặn việc bán trùng trong cùng một suất chiếu.
+* Nâng cao hiệu quả kiểm soát vé: Hỗ trợ tra cứu bằng mã vé hoặc mã QR, kiểm tra tính hợp lệ và cập nhật trạng thái sau khi sử dụng, hạn chế tình trạng sử dụng vé không hợp lệ hoặc sử dụng lại vé 
+* Hỗ trợ quản lý giá vé và sản phẩm F&B: Cho phép Admin thiết lập, điều chỉnh giá vé, quản lý danh mục và giá bán sản phẩm F&B, đồng thời theo dõi số lượng tồn kho.
+* Cung cấp thông tin phục vụ quản lý: Tổng hợp doanh thu bán vé theo thời gian, phim và nhân viên; thống kê tình trạng vé và thông tin tồn kho F&B để hỗ trợ theo dõi hoạt động của rạp.
+2.5. Ý nghĩa và khó khăn của việc nghiên cứu đề tài
+Ý nghĩa đối với người sử dụng hệ thống
+* Đối với Admin: Hệ thống hỗ trợ quản lý tập trung thông tin nhân viên, phim, lịch chiếu, phòng chiếu, giá vé và sản phẩm F&B. Các chức năng tra cứu, kiểm tra xung đột lịch chiếu và thống kê giúp giảm thao tác thủ công, hạn chế sai sót và cung cấp thông tin phục vụ quản lý.
+* Đối với Nhân viên: Hệ thống hỗ trợ tìm suất chiếu, kiểm tra ghế trống, chọn ghế, tính tiền, thanh toán và phát hành vé tại quầy. Chức năng tra cứu và xác nhận vé giúp kiểm soát khách vào phòng chiếu nhanh chóng, chính xác hơn.
+* Đối với hoạt động của rạp: Việc sử dụng dữ liệu thống nhất giúp các khâu quản lý lịch chiếu, bán vé và kiểm tra vé phối hợp thuận tiện, hạn chế bán trùng ghế, xếp trùng lịch phòng và sai lệch thông tin giao dịch.
+Ý nghĩa đối với sinh viên
+* Vận dụng kiến thức môn Phân tích thiết kế hướng đối tượng vào việc nghiên cứu và mô hình hóa hệ thống quản lý rạp chiếu phim.
+* Rèn luyện kỹ năng xác định phạm vi, phân tích yêu cầu, xây dựng biểu đồ phân rã chức năng, biểu đồ Use Case và viết đặc tả nghiệp vụ.
+* Phát triển tư duy thiết kế dữ liệu và xử lý các ràng buộc như chống trùng lịch chiếu, chống bán trùng ghế và kiểm soát trạng thái vé.
+* Rèn luyện kỹ năng làm việc nhóm, phân chia nhiệm vụ và kiểm tra tính nhất quán giữa các phần của báo cáo.
+Khó khăn khi nghiên cứu đề tài
+* Cần xác định rõ các quy tắc tạo, cập nhật và hủy suất chiếu, đặc biệt khi đã phát sinh vé bán ra hoặc cần bố trí thời gian dọn phòng.
+* Cần phân biệt trạng thái sử dụng của ghế trong phòng với trạng thái bán của ghế theo từng suất chiếu; bảo đảm nhiều quầy không thể bán cùng một ghế cho cùng một suất chiếu.
+* Cần thiết kế bảng giá vé phù hợp với các tiêu chí áp dụng và bảo toàn giá trị của những giao dịch đã hoàn tất khi giá được điều chỉnh.
+* Cần xác định đầy đủ điều kiện kiểm tra vé, xử lý các trường hợp vé không tồn tại, chưa thanh toán, sai suất chiếu hoặc đã sử dụng.
+* Cần bảo đảm các mô hình, đặc tả và nội dung báo cáo thống nhất về tên chức năng, quyền sử dụng và phạm vi nghiệp vụ.
+CHƯƠNG III: PHÂN TÍCH VÀ THIẾT KẾ HỆ THỐNG
+3.1. BFD
+Biểu đồ phân rã chức năng thể hiện cấu trúc phân rã 9 chức năng cốt lõi của hệ thống quản lý rạp chiếu phim:  
+3.2. Use-case
+Usecase tổng quát
+  
+
+3.2.1. Use-case đăng nhập
+
+
+  
+
+3.2.2. Use-case Quản lý nhân viên
+  
+
+3.2.3. Use-case Quản lý phim
+  
+
+3.2.4. Use-case Quản lý lịch chiếu
+  
+
+3.2.5. Use-case Quản lý phòng chiếu
+  
+
+3.2.6. Use-case Quản lý giá và F&B
+  
+
+3.2.7. Use-case Kiểm tra và xác nhận vé
+  
+
+3.2.8. Use-case Quản lý bán vé
+  
+
+3.2.9. Use-case Báo cáo và thống kê
+  
+
+3.3 Đặc tả usecase
+3.3.1. Use-case Đăng nhập
+
+
+  
+
+Mục
+	Nội dung
+	UseCase ID
+	UC01
+	Tên Use Case
+	Đăng nhập
+	Tác nhân
+	Admin, Nhân viên
+	Tóm tắt
+	Cho phép Admin và Nhân viên sử dụng tài khoản và mật khẩu đã được cấp để đăng nhập vào hệ thống quản lý rạp chiếu phim.
+	Dòng sự kiện chính
+	1. Người dùng mở giao diện đăng nhập.
+2. Người dùng nhập tên đăng nhập và mật khẩu.
+3. Người dùng chọn “Đăng nhập”.
+4. Hệ thống kiểm tra thông tin đã nhập, đối chiếu tài khoản và mật khẩu với dữ liệu lưu trữ, đồng thời kiểm tra trạng thái tài khoản.
+5. Hệ thống xác định vai trò của người dùng và thiết lập phiên đăng nhập.
+6. Hệ thống chuyển sang giao diện làm việc tương ứng với vai trò Admin hoặc Nhân viên.
+	Dòng sự kiện phụ
+	4.1. Người dùng chưa nhập tên đăng nhập hoặc mật khẩu:
+• Hệ thống thông báo yêu cầu nhập đầy đủ thông tin.
+• Quay lại bước 2.
+4.2. Tên đăng nhập hoặc mật khẩu không chính xác:
+• Hệ thống thông báo “Tên đăng nhập hoặc mật khẩu không chính xác”.
+• Không thiết lập phiên đăng nhập.
+• Quay lại bước 2.
+4.3. Tài khoản đã bị khóa hoặc ngừng hoạt động:
+• Hệ thống thông báo “Tài khoản không được phép truy cập. Vui lòng liên hệ Admin”.
+• Không cho phép đăng nhập.
+	Tiền điều kiện
+	• Người dùng đã được cấp tài khoản trên hệ thống.
+• Người dùng chưa đăng nhập và đang truy cập giao diện đăng nhập.
+	Hậu điều kiện
+	• Khi thành công: phiên đăng nhập được thiết lập; người dùng được chuyển đến giao diện làm việc và chỉ được truy cập các chức năng phù hợp với vai trò.
+• Khi thất bại: không thiết lập phiên đăng nhập; người dùng vẫn ở giao diện đăng nhập.
+	
+
+3.3.2. Use-case Quản lý nhân viên (UC02)
+
+
+  
+
+3.3.2.1. Thêm nhân viên
+Mục
+	Nội dung
+	UseCase ID
+	UC02.1.1
+	Tên Use Case
+	Thêm nhân viên
+	Tác nhân
+	Admin
+	Tóm tắt
+	Cho phép Admin thêm hồ sơ nhân viên mới vào hệ thống quản lý rạp chiếu phim.
+	Dòng sự kiện chính
+	1. Admin chọn chức năng “Quản lý nhân viên”.
+2. Hệ thống hiển thị danh sách nhân viên.
+3. Admin chọn “Thêm nhân viên”.
+4. Hệ thống hiển thị biểu mẫu thêm nhân viên.
+5. Admin nhập thông tin nhân viên gồm họ tên, ngày sinh, số điện thoại, email, địa chỉ và chức vụ.
+6. Admin chọn “Lưu”.
+7. Hệ thống kiểm tra thông tin đã nhập và lưu hồ sơ nhân viên vào cơ sở dữ liệu.
+8. Hệ thống thông báo “Thêm nhân viên thành công” và cập nhật danh sách nhân viên.
+	Dòng sự kiện phụ
+	6.1. Admin chọn “Hủy”: Hệ thống không lưu thông tin đã nhập và trở về danh sách nhân viên.
+7.1. Thông tin bắt buộc bị bỏ trống hoặc dữ liệu không hợp lệ: Hệ thống thông báo các trường cần điều chỉnh, giữ thông tin đã nhập và quay lại bước 5.
+	Tiền điều kiện
+	Admin đã đăng nhập và có quyền sử dụng chức năng Quản lý nhân viên.
+	Hậu điều kiện
+	Khi thành công, hồ sơ nhân viên mới được lưu và xuất hiện trong danh sách nhân viên. Nếu Admin hủy hoặc lưu thất bại, không tạo hồ sơ mới.
+	3.3.2.2. Sửa nhân viên
+Mục
+	Nội dung
+	UseCase ID
+	UC02.1.2
+	Tên Use Case
+	Sửa nhân viên
+	Tác nhân
+	Admin
+	Tóm tắt
+	Cho phép Admin chỉnh sửa thông tin của nhân viên đã có trong hệ thống.
+	Dòng sự kiện chính
+	1. Admin chọn chức năng “Quản lý nhân viên”.
+2. Hệ thống hiển thị danh sách nhân viên.
+3. Admin chọn nhân viên cần sửa và chọn “Sửa nhân viên”.
+4. Hệ thống hiển thị biểu mẫu cùng thông tin hiện tại của nhân viên.
+5. Admin chỉnh sửa các thông tin cần thay đổi.
+6. Admin chọn “Lưu”.
+7. Hệ thống kiểm tra dữ liệu và lưu các thay đổi vào cơ sở dữ liệu.
+8. Hệ thống thông báo “Cập nhật nhân viên thành công” và hiển thị thông tin đã cập nhật.
+	Dòng sự kiện phụ
+	6.1. Admin chọn “Hủy”: Hệ thống không lưu các thay đổi và trở về danh sách nhân viên.
+7.1. Thông tin bắt buộc bị bỏ trống hoặc dữ liệu không hợp lệ: Hệ thống thông báo các trường cần điều chỉnh, giữ nội dung chỉnh sửa và quay lại bước 5.
+	Tiền điều kiện
+	Admin đã đăng nhập, có quyền sử dụng chức năng Quản lý nhân viên và hồ sơ cần sửa tồn tại trong hệ thống.
+	Hậu điều kiện
+	Khi thành công, thông tin nhân viên được cập nhật. Nếu Admin hủy hoặc cập nhật thất bại, thông tin đã lưu trước đó được giữ nguyên.
+	3.3.2.3. Xóa nhân viên
+Mục
+	Nội dung
+	UseCase ID
+	UC02.1.3
+	Tên Use Case
+	Xóa nhân viên
+	Tác nhân
+	Admin
+	Tóm tắt
+	Cho phép Admin xóa hồ sơ nhân viên khỏi danh sách quản lý khi đáp ứng điều kiện về dữ liệu liên quan.
+	Dòng sự kiện chính
+	1. Admin chọn chức năng “Quản lý nhân viên”.
+2. Hệ thống hiển thị danh sách nhân viên.
+3. Admin chọn nhân viên cần xóa và chọn “Xóa nhân viên”.
+4. Hệ thống hiển thị thông báo “Bạn có chắc chắn muốn xóa nhân viên này?”.
+5. Admin chọn “Có”.
+6. Hệ thống kiểm tra dữ liệu liên quan đến nhân viên và xác định hồ sơ được phép xóa.
+7. Hệ thống thực hiện xóa hồ sơ, thông báo “Xóa nhân viên thành công” và cập nhật danh sách nhân viên.
+	Dòng sự kiện phụ
+	5.1. Admin chọn “Không”: Hệ thống đóng thông báo xác nhận và giữ nguyên hồ sơ nhân viên.
+6.1. Nhân viên đã có dữ liệu giao dịch cần lưu giữ: Hệ thống thông báo “Không thể xóa nhân viên vì có dữ liệu giao dịch liên quan” và không thực hiện xóa.
+	Tiền điều kiện
+	Admin đã đăng nhập, có quyền sử dụng chức năng Quản lý nhân viên và hồ sơ cần xóa tồn tại trong hệ thống.
+	Hậu điều kiện
+	Khi thành công, hồ sơ nhân viên được xóa khỏi danh sách quản lý. Nếu thao tác bị hủy, bị từ chối hoặc thất bại, hồ sơ được giữ nguyên. Dữ liệu lịch sử giao dịch không bị xóa bởi thao tác này.
+	3.3.2.4. Xem thông tin chi tiết nhân viên
+Mục
+	Nội dung
+	UseCase ID
+	UC02.2
+	Tên Use Case
+	Xem thông tin chi tiết nhân viên
+	Tác nhân
+	Admin, Nhân viên
+	Tóm tắt
+	Cho phép Admin xem hồ sơ chi tiết của nhân viên và cho phép Nhân viên xem thông tin của bản thân.
+	Dòng sự kiện chính
+	1. Admin truy cập danh sách nhân viên; Nhân viên truy cập chức năng xem thông tin cá nhân.
+2. Admin chọn nhân viên cần xem; đối với Nhân viên, hệ thống xác định hồ sơ tương ứng với tài khoản đang đăng nhập.
+3. Hệ thống kiểm tra quyền truy cập và lấy thông tin hồ sơ.
+4. Hệ thống hiển thị thông tin chi tiết gồm mã nhân viên, họ tên, ngày sinh, số điện thoại, email, địa chỉ và chức vụ.
+5. Người dùng chọn “Trở về” để quay lại giao diện trước đó.
+	Dòng sự kiện phụ
+	3.1. Không tìm thấy hồ sơ nhân viên: Hệ thống thông báo “Không tìm thấy thông tin nhân viên” và trở về giao diện trước đó.
+3.2. Nhân viên yêu cầu xem hồ sơ của người khác: Hệ thống từ chối và thông báo “Bạn không có quyền xem thông tin này”.
+	Tiền điều kiện
+	Người dùng đã đăng nhập. Admin được xem hồ sơ nhân viên trong hệ thống; Nhân viên chỉ được xem hồ sơ của bản thân.
+	Hậu điều kiện
+	Thông tin được hiển thị đúng quyền truy cập. Việc xem hồ sơ không làm thay đổi dữ liệu nhân viên.
+	3.3.2.5. Tìm kiếm nhân viên
+Mục
+	Nội dung
+	UseCase ID
+	UC02.3
+	Tên Use Case
+	Tìm kiếm nhân viên
+	Tác nhân
+	Admin
+	Tóm tắt
+	Cho phép Admin tìm kiếm nhân viên theo mã nhân viên, họ tên hoặc số điện thoại.
+	Dòng sự kiện chính
+	1. Admin chọn chức năng “Quản lý nhân viên”.
+2. Hệ thống hiển thị danh sách nhân viên và ô tìm kiếm.
+3. Admin nhập mã nhân viên, họ tên hoặc số điện thoại cần tìm.
+4. Admin chọn “Tìm kiếm”.
+5. Hệ thống tìm các hồ sơ phù hợp với thông tin đã nhập.
+6. Hệ thống hiển thị danh sách kết quả tìm kiếm.
+	Dòng sự kiện phụ
+	4.1. Admin không nhập từ khóa: Hệ thống hiển thị toàn bộ danh sách nhân viên.
+5.1. Không có hồ sơ phù hợp: Hệ thống hiển thị danh sách kết quả trống và thông báo “Không tìm thấy nhân viên phù hợp”.
+	Tiền điều kiện
+	Admin đã đăng nhập và có quyền sử dụng chức năng Quản lý nhân viên.
+	Hậu điều kiện
+	Hệ thống hiển thị kết quả theo thông tin tìm kiếm. Dữ liệu nhân viên không bị thay đổi.
+	
+
+3.3.3. Use-case Quản lý phim (UC03)
+  
+
+3.3.3.1. Thêm phim
+Mục
+	Nội dung
+	UseCase ID
+	UC03.1
+	Tên Use Case
+	Thêm phim
+	Tác nhân
+	Admin
+	Tóm tắt
+	Cho phép Admin thêm phim mới vào danh mục phim của rạp.
+	Dòng sự kiện chính
+	1. Admin chọn chức năng “Quản lý phim”.
+2. Hệ thống hiển thị danh sách phim.
+3. Admin chọn “Thêm phim”.
+4. Hệ thống hiển thị biểu mẫu thêm phim.
+5. Admin nhập tên phim, thời lượng, thể loại, đạo diễn, ngày khởi chiếu, giới hạn độ tuổi, poster và trạng thái chiếu.
+6. Admin chọn “Lưu”.
+7. Hệ thống kiểm tra dữ liệu và lưu thông tin phim vào cơ sở dữ liệu.
+8. Hệ thống thông báo “Thêm phim thành công” và cập nhật danh sách phim.
+	Dòng sự kiện phụ
+	6.1. Admin chọn “Hủy”: Hệ thống không lưu thông tin đã nhập và trở về danh sách phim.
+7.1. Thông tin bắt buộc bị bỏ trống, thời lượng không lớn hơn 0 hoặc dữ liệu không hợp lệ: Hệ thống thông báo các trường cần điều chỉnh, giữ thông tin đã nhập và quay lại bước 5.
+	Tiền điều kiện
+	Admin đã đăng nhập và có quyền sử dụng chức năng Quản lý phim.
+	Hậu điều kiện
+	Khi thành công, phim mới được lưu và xuất hiện trong danh sách phim. Nếu Admin hủy hoặc lưu thất bại, không tạo phim mới.
+	3.3.3.2. Sửa tên phim
+Mục
+	Nội dung
+	UseCase ID
+	UC03.2.1
+	Tên Use Case
+	Sửa tên phim
+	Tác nhân
+	Admin
+	Tóm tắt
+	Cho phép Admin chỉnh sửa tên của phim đã có trong hệ thống.
+	Dòng sự kiện chính
+	1. Admin chọn chức năng “Quản lý phim”.
+2. Hệ thống hiển thị danh sách phim.
+3. Admin chọn phim cần sửa tên.
+4. Hệ thống hiển thị thông tin hiện tại của phim.
+5. Admin nhập tên phim mới và chọn “Lưu”.
+6. Hệ thống kiểm tra tên phim và lưu thay đổi.
+7. Hệ thống thông báo “Cập nhật tên phim thành công” và hiển thị tên phim đã cập nhật.
+	Dòng sự kiện phụ
+	5.1. Admin chọn “Hủy”: Hệ thống không lưu thay đổi và giữ nguyên tên phim.
+6.1. Tên phim bị bỏ trống: Hệ thống thông báo “Vui lòng nhập tên phim” và quay lại bước 5.
+	Tiền điều kiện
+	Admin đã đăng nhập, có quyền sử dụng chức năng Quản lý phim và phim cần sửa tồn tại trong hệ thống.
+	Hậu điều kiện
+	Khi thành công, tên phim được cập nhật; các thông tin khác của phim được giữ nguyên. Nếu thao tác bị hủy hoặc thất bại, tên phim không thay đổi.
+	3.3.3.3. Cập nhật poster phim
+Mục
+	Nội dung
+	UseCase ID
+	UC03.2.2
+	Tên Use Case
+	Cập nhật poster phim
+	Tác nhân
+	Admin
+	Tóm tắt
+	Cho phép Admin thay đổi ảnh poster của phim đã có trong hệ thống.
+	Dòng sự kiện chính
+	1. Admin chọn chức năng “Quản lý phim”.
+2. Hệ thống hiển thị danh sách phim.
+3. Admin chọn phim cần cập nhật poster.
+4. Hệ thống hiển thị thông tin và poster hiện tại của phim.
+5. Admin chọn ảnh poster mới.
+6. Hệ thống hiển thị ảnh đã chọn để Admin kiểm tra.
+7. Admin chọn “Lưu”.
+8. Hệ thống lưu poster mới và thông báo “Cập nhật poster thành công”.
+	Dòng sự kiện phụ
+	5.1. Tệp được chọn không phải định dạng ảnh được hỗ trợ hoặc không thể đọc: Hệ thống thông báo “Ảnh không hợp lệ. Vui lòng chọn ảnh khác” và cho phép Admin chọn lại.
+7.1. Admin chọn “Hủy”: Hệ thống không lưu ảnh mới và giữ nguyên poster hiện tại.
+	Tiền điều kiện
+	Admin đã đăng nhập, có quyền sử dụng chức năng Quản lý phim và phim cần cập nhật tồn tại trong hệ thống.
+	Hậu điều kiện
+	Khi thành công, poster mới được lưu và hiển thị cho phim tương ứng. Nếu thao tác bị hủy hoặc thất bại, poster hiện tại được giữ nguyên.
+	3.3.3.4. Cập nhật thể loại phim
+Mục
+	Nội dung
+	UseCase ID
+	UC03.2.3
+	Tên Use Case
+	Cập nhật thể loại phim
+	Tác nhân
+	Admin
+	Tóm tắt
+	Cho phép Admin điều chỉnh thể loại của phim đã có trong hệ thống.
+	Dòng sự kiện chính
+	1. Admin chọn chức năng “Quản lý phim”.
+2. Hệ thống hiển thị danh sách phim.
+3. Admin chọn phim cần cập nhật thể loại.
+4. Hệ thống hiển thị thông tin và thể loại hiện tại của phim.
+5. Admin chọn thể loại phù hợp và chọn “Lưu”.
+6. Hệ thống kiểm tra dữ liệu và lưu thay đổi.
+7. Hệ thống thông báo “Cập nhật thể loại thành công” và hiển thị thông tin đã cập nhật.
+	Dòng sự kiện phụ
+	5.1. Admin chọn “Hủy”: Hệ thống không lưu thay đổi và giữ nguyên thể loại hiện tại.
+6.1. Admin chưa chọn thể loại: Hệ thống thông báo “Vui lòng chọn thể loại phim” và quay lại bước 5.
+	Tiền điều kiện
+	Admin đã đăng nhập, có quyền sử dụng chức năng Quản lý phim và phim cần cập nhật tồn tại trong hệ thống.
+	Hậu điều kiện
+	Khi thành công, thể loại phim được cập nhật. Nếu thao tác bị hủy hoặc thất bại, thể loại hiện tại được giữ nguyên.
+	3.3.3.5. Ngừng chiếu phim
+Mục
+	Nội dung
+	UseCase ID
+	UC03.3
+	Tên Use Case
+	Ngừng chiếu phim
+	Tác nhân
+	Admin
+	Tóm tắt
+	Cho phép Admin chuyển phim sang trạng thái “Ngừng chiếu” để không tiếp tục tạo suất chiếu mới cho phim đó.
+	Dòng sự kiện chính
+	1. Admin chọn chức năng “Quản lý phim”.
+2. Hệ thống hiển thị danh sách phim.
+3. Admin chọn phim cần ngừng chiếu và chọn “Ngừng chiếu”.
+4. Hệ thống hiển thị thông báo yêu cầu xác nhận.
+5. Admin chọn “Có”.
+6. Hệ thống kiểm tra phim không còn suất chiếu đang diễn ra hoặc sắp diễn ra.
+7. Hệ thống chuyển trạng thái phim sang “Ngừng chiếu”.
+8. Hệ thống thông báo “Ngừng chiếu phim thành công” và cập nhật danh sách phim.
+	Dòng sự kiện phụ
+	5.1. Admin chọn “Không”: Hệ thống đóng thông báo và giữ nguyên trạng thái phim.
+6.1. Phim còn suất chiếu đang diễn ra hoặc sắp diễn ra: Hệ thống từ chối thay đổi trạng thái và thông báo “Phim vẫn còn suất chiếu chưa kết thúc”. Admin cần xử lý các suất chiếu liên quan trước khi thực hiện lại.
+	Tiền điều kiện
+	Admin đã đăng nhập, có quyền sử dụng chức năng Quản lý phim và phim được chọn chưa ở trạng thái “Ngừng chiếu”.
+	Hậu điều kiện
+	Khi thành công, phim chuyển sang trạng thái “Ngừng chiếu” và không được sử dụng để tạo suất chiếu mới. Thông tin phim, suất chiếu và giao dịch đã phát sinh vẫn được lưu giữ. Nếu thao tác bị hủy hoặc thất bại, trạng thái phim không thay đổi.
+	3.3.3.6. Tra cứu phim
+Mục
+	Nội dung
+	UseCase ID
+	UC03.4
+	Tên Use Case
+	Tra cứu phim
+	Tác nhân
+	Admin, Nhân viên
+	Tóm tắt
+	Cho phép Admin và Nhân viên tìm kiếm, xem thông tin phim theo tên phim, thể loại hoặc trạng thái chiếu.
+	Dòng sự kiện chính
+	1. Người dùng truy cập chức năng tra cứu phim.
+2. Hệ thống hiển thị danh sách phim và các trường tìm kiếm, lọc dữ liệu.
+3. Người dùng nhập tên phim hoặc chọn thể loại, trạng thái chiếu cần tra cứu.
+4. Người dùng chọn “Tìm kiếm”.
+5. Hệ thống tìm các phim đáp ứng tiêu chí đã chọn.
+6. Hệ thống hiển thị danh sách kết quả.
+7. Người dùng chọn một phim để xem thông tin chi tiết.
+	Dòng sự kiện phụ
+	4.1. Người dùng không nhập hoặc chọn tiêu chí: Hệ thống hiển thị toàn bộ danh sách phim được phép tra cứu.
+5.1. Không có phim phù hợp: Hệ thống hiển thị danh sách kết quả trống và thông báo “Không tìm thấy phim phù hợp”.
+	Tiền điều kiện
+	Người dùng đã đăng nhập với vai trò Admin hoặc Nhân viên.
+	Hậu điều kiện
+	Hệ thống hiển thị kết quả tra cứu và thông tin phim được chọn. Thao tác tra cứu không làm thay đổi dữ liệu phim.
+	
+
+3.3.4. Use-case Quản lý lịch chiếu (UC04)
+  
+
+3.3.4.1. Tạo suất chiếu
+Mục
+	Nội dung
+	UseCase ID
+	UC04.1
+	Tên Use Case
+	Tạo suất chiếu
+	Tác nhân
+	Admin
+	Tóm tắt
+	Cho phép Admin tạo suất chiếu mới bằng cách chọn phim, phòng chiếu, ngày chiếu và giờ bắt đầu.
+	Dòng sự kiện chính
+	1. Admin chọn chức năng “Quản lý lịch chiếu”.
+2. Hệ thống hiển thị danh sách suất chiếu theo ngày và phòng chiếu.
+3. Admin chọn “Tạo suất chiếu”.
+4. Hệ thống hiển thị biểu mẫu tạo suất chiếu.
+5. Admin chọn phim, phòng chiếu, ngày chiếu và giờ bắt đầu.
+6. Admin chọn “Lưu”.
+7. Hệ thống kiểm tra dữ liệu, trạng thái phim và trạng thái phòng chiếu.
+8. Hệ thống xác định khoảng thời gian sử dụng phòng dựa trên giờ bắt đầu, thời lượng phim và thời gian dọn phòng; thực hiện kiểm tra lịch trùng.
+9. Hệ thống lưu suất chiếu mới và thiết lập danh sách ghế theo sơ đồ phòng, trong đó các ghế đang sử dụng được ở trạng thái chưa bán.
+10. Hệ thống thông báo “Tạo suất chiếu thành công” và cập nhật danh sách suất chiếu.
+	Dòng sự kiện phụ
+	6.1. Admin chọn “Hủy”: Hệ thống không lưu thông tin và trở về danh sách suất chiếu.
+7.1. Thông tin chưa đầy đủ hoặc thời điểm bắt đầu đã qua: Hệ thống thông báo lỗi, giữ thông tin đã nhập và quay lại bước 5.
+7.2. Phim không được phép xếp lịch hoặc phòng chiếu không hoạt động: Hệ thống yêu cầu Admin chọn phim hoặc phòng khác.
+8.1. Khoảng thời gian sử dụng phòng bị trùng: Hệ thống thông báo “Lịch chiếu bị trùng”, không lưu suất chiếu và yêu cầu điều chỉnh phòng, ngày hoặc giờ chiếu.
+	Tiền điều kiện
+	Admin đã đăng nhập và có quyền quản lý lịch chiếu. Thông tin phim, phòng chiếu và sơ đồ ghế đã được tạo trong hệ thống.
+	Hậu điều kiện
+	Khi thành công, suất chiếu mới được lưu, không xung đột lịch phòng và có danh sách ghế phục vụ bán vé. Nếu thao tác bị hủy hoặc thất bại, không tạo suất chiếu mới.
+	3.3.4.2. Cập nhật phim chiếu
+Mục
+	Nội dung
+	UseCase ID
+	UC04.2.1
+	Tên Use Case
+	Cập nhật phim chiếu
+	Tác nhân
+	Admin
+	Tóm tắt
+	Cho phép Admin thay đổi phim được gán cho một suất chiếu chưa phát sinh vé bán ra.
+	Dòng sự kiện chính
+	1. Admin truy cập chức năng “Quản lý lịch chiếu”.
+2. Admin chọn suất chiếu cần thay đổi phim và chọn “Cập nhật phim chiếu”.
+3. Hệ thống kiểm tra suất chiếu chưa bắt đầu, chưa bị hủy và chưa phát sinh vé bán ra.
+4. Hệ thống hiển thị phim hiện tại và danh sách phim được phép xếp lịch.
+5. Admin chọn phim thay thế và chọn “Lưu”.
+6. Hệ thống xác định lại khoảng thời gian sử dụng phòng theo thời lượng phim mới và thực hiện kiểm tra lịch trùng.
+7. Hệ thống lưu thay đổi và thông báo “Cập nhật phim chiếu thành công”.
+	Dòng sự kiện phụ
+	3.1. Suất chiếu đã bắt đầu, đã bị hủy hoặc đã phát sinh vé bán ra: Hệ thống thông báo không được phép thay đổi phim và kết thúc thao tác.
+5.1. Admin chọn “Hủy”: Hệ thống giữ nguyên phim hiện tại.
+6.1. Phim được chọn không còn được phép xếp lịch: Hệ thống yêu cầu chọn phim khác.
+6.2. Thời lượng phim mới gây trùng lịch phòng: Hệ thống thông báo xung đột, không lưu thay đổi và cho phép Admin chọn lại phim.
+	Tiền điều kiện
+	Admin đã đăng nhập, có quyền quản lý lịch chiếu và suất chiếu cần cập nhật tồn tại trong hệ thống.
+	Hậu điều kiện
+	Khi thành công, suất chiếu được gán phim mới và khoảng thời gian sử dụng phòng được cập nhật hợp lệ. Nếu thao tác bị hủy, bị từ chối hoặc thất bại, thông tin suất chiếu được giữ nguyên.
+	3.3.4.3. Thay đổi phòng chiếu
+Mục
+	Nội dung
+	UseCase ID
+	UC04.2.2
+	Tên Use Case
+	Thay đổi phòng chiếu
+	Tác nhân
+	Admin
+	Tóm tắt
+	Cho phép Admin chuyển một suất chiếu chưa phát sinh vé bán ra sang phòng chiếu khác.
+	Dòng sự kiện chính
+	1. Admin truy cập chức năng “Quản lý lịch chiếu”.
+2. Admin chọn suất chiếu cần thay đổi phòng và chọn “Thay đổi phòng chiếu”.
+3. Hệ thống kiểm tra suất chiếu chưa bắt đầu, chưa bị hủy và chưa phát sinh vé bán ra.
+4. Hệ thống hiển thị thông tin phòng hiện tại và danh sách phòng chiếu.
+5. Admin chọn phòng thay thế và chọn “Lưu”.
+6. Hệ thống kiểm tra phòng mới đang hoạt động, có sơ đồ ghế hợp lệ và phù hợp với định dạng chiếu của suất chiếu.
+7. Hệ thống kiểm tra lịch trùng tại phòng mới theo ngày, giờ và thời lượng của suất chiếu.
+8. Hệ thống lưu phòng mới và thiết lập lại danh sách ghế của suất chiếu theo sơ đồ phòng mới.
+9. Hệ thống thông báo “Thay đổi phòng chiếu thành công”.
+	Dòng sự kiện phụ
+	3.1. Suất chiếu đã bắt đầu, đã bị hủy hoặc đã phát sinh vé bán ra: Hệ thống từ chối thay đổi phòng.
+5.1. Admin chọn “Hủy”: Hệ thống giữ nguyên phòng hiện tại.
+6.1. Phòng mới không đáp ứng điều kiện: Hệ thống thông báo lý do và yêu cầu chọn phòng khác.
+7.1. Phòng mới có lịch chiếu bị trùng: Hệ thống thông báo xung đột và không lưu thay đổi.
+	Tiền điều kiện
+	Admin đã đăng nhập, có quyền quản lý lịch chiếu và suất chiếu cần cập nhật tồn tại trong hệ thống.
+	Hậu điều kiện
+	Khi thành công, suất chiếu được chuyển sang phòng mới, danh sách ghế được cập nhật tương ứng và không xung đột lịch phòng. Nếu thao tác không thành công, dữ liệu suất chiếu được giữ nguyên.
+	3.3.4.4. Đổi ngày chiếu
+Mục
+	Nội dung
+	UseCase ID
+	UC04.2.3
+	Tên Use Case
+	Đổi ngày chiếu
+	Tác nhân
+	Admin
+	Tóm tắt
+	Cho phép Admin thay đổi ngày của một suất chiếu chưa phát sinh vé bán ra.
+	Dòng sự kiện chính
+	1. Admin truy cập chức năng “Quản lý lịch chiếu”.
+2. Admin chọn suất chiếu cần thay đổi ngày và chọn “Đổi ngày chiếu”.
+3. Hệ thống kiểm tra suất chiếu chưa bắt đầu, chưa bị hủy và chưa phát sinh vé bán ra.
+4. Hệ thống hiển thị ngày chiếu hiện tại.
+5. Admin chọn ngày mới và chọn “Lưu”.
+6. Hệ thống kiểm tra ngày mới kết hợp với giờ bắt đầu hiện tại tạo thành thời điểm chiếu hợp lệ, chưa qua.
+7. Hệ thống kiểm tra lịch trùng của phòng tại ngày mới.
+8. Hệ thống lưu thay đổi, thông báo “Đổi ngày chiếu thành công” và cập nhật danh sách suất chiếu.
+	Dòng sự kiện phụ
+	3.1. Suất chiếu đã bắt đầu, đã bị hủy hoặc đã phát sinh vé bán ra: Hệ thống từ chối đổi ngày chiếu.
+5.1. Admin chọn “Hủy”: Hệ thống giữ nguyên ngày chiếu hiện tại.
+6.1. Ngày chiếu không hợp lệ hoặc thời điểm chiếu mới đã qua: Hệ thống yêu cầu chọn lại ngày.
+7.1. Lịch chiếu tại ngày mới bị trùng: Hệ thống thông báo xung đột và không lưu thay đổi.
+	Tiền điều kiện
+	Admin đã đăng nhập, có quyền quản lý lịch chiếu và suất chiếu cần cập nhật tồn tại trong hệ thống.
+	Hậu điều kiện
+	Khi thành công, ngày chiếu được cập nhật hợp lệ và không xung đột lịch phòng. Nếu thao tác không thành công, ngày chiếu được giữ nguyên.
+	3.3.4.5. Đổi giờ chiếu
+Mục
+	Nội dung
+	UseCase ID
+	UC04.2.4
+	Tên Use Case
+	Đổi giờ chiếu
+	Tác nhân
+	Admin
+	Tóm tắt
+	Cho phép Admin thay đổi giờ bắt đầu của một suất chiếu chưa phát sinh vé bán ra.
+	Dòng sự kiện chính
+	1. Admin truy cập chức năng “Quản lý lịch chiếu”.
+2. Admin chọn suất chiếu cần thay đổi giờ và chọn “Đổi giờ chiếu”.
+3. Hệ thống kiểm tra suất chiếu chưa bắt đầu, chưa bị hủy và chưa phát sinh vé bán ra.
+4. Hệ thống hiển thị giờ bắt đầu hiện tại.
+5. Admin nhập giờ mới và chọn “Lưu”.
+6. Hệ thống kiểm tra giờ mới kết hợp với ngày chiếu hiện tại tạo thành thời điểm chiếu hợp lệ, chưa qua.
+7. Hệ thống xác định lại khoảng thời gian sử dụng phòng và kiểm tra lịch trùng.
+8. Hệ thống lưu thay đổi, thông báo “Đổi giờ chiếu thành công” và cập nhật danh sách suất chiếu.
+	Dòng sự kiện phụ
+	3.1. Suất chiếu đã bắt đầu, đã bị hủy hoặc đã phát sinh vé bán ra: Hệ thống từ chối đổi giờ chiếu.
+5.1. Admin chọn “Hủy”: Hệ thống giữ nguyên giờ chiếu hiện tại.
+6.1. Giờ nhập không hợp lệ hoặc thời điểm chiếu mới đã qua: Hệ thống yêu cầu nhập lại giờ.
+7.1. Giờ mới gây trùng lịch phòng: Hệ thống thông báo xung đột và không lưu thay đổi.
+	Tiền điều kiện
+	Admin đã đăng nhập, có quyền quản lý lịch chiếu và suất chiếu cần cập nhật tồn tại trong hệ thống.
+	Hậu điều kiện
+	Khi thành công, giờ bắt đầu và khoảng thời gian sử dụng phòng được cập nhật hợp lệ. Nếu thao tác không thành công, thông tin giờ chiếu được giữ nguyên.
+	3.3.4.6. Kiểm tra lịch trùng
+Mục
+	Nội dung
+	UseCase ID
+	UC04.3
+	Tên Use Case
+	Kiểm tra lịch trùng
+	Tác nhân
+	Admin, thông qua thao tác tạo hoặc cập nhật suất chiếu.
+	Tóm tắt
+	Hệ thống kiểm tra xung đột thời gian sử dụng phòng khi Admin tạo hoặc thay đổi thông tin suất chiếu.
+	Dòng sự kiện chính
+	1. Admin thực hiện tạo hoặc cập nhật suất chiếu và chọn lưu thông tin.
+2. Hệ thống lấy phòng chiếu, ngày chiếu, giờ bắt đầu, thời lượng phim và thời gian dọn phòng.
+3. Hệ thống xác định khoảng thời gian sử dụng phòng của suất chiếu cần kiểm tra.
+4. Hệ thống lấy các suất chiếu chưa bị hủy trong cùng phòng có khả năng giao nhau về thời gian; nếu đang cập nhật, không so sánh suất chiếu với chính nó.
+5. Hệ thống so sánh các khoảng thời gian sử dụng phòng.
+6. Nếu không có khoảng thời gian giao nhau, hệ thống trả kết quả không trùng lịch để tiếp tục lưu suất chiếu.
+	Dòng sự kiện phụ
+	5.1. Phát hiện khoảng thời gian giao nhau: Hệ thống thông báo lịch chiếu bị trùng, không cho phép lưu và yêu cầu Admin điều chỉnh thông tin.
+	Tiền điều kiện
+	Admin đã đăng nhập và đang tạo hoặc cập nhật suất chiếu. Các thông tin cần kiểm tra đã được nhập đầy đủ và hợp lệ.
+	Hậu điều kiện
+	Hệ thống xác định suất chiếu có hoặc không có xung đột lịch phòng. Thao tác kiểm tra không tự làm thay đổi dữ liệu lịch chiếu.
+	3.3.4.7. Hủy suất chiếu
+Mục
+	Nội dung
+	UseCase ID
+	UC04.4
+	Tên Use Case
+	Hủy suất chiếu
+	Tác nhân
+	Admin
+	Tóm tắt
+	Cho phép Admin hủy suất chiếu chưa bắt đầu và chưa phát sinh vé bán ra.
+	Dòng sự kiện chính
+	1. Admin truy cập chức năng “Quản lý lịch chiếu”.
+2. Hệ thống hiển thị danh sách suất chiếu.
+3. Admin chọn suất chiếu cần hủy và chọn “Hủy suất chiếu”.
+4. Hệ thống hiển thị thông báo yêu cầu xác nhận.
+5. Admin chọn “Có”.
+6. Hệ thống kiểm tra suất chiếu chưa bắt đầu, chưa bị hủy và chưa phát sinh vé bán ra.
+7. Hệ thống chuyển trạng thái suất chiếu sang “Đã hủy” và không cho phép tiếp tục bán vé cho suất chiếu đó.
+8. Hệ thống thông báo “Hủy suất chiếu thành công” và cập nhật danh sách suất chiếu.
+	Dòng sự kiện phụ
+	5.1. Admin chọn “Không”: Hệ thống đóng thông báo và giữ nguyên suất chiếu.
+6.1. Suất chiếu đã bắt đầu hoặc đã phát sinh vé bán ra: Hệ thống thông báo không được phép hủy và giữ nguyên dữ liệu.
+6.2. Suất chiếu đã bị hủy: Hệ thống thông báo trạng thái hiện tại và không thực hiện hủy lần nữa.
+	Tiền điều kiện
+	Admin đã đăng nhập, có quyền quản lý lịch chiếu và suất chiếu cần hủy tồn tại trong hệ thống.
+	Hậu điều kiện
+	Khi thành công, suất chiếu ở trạng thái “Đã hủy”, không được bán vé và không còn chiếm lịch sử dụng phòng. Thông tin suất chiếu vẫn được lưu để tra cứu. Nếu thao tác không thành công, dữ liệu được giữ nguyên.
+	
+
+3.3.5. Use-case Quản lý phòng chiếu (UC05)
+  
+
+3.3.5.1. Thêm ghế
+Mục
+	Nội dung
+	UseCase ID
+	UC05.1.1
+	Tên Use Case
+	Thêm ghế
+	Tác nhân
+	Admin
+	Tóm tắt
+	Cho phép Admin bổ sung ghế vào sơ đồ của một phòng chiếu.
+	Dòng sự kiện chính
+	1. Admin chọn chức năng “Quản lý phòng chiếu”.
+2. Hệ thống hiển thị danh sách phòng chiếu.
+3. Admin chọn phòng cần bổ sung ghế và mở sơ đồ ghế.
+4. Admin chọn “Thêm ghế”.
+5. Hệ thống hiển thị biểu mẫu nhập thông tin ghế.
+6. Admin nhập hàng ghế, số ghế, loại ghế và trạng thái sử dụng.
+7. Admin chọn “Lưu”.
+8. Hệ thống kiểm tra vị trí ghế không bị trùng và việc bổ sung không ảnh hưởng đến các suất chiếu đã bán vé, chưa kết thúc.
+9. Hệ thống lưu ghế mới, cập nhật sơ đồ và tổng số ghế của phòng.
+10. Hệ thống thông báo “Thêm ghế thành công”.
+	Dòng sự kiện phụ
+	7.1. Admin chọn “Hủy”: Hệ thống không lưu thông tin và trở về sơ đồ ghế.
+8.1. Thông tin chưa đầy đủ hoặc vị trí ghế bị trùng: Hệ thống thông báo lỗi, giữ thông tin đã nhập và yêu cầu điều chỉnh.
+8.2. Phòng có suất chiếu đã bán vé, chưa kết thúc: Hệ thống từ chối bổ sung ghế và thông báo không được thay đổi kết cấu sơ đồ ghế lúc này.
+	Tiền điều kiện
+	Admin đã đăng nhập, có quyền quản lý phòng chiếu và phòng được chọn tồn tại trong hệ thống.
+	Hậu điều kiện
+	Khi thành công, ghế mới được lưu, xuất hiện trên sơ đồ và tổng số ghế của phòng được cập nhật. Nếu thao tác không thành công, sơ đồ ghế được giữ nguyên.
+	3.3.5.2. Cập nhật thông tin ghế
+Mục
+	Nội dung
+	UseCase ID
+	UC05.1.2
+	Tên Use Case
+	Cập nhật thông tin ghế
+	Tác nhân
+	Admin
+	Tóm tắt
+	Cho phép Admin chỉnh sửa hàng, số ghế hoặc trạng thái sử dụng của ghế trong phòng chiếu.
+	Dòng sự kiện chính
+	1. Admin truy cập chức năng “Quản lý phòng chiếu”.
+2. Admin chọn phòng chiếu và mở sơ đồ ghế.
+3. Admin chọn ghế cần cập nhật.
+4. Hệ thống hiển thị thông tin hiện tại của ghế.
+5. Admin chỉnh sửa hàng, số ghế hoặc trạng thái sử dụng thành “Sẵn sàng sử dụng” hay “Bảo trì”.
+6. Admin chọn “Lưu”.
+7. Hệ thống kiểm tra dữ liệu, vị trí ghế và các suất chiếu liên quan.
+8. Hệ thống lưu thay đổi, cập nhật sơ đồ ghế và thông báo “Cập nhật thông tin ghế thành công”.
+	Dòng sự kiện phụ
+	6.1. Admin chọn “Hủy”: Hệ thống không lưu thay đổi.
+7.1. Thông tin chưa đầy đủ hoặc vị trí mới trùng với ghế khác: Hệ thống thông báo lỗi và yêu cầu điều chỉnh.
+7.2. Admin thay đổi hàng hoặc số ghế khi phòng có suất chiếu đã bán vé, chưa kết thúc: Hệ thống từ chối thay đổi để bảo toàn thông tin vị trí ghế trên vé.
+7.3. Admin chuyển ghế sang “Bảo trì” nhưng ghế đã được bán trong suất chiếu chưa kết thúc: Hệ thống từ chối và thông báo ghế đang có vé liên quan.
+	Tiền điều kiện
+	Admin đã đăng nhập, có quyền quản lý phòng chiếu và ghế cần cập nhật tồn tại trong hệ thống.
+	Hậu điều kiện
+	Khi thành công, thông tin ghế được cập nhật. Ghế bảo trì không được chọn để bán vé. Nếu thao tác không thành công, dữ liệu ghế được giữ nguyên. Việc cập nhật không làm thay đổi thông tin vé đã phát hành.
+	3.3.5.3. Phân loại ghế
+Mục
+	Nội dung
+	UseCase ID
+	UC05.1.3
+	Tên Use Case
+	Phân loại ghế
+	Tác nhân
+	Admin
+	Tóm tắt
+	Cho phép Admin thiết lập loại ghế để phục vụ bố trí phòng và áp dụng giá vé.
+	Dòng sự kiện chính
+	1. Admin truy cập chức năng “Quản lý phòng chiếu”.
+2. Admin chọn phòng chiếu và mở sơ đồ ghế.
+3. Admin chọn ghế cần phân loại.
+4. Hệ thống hiển thị loại ghế hiện tại và các loại ghế được hỗ trợ.
+5. Admin chọn loại ghế phù hợp như ghế thường, ghế VIP hoặc ghế đôi.
+6. Admin chọn “Lưu”.
+7. Hệ thống kiểm tra loại ghế và các suất chiếu liên quan.
+8. Hệ thống lưu loại ghế mới, cập nhật sơ đồ và thông báo “Phân loại ghế thành công”.
+	Dòng sự kiện phụ
+	6.1. Admin chọn “Hủy”: Hệ thống giữ nguyên loại ghế hiện tại.
+7.1. Admin chưa chọn loại ghế hoặc loại ghế không hợp lệ: Hệ thống yêu cầu chọn lại.
+7.2. Phòng có suất chiếu đã bán vé, chưa kết thúc: Hệ thống từ chối thay đổi loại ghế để tránh ảnh hưởng đến thông tin ghế và giá vé đã áp dụng.
+	Tiền điều kiện
+	Admin đã đăng nhập, có quyền quản lý phòng chiếu và ghế được chọn tồn tại trong hệ thống.
+	Hậu điều kiện
+	Khi thành công, loại ghế được cập nhật và sử dụng để xác định giá cho các giao dịch mới. Nếu thao tác không thành công, loại ghế được giữ nguyên. Giá trị giao dịch đã hoàn tất không bị thay đổi.
+	3.3.5.4. Thêm phòng chiếu
+Mục
+	Nội dung
+	UseCase ID
+	UC05.2
+	Tên Use Case
+	Thêm phòng chiếu
+	Tác nhân
+	Admin
+	Tóm tắt
+	Cho phép Admin khai báo phòng chiếu mới trong hệ thống.
+	Dòng sự kiện chính
+	1. Admin chọn chức năng “Quản lý phòng chiếu”.
+2. Hệ thống hiển thị danh sách phòng chiếu.
+3. Admin chọn “Thêm phòng chiếu”.
+4. Hệ thống hiển thị biểu mẫu thêm phòng.
+5. Admin nhập tên phòng, chọn loại phòng chiếu và trạng thái hoạt động.
+6. Admin chọn “Lưu”.
+7. Hệ thống kiểm tra thông tin và tên phòng không trùng với phòng đã có.
+8. Hệ thống lưu phòng mới, thông báo “Thêm phòng chiếu thành công” và cập nhật danh sách phòng.
+	Dòng sự kiện phụ
+	6.1. Admin chọn “Hủy”: Hệ thống không lưu thông tin và trở về danh sách phòng.
+7.1. Thông tin bắt buộc bị bỏ trống hoặc dữ liệu không hợp lệ: Hệ thống thông báo các trường cần điều chỉnh và giữ thông tin đã nhập.
+7.2. Tên phòng bị trùng: Hệ thống thông báo “Tên phòng chiếu đã tồn tại” và yêu cầu nhập tên khác.
+	Tiền điều kiện
+	Admin đã đăng nhập và có quyền quản lý phòng chiếu.
+	Hậu điều kiện
+	Khi thành công, phòng mới được lưu và xuất hiện trong danh sách phòng chiếu. Phòng chỉ được sử dụng để tạo suất chiếu sau khi có sơ đồ ghế hợp lệ và đang hoạt động. Nếu thao tác không thành công, không tạo phòng mới.
+	3.3.5.5. Tra cứu phòng chiếu
+Mục
+	Nội dung
+	UseCase ID
+	UC05.3
+	Tên Use Case
+	Tra cứu phòng chiếu
+	Tác nhân
+	Admin, Nhân viên
+	Tóm tắt
+	Cho phép Admin và Nhân viên tìm kiếm, xem thông tin phòng chiếu và sơ đồ ghế.
+	Dòng sự kiện chính
+	1. Người dùng truy cập chức năng tra cứu phòng chiếu.
+2. Hệ thống hiển thị danh sách phòng và các tiêu chí tìm kiếm.
+3. Người dùng nhập mã hoặc tên phòng, hoặc chọn loại phòng và trạng thái hoạt động.
+4. Người dùng chọn “Tìm kiếm”.
+5. Hệ thống hiển thị các phòng phù hợp.
+6. Người dùng chọn phòng cần xem.
+7. Hệ thống hiển thị thông tin phòng, tổng số ghế, sơ đồ ghế và trạng thái hoạt động.
+	Dòng sự kiện phụ
+	4.1. Người dùng không nhập hoặc chọn tiêu chí: Hệ thống hiển thị toàn bộ danh sách phòng được phép tra cứu.
+5.1. Không có phòng phù hợp: Hệ thống hiển thị danh sách kết quả trống và thông báo “Không tìm thấy phòng chiếu phù hợp”.
+	Tiền điều kiện
+	Người dùng đã đăng nhập với vai trò Admin hoặc Nhân viên.
+	Hậu điều kiện
+	Thông tin phòng chiếu được hiển thị theo kết quả tra cứu. Thao tác không làm thay đổi dữ liệu phòng hoặc ghế.
+	3.3.5.6. Cập nhật thông tin phòng chiếu
+Mục
+	Nội dung
+	UseCase ID
+	UC05.4
+	Tên Use Case
+	Cập nhật thông tin phòng chiếu
+	Tác nhân
+	Admin
+	Tóm tắt
+	Cho phép Admin chỉnh sửa tên hoặc loại phòng chiếu đã có trong hệ thống.
+	Dòng sự kiện chính
+	1. Admin truy cập chức năng “Quản lý phòng chiếu”.
+2. Admin chọn phòng cần sửa và chọn “Cập nhật thông tin phòng chiếu”.
+3. Hệ thống hiển thị thông tin hiện tại của phòng.
+4. Admin chỉnh sửa tên hoặc loại phòng chiếu.
+5. Admin chọn “Lưu”.
+6. Hệ thống kiểm tra dữ liệu và các suất chiếu liên quan.
+7. Hệ thống lưu thay đổi, thông báo “Cập nhật phòng chiếu thành công” và cập nhật danh sách phòng.
+	Dòng sự kiện phụ
+	5.1. Admin chọn “Hủy”: Hệ thống giữ nguyên thông tin phòng.
+6.1. Thông tin bắt buộc bị bỏ trống, loại phòng không hợp lệ hoặc tên phòng trùng với phòng khác: Hệ thống thông báo lỗi và yêu cầu điều chỉnh.
+6.2. Admin thay đổi loại phòng khi còn suất chiếu chưa bị hủy, chưa kết thúc: Hệ thống từ chối thay đổi loại phòng để tránh làm sai lệch thông tin suất chiếu.
+	Tiền điều kiện
+	Admin đã đăng nhập, có quyền quản lý phòng chiếu và phòng cần cập nhật tồn tại trong hệ thống.
+	Hậu điều kiện
+	Khi thành công, thông tin phòng được cập nhật. Sơ đồ ghế và tổng số ghế không thay đổi bởi thao tác này. Nếu thao tác không thành công, thông tin phòng được giữ nguyên.
+	3.3.5.7. Cập nhật trạng thái phòng chiếu
+Mục
+	Nội dung
+	UseCase ID
+	UC05.5
+	Tên Use Case
+	Cập nhật trạng thái phòng chiếu
+	Tác nhân
+	Admin
+	Tóm tắt
+	Cho phép Admin thay đổi trạng thái phòng chiếu thành “Đang hoạt động”, “Tạm ngừng hoạt động” hoặc “Bảo trì”.
+	Dòng sự kiện chính
+	1. Admin truy cập chức năng “Quản lý phòng chiếu”.
+2. Admin chọn phòng cần thay đổi trạng thái.
+3. Hệ thống hiển thị trạng thái hiện tại của phòng.
+4. Admin chọn trạng thái mới và chọn “Lưu”.
+5. Hệ thống kiểm tra các điều kiện liên quan đến trạng thái được chọn.
+6. Hệ thống lưu thay đổi, thông báo “Cập nhật trạng thái phòng thành công” và cập nhật danh sách phòng.
+	Dòng sự kiện phụ
+	4.1. Admin chọn “Hủy”: Hệ thống giữ nguyên trạng thái phòng.
+5.1. Admin chọn “Tạm ngừng hoạt động” hoặc “Bảo trì” nhưng phòng còn suất chiếu chưa bị hủy, chưa kết thúc: Hệ thống từ chối và yêu cầu xử lý các suất chiếu liên quan trước.
+5.2. Admin chọn “Đang hoạt động” nhưng phòng chưa có ghế sử dụng được: Hệ thống thông báo phòng chưa đủ điều kiện hoạt động và không lưu thay đổi.
+	Tiền điều kiện
+	Admin đã đăng nhập, có quyền quản lý phòng chiếu và phòng được chọn tồn tại trong hệ thống.
+	Hậu điều kiện
+	Khi thành công, trạng thái phòng được cập nhật. Phòng tạm ngừng hoặc bảo trì không được sử dụng để tạo suất chiếu mới. Nếu thao tác không thành công, trạng thái phòng được giữ nguyên.
+	
+
+3.3.6. Use-case Quản lý giá vé và F&B (UC06)
+  
+
+3.3.6.1. Thiết lập giá vé
+Mục
+	Nội dung
+	UseCase ID
+	UC06.1.1
+	Tên Use Case
+	Thiết lập giá vé
+	Tác nhân
+	Admin
+	Tóm tắt
+	Cho phép Admin thiết lập mức giá vé theo loại ghế, loại phòng chiếu và thời điểm chiếu.
+	Dòng sự kiện chính
+	1. Admin chọn chức năng “Quản lý giá vé và F&B”.
+2. Hệ thống hiển thị bảng giá vé hiện tại.
+3. Admin chọn “Thiết lập giá vé”.
+4. Hệ thống hiển thị biểu mẫu thiết lập giá.
+5. Admin chọn loại ghế, loại phòng chiếu, thời điểm áp dụng như ngày thường, cuối tuần hoặc ngày lễ và nhập mức giá vé.
+6. Admin chọn “Lưu”.
+7. Hệ thống kiểm tra mức giá và các điều kiện áp dụng.
+8. Hệ thống lưu mức giá mới, thông báo “Thiết lập giá vé thành công” và cập nhật bảng giá.
+	Dòng sự kiện phụ
+	6.1. Admin chọn “Hủy”: Hệ thống không lưu thông tin và trở về bảng giá vé.
+7.1. Thông tin chưa đầy đủ hoặc mức giá không phải số lớn hơn 0: Hệ thống thông báo lỗi, giữ thông tin đã nhập và yêu cầu điều chỉnh.
+7.2. Đã tồn tại mức giá có cùng điều kiện áp dụng: Hệ thống thông báo “Giá vé cho điều kiện này đã tồn tại” và yêu cầu Admin sử dụng chức năng Sửa giá vé.
+	Tiền điều kiện
+	Admin đã đăng nhập và có quyền quản lý giá vé. Các loại ghế và loại phòng chiếu đã được xác định trong hệ thống.
+	Hậu điều kiện
+	Khi thành công, mức giá mới được lưu và có thể sử dụng để tính tiền cho các giao dịch bán vé phù hợp. Nếu thao tác không thành công, bảng giá được giữ nguyên.
+	3.3.6.2. Sửa giá vé
+Mục
+	Nội dung
+	UseCase ID
+	UC06.1.2
+	Tên Use Case
+	Sửa giá vé
+	Tác nhân
+	Admin
+	Tóm tắt
+	Cho phép Admin điều chỉnh mức giá vé đã được thiết lập trong hệ thống.
+	Dòng sự kiện chính
+	1. Admin truy cập chức năng “Quản lý giá vé và F&B”.
+2. Hệ thống hiển thị bảng giá vé.
+3. Admin chọn mức giá cần sửa và chọn “Sửa giá vé”.
+4. Hệ thống hiển thị mức giá hiện tại cùng các điều kiện áp dụng.
+5. Admin nhập mức giá mới và chọn “Lưu”.
+6. Hệ thống kiểm tra mức giá mới hợp lệ.
+7. Hệ thống lưu thay đổi, thông báo “Cập nhật giá vé thành công” và cập nhật bảng giá.
+	Dòng sự kiện phụ
+	5.1. Admin chọn “Hủy”: Hệ thống không lưu thay đổi và giữ nguyên mức giá hiện tại.
+6.1. Mức giá bị bỏ trống hoặc không phải số lớn hơn 0: Hệ thống thông báo “Vui lòng nhập giá vé hợp lệ” và yêu cầu nhập lại.
+	Tiền điều kiện
+	Admin đã đăng nhập, có quyền quản lý giá vé và mức giá cần sửa tồn tại trong hệ thống.
+	Hậu điều kiện
+	Khi thành công, mức giá mới được áp dụng cho các giao dịch bán vé phát sinh sau khi cập nhật. Giá vé và tổng tiền của các giao dịch đã hoàn tất được giữ nguyên. Nếu thao tác không thành công, bảng giá không thay đổi.
+	3.3.6.3. Thêm sản phẩm
+Mục
+	Nội dung
+	UseCase ID
+	UC06.2.1
+	Tên Use Case
+	Thêm sản phẩm
+	Tác nhân
+	Admin
+	Tóm tắt
+	Cho phép Admin thêm sản phẩm F&B mới vào danh mục quản lý của rạp.
+	Dòng sự kiện chính
+	1. Admin truy cập chức năng “Quản lý giá vé và F&B”.
+2. Admin chọn mục “Quản lý F&B”.
+3. Hệ thống hiển thị danh sách sản phẩm.
+4. Admin chọn “Thêm sản phẩm”.
+5. Hệ thống hiển thị biểu mẫu thêm sản phẩm.
+6. Admin nhập mã sản phẩm, tên sản phẩm, mô tả, đơn vị tính, đơn giá, số lượng tồn kho ban đầu và tình trạng kinh doanh.
+7. Admin chọn “Lưu”.
+8. Hệ thống kiểm tra thông tin sản phẩm.
+9. Hệ thống lưu sản phẩm mới, thông báo “Thêm sản phẩm thành công” và cập nhật danh sách sản phẩm.
+	Dòng sự kiện phụ
+	7.1. Admin chọn “Hủy”: Hệ thống không lưu thông tin và trở về danh sách sản phẩm.
+8.1. Thông tin bắt buộc bị bỏ trống: Hệ thống thông báo các trường cần bổ sung và giữ thông tin đã nhập.
+8.2. Mã sản phẩm đã tồn tại: Hệ thống thông báo mã bị trùng và yêu cầu nhập mã khác.
+8.3. Đơn giá không phải số lớn hơn 0 hoặc số lượng tồn kho không phải số nguyên không âm: Hệ thống thông báo dữ liệu không hợp lệ và yêu cầu điều chỉnh.
+	Tiền điều kiện
+	Admin đã đăng nhập và có quyền quản lý F&B.
+	Hậu điều kiện
+	Khi thành công, sản phẩm mới được lưu cùng giá bán và số lượng tồn kho ban đầu, đồng thời xuất hiện trong danh mục F&B. Nếu thao tác không thành công, không tạo sản phẩm mới.
+	3.3.6.4. Cập nhật sản phẩm
+Mục
+	Nội dung
+	UseCase ID
+	UC06.2.2
+	Tên Use Case
+	Cập nhật sản phẩm
+	Tác nhân
+	Admin
+	Tóm tắt
+	Cho phép Admin chỉnh sửa tên, mô tả, đơn vị tính, tình trạng kinh doanh và số lượng tồn kho của sản phẩm F&B.
+	Dòng sự kiện chính
+	1. Admin truy cập mục “Quản lý F&B”.
+2. Hệ thống hiển thị danh sách sản phẩm.
+3. Admin chọn sản phẩm cần sửa và chọn “Cập nhật sản phẩm”.
+4. Hệ thống hiển thị thông tin hiện tại của sản phẩm.
+5. Admin chỉnh sửa tên, mô tả, đơn vị tính, tình trạng kinh doanh hoặc cập nhật số lượng tồn kho theo số lượng thực tế đã kiểm tra.
+6. Admin chọn “Lưu”.
+7. Hệ thống kiểm tra thông tin đã chỉnh sửa.
+8. Hệ thống lưu thay đổi, thông báo “Cập nhật sản phẩm thành công” và cập nhật danh sách sản phẩm.
+	Dòng sự kiện phụ
+	6.1. Admin chọn “Hủy”: Hệ thống không lưu thay đổi và giữ nguyên thông tin sản phẩm.
+7.1. Thông tin bắt buộc bị bỏ trống hoặc dữ liệu không hợp lệ: Hệ thống thông báo lỗi, giữ nội dung chỉnh sửa và yêu cầu điều chỉnh.
+7.2. Số lượng tồn kho không phải số nguyên không âm: Hệ thống thông báo “Số lượng tồn kho không hợp lệ”, giữ nội dung đã nhập và yêu cầu điều chỉnh.
+	Tiền điều kiện
+	Admin đã đăng nhập, có quyền quản lý F&B và sản phẩm cần cập nhật tồn tại trong hệ thống.
+	Hậu điều kiện
+	Khi thành công, các thông tin được chỉnh sửa và số lượng tồn kho được lưu, sử dụng cho chức năng kiểm tra tồn kho và thống kê F&B. Mã sản phẩm và giá bán không thay đổi bởi thao tác này. Nếu thao tác không thành công, dữ liệu sản phẩm được giữ nguyên.
+	3.3.6.5. Quản lý giá bán
+Mục
+	Nội dung
+	UseCase ID
+	UC06.2.3
+	Tên Use Case
+	Quản lý giá bán
+	Tác nhân
+	Admin
+	Tóm tắt
+	Cho phép Admin xem và điều chỉnh giá bán của sản phẩm F&B.
+	Dòng sự kiện chính
+	1. Admin truy cập mục “Quản lý F&B”.
+2. Admin chọn chức năng “Quản lý giá bán”.
+3. Hệ thống hiển thị danh sách sản phẩm cùng giá bán hiện tại.
+4. Admin chọn sản phẩm cần điều chỉnh giá.
+5. Hệ thống hiển thị thông tin sản phẩm và ô nhập giá bán.
+6. Admin nhập giá mới và chọn “Lưu”.
+7. Hệ thống kiểm tra giá bán hợp lệ.
+8. Hệ thống lưu giá mới, thông báo “Cập nhật giá bán thành công” và cập nhật danh sách giá sản phẩm.
+	Dòng sự kiện phụ
+	6.1. Admin chọn “Hủy”: Hệ thống giữ nguyên giá bán hiện tại.
+7.1. Giá bán bị bỏ trống hoặc không phải số lớn hơn 0: Hệ thống thông báo “Vui lòng nhập giá bán hợp lệ” và yêu cầu nhập lại.
+	Tiền điều kiện
+	Admin đã đăng nhập, có quyền quản lý F&B và sản phẩm được chọn tồn tại trong hệ thống.
+	Hậu điều kiện
+	Khi thành công, giá bán của sản phẩm được cập nhật. Các thông tin khác và số lượng tồn kho được giữ nguyên. Nếu thao tác không thành công, giá bán không thay đổi.
+	3.3.6.6. Kiểm tra tồn kho
+Mục
+	Nội dung
+	UseCase ID
+	UC06.2.4
+	Tên Use Case
+	Kiểm tra tồn kho
+	Tác nhân
+	Admin
+	Tóm tắt
+	Cho phép Admin xem số lượng tồn kho của các sản phẩm F&B và xác định sản phẩm còn hàng hoặc hết hàng.
+	Dòng sự kiện chính
+	1. Admin truy cập mục “Quản lý F&B”.
+2. Admin chọn “Kiểm tra tồn kho”.
+3. Hệ thống hiển thị danh sách sản phẩm cùng mã sản phẩm, tên, đơn vị tính và số lượng tồn kho.
+4. Admin nhập mã hoặc tên sản phẩm cần xem, hoặc chọn trạng thái còn hàng, hết hàng để lọc danh sách.
+5. Hệ thống hiển thị các sản phẩm phù hợp cùng số lượng tồn kho hiện tại.
+	Dòng sự kiện phụ
+	4.1. Admin không nhập hoặc chọn tiêu chí: Hệ thống hiển thị tồn kho của toàn bộ sản phẩm.
+5.1. Không có sản phẩm phù hợp: Hệ thống hiển thị danh sách kết quả trống và thông báo “Không tìm thấy sản phẩm phù hợp”.
+	Tiền điều kiện
+	Admin đã đăng nhập và có quyền quản lý F&B.
+	Hậu điều kiện
+	Hệ thống hiển thị số lượng tồn kho theo dữ liệu đang lưu. Sản phẩm có số lượng bằng 0 được xác định là hết hàng. Thao tác kiểm tra không làm thay đổi số lượng tồn kho.
+	
+
+3.3.7. Use-case Kiểm tra, xác nhận vé (UC07)
+  
+
+3.3.7.1. Tra cứu vé
+Mục
+	Nội dung
+	UseCase ID
+	UC07.1
+	Tên Use Case
+	Tra cứu vé
+	Tác nhân
+	Nhân viên
+	Tóm tắt
+	Cho phép Nhân viên tìm và xem thông tin vé bằng mã vé hoặc mã QR.
+	Dòng sự kiện chính
+	1. Nhân viên chọn chức năng “Kiểm tra và xác nhận vé”.
+2. Hệ thống hiển thị giao diện tra cứu vé.
+3. Nhân viên quét mã QR hoặc nhập mã vé.
+4. Hệ thống tìm vé tương ứng trong cơ sở dữ liệu.
+5. Hệ thống hiển thị thông tin gồm mã vé, tên phim, phòng chiếu, ngày giờ chiếu, vị trí ghế và trạng thái vé.
+	Dòng sự kiện phụ
+	3.1. Mã QR không đọc được: Hệ thống thông báo lỗi và cho phép Nhân viên quét lại hoặc nhập mã vé thủ công.
+3.2. Nhân viên chưa nhập mã vé: Hệ thống yêu cầu nhập mã vé hoặc quét mã QR.
+4.1. Không tìm thấy vé: Hệ thống thông báo “Vé không tồn tại” và cho phép tra cứu lại.
+	Tiền điều kiện
+	Nhân viên đã đăng nhập và có quyền sử dụng chức năng Kiểm tra và xác nhận vé.
+	Hậu điều kiện
+	Khi thành công, thông tin vé được hiển thị. Thao tác tra cứu không làm thay đổi trạng thái vé.
+	3.3.7.2. Kiểm tra tính hợp lệ
+Mục
+	Nội dung
+	UseCase ID
+	UC07.2
+	Tên Use Case
+	Kiểm tra tính hợp lệ
+	Tác nhân
+	Nhân viên
+	Tóm tắt
+	Cho phép Nhân viên kiểm tra vé có đủ điều kiện sử dụng để vào phòng chiếu hay không.
+	Dòng sự kiện chính
+	1. Nhân viên tra cứu vé bằng mã vé hoặc mã QR.
+2. Hệ thống tìm và hiển thị thông tin vé.
+3. Hệ thống kiểm tra vé đã thanh toán và chưa sử dụng.
+4. Hệ thống kiểm tra vé thuộc đúng phòng và suất chiếu đang được kiểm soát, đồng thời thời điểm kiểm tra nằm trong khoảng thời gian cho phép vào phòng.
+5. Hệ thống hiển thị kết quả “Vé hợp lệ”.
+6. Nhân viên đối chiếu thông tin và chọn “Xác nhận” để thực hiện cập nhật trạng thái vé.
+	Dòng sự kiện phụ
+	2.1. Vé không tồn tại: Hệ thống thông báo “Vé không tồn tại” và không cho phép xác nhận.
+3.1. Vé chưa thanh toán hoặc đã sử dụng: Hệ thống thông báo vé không hợp lệ kèm lý do và không cho phép xác nhận.
+4.1. Vé không đúng phòng, không đúng suất chiếu hoặc ngoài thời gian được phép vào: Hệ thống thông báo lý do từ chối và giữ nguyên trạng thái vé.
+6.1. Nhân viên không xác nhận cho khách vào: Hệ thống giữ nguyên trạng thái vé.
+	Tiền điều kiện
+	Nhân viên đã đăng nhập và có quyền kiểm tra vé. Phòng và suất chiếu đang được kiểm soát đã được xác định.
+	Hậu điều kiện
+	Hệ thống hiển thị kết quả kiểm tra. Nếu vé hợp lệ và Nhân viên xác nhận, hệ thống thực hiện cập nhật trạng thái. Nếu vé không hợp lệ, Nhân viên chưa xác nhận hoặc kiểm tra thất bại, trạng thái vé được giữ nguyên.
+	3.3.7.3. Cập nhật trạng thái
+Mục
+	Nội dung
+	UseCase ID
+	UC07.3
+	Tên Use Case
+	Cập nhật trạng thái
+	Tác nhân
+	Nhân viên
+	Tóm tắt
+	Cho phép Nhân viên xác nhận sử dụng vé hợp lệ để hệ thống chuyển trạng thái vé sang “Đã sử dụng”.
+	Dòng sự kiện chính
+	1. Hệ thống hiển thị kết quả kiểm tra vé hợp lệ.
+2. Nhân viên chọn “Xác nhận” cho khách vào phòng chiếu.
+3. Hệ thống kiểm tra lại vé vẫn đủ điều kiện sử dụng tại thời điểm xác nhận.
+4. Hệ thống cập nhật trạng thái vé sang “Đã sử dụng”.
+5. Hệ thống thông báo “Xác nhận vé thành công” và hiển thị trạng thái mới.
+6. Nhân viên cho khách vào phòng chiếu.
+	Dòng sự kiện phụ
+	2.1. Nhân viên hủy xác nhận: Hệ thống giữ nguyên trạng thái vé.
+3.1. Vé đã được xác nhận sử dụng tại lần kiểm tra khác: Hệ thống thông báo “Vé đã được sử dụng” và không thực hiện cập nhật lần nữa.
+3.2. Vé không còn đủ điều kiện sử dụng: Hệ thống thông báo lý do từ chối và không cập nhật trạng thái.
+4.1. Nhân viên chưa cho khách vào cho đến khi hệ thống xác nhận thành công.
+	Tiền điều kiện
+	Nhân viên đã đăng nhập, có quyền kiểm tra vé và vé đã được kiểm tra hợp lệ.
+	Hậu điều kiện
+	Khi thành công, vé chuyển sang “Đã sử dụng” và không được xác nhận sử dụng lần nữa. Nếu thao tác bị hủy hoặc cập nhật thất bại, hệ thống không ghi nhận thêm lần sử dụng vé.
+	
+
+3.3.8. Use-case Quản lý bán vé (UC08)
+  
+
+3.3.8.1. Tìm suất chiếu
+Mục
+	Nội dung
+	UseCase ID
+	UC08.1
+	Tên Use Case
+	Tìm suất chiếu
+	Tác nhân
+	Nhân viên
+	Tóm tắt
+	Cho phép Nhân viên tìm các suất chiếu phù hợp với yêu cầu của khách hàng.
+	Dòng sự kiện chính
+	1. Nhân viên chọn chức năng “Quản lý bán vé”.
+2. Hệ thống hiển thị danh sách suất chiếu đang được phép bán vé và các tiêu chí tìm kiếm.
+3. Nhân viên nhập tên phim hoặc chọn ngày, giờ chiếu cần tìm.
+4. Nhân viên chọn “Tìm kiếm”.
+5. Hệ thống hiển thị các suất chiếu phù hợp, gồm tên phim, phòng chiếu, ngày và giờ bắt đầu.
+6. Nhân viên chọn suất chiếu theo yêu cầu của khách để tiếp tục kiểm tra ghế trống.
+	Dòng sự kiện phụ
+	4.1. Nhân viên không nhập hoặc chọn tiêu chí: Hệ thống hiển thị toàn bộ suất chiếu đang được phép bán vé.
+5.1. Không có suất chiếu phù hợp: Hệ thống thông báo “Không tìm thấy suất chiếu phù hợp” và cho phép thay đổi tiêu chí.
+6.1. Suất chiếu được chọn không còn được phép bán vé: Hệ thống thông báo và yêu cầu chọn suất chiếu khác.
+	Tiền điều kiện
+	Nhân viên đã đăng nhập và có quyền bán vé.
+	Hậu điều kiện
+	Hệ thống hiển thị kết quả tìm kiếm. Nếu Nhân viên chọn một suất chiếu hợp lệ, hệ thống sử dụng suất chiếu đó cho các thao tác bán vé tiếp theo.
+	3.3.8.2. Kiểm tra ghế trống
+Mục
+	Nội dung
+	UseCase ID
+	UC08.2
+	Tên Use Case
+	Kiểm tra ghế trống
+	Tác nhân
+	Nhân viên
+	Tóm tắt
+	Cho phép Nhân viên xem tình trạng ghế của suất chiếu và chọn ghế theo yêu cầu của khách hàng.
+	Dòng sự kiện chính
+	1. Nhân viên chọn suất chiếu cần bán vé.
+2. Hệ thống lấy sơ đồ ghế của phòng và tình trạng ghế theo suất chiếu đã chọn.
+3. Hệ thống hiển thị các ghế còn trống, đã bán, đang được giữ hoặc không khả dụng.
+4. Nhân viên chọn ghế còn trống theo yêu cầu của khách.
+5. Hệ thống kiểm tra các ghế được chọn vẫn còn trống và sử dụng được.
+6. Hệ thống giữ tạm các ghế cho giao dịch hiện tại và hiển thị danh sách ghế đã chọn.
+7. Nhân viên xác nhận lựa chọn để tiếp tục tính tiền.
+	Dòng sự kiện phụ
+	3.1. Không còn ghế trống: Hệ thống thông báo “Suất chiếu đã hết chỗ” và cho phép Nhân viên chọn suất chiếu khác.
+5.1. Ghế đã được bán, được giữ bởi giao dịch khác hoặc không khả dụng: Hệ thống thông báo ghế không thể chọn, cập nhật sơ đồ và yêu cầu chọn lại.
+7.1. Nhân viên hủy giao dịch hoặc đổi suất chiếu: Hệ thống giải phóng các ghế đang giữ cho giao dịch hiện tại.
+7.2. Hết thời gian giữ ghế khi giao dịch chưa bắt đầu xử lý thanh toán: Hệ thống giải phóng ghế, thông báo và yêu cầu kiểm tra lại tình trạng ghế. Khi giao dịch đang xử lý thanh toán, hệ thống tiếp tục giữ ghế cho đến khi xác định kết quả; nếu kết quả chưa rõ, Nhân viên kiểm tra giao dịch trước khi tiếp tục xử lý.
+	Tiền điều kiện
+	Nhân viên đã đăng nhập, có quyền bán vé và đã chọn suất chiếu đang được phép bán vé.
+	Hậu điều kiện
+	Khi thành công, các ghế được chọn được giữ tạm cho giao dịch hiện tại, chưa chuyển sang “Đã bán”. Nếu giao dịch bị hủy trước khi thanh toán hoặc hết thời gian giữ khi chưa bắt đầu xử lý thanh toán, các ghế được giải phóng 
+	3.3.8.3. Tính tiền
+Mục
+	Nội dung
+	UseCase ID
+	UC08.3
+	Tên Use Case
+	Tính tiền
+	Tác nhân
+	Nhân viên
+	Tóm tắt
+	Cho phép Nhân viên xác định tổng tiền vé dựa trên suất chiếu, các ghế đã chọn và bảng giá hiện hành.
+	Dòng sự kiện chính
+	1. Nhân viên xác nhận danh sách ghế đã chọn.
+2. Hệ thống kiểm tra các ghế vẫn được giữ hợp lệ cho giao dịch hiện tại.
+3. Hệ thống xác định loại ghế, loại phòng và thời điểm chiếu để lấy mức giá tương ứng.
+4. Hệ thống tính tiền từng vé và tổng tiền của các vé được chọn.
+5. Hệ thống hiển thị danh sách ghế, giá từng vé và tổng tiền cần thanh toán.
+6. Nhân viên thông báo tổng tiền cho khách.
+7. Nếu khách đồng ý mua, Nhân viên chọn “Thanh toán” để tiếp tục giao dịch.
+	Dòng sự kiện phụ
+	2.1. Chưa chọn ghế hoặc thời gian giữ ghế đã hết: Hệ thống yêu cầu Nhân viên kiểm tra và chọn lại ghế.
+3.1. Chưa có giá vé phù hợp: Hệ thống thông báo “Chưa thiết lập giá vé cho lựa chọn này” và không cho phép thanh toán.
+6.1. Khách muốn thay đổi ghế hoặc số lượng vé: Nhân viên quay lại lựa chọn ghế; hệ thống tính lại tiền theo lựa chọn mới.
+6.2. Khách không đồng ý mua: Nhân viên hủy giao dịch; hệ thống giải phóng các ghế đang giữ.
+	Tiền điều kiện
+	Nhân viên đã đăng nhập, có quyền bán vé và đã chọn ghế cho giao dịch hiện tại.
+	Hậu điều kiện
+	Khi thành công, hệ thống hiển thị tổng tiền vé. Nếu khách đồng ý, giao dịch được chuyển sang bước thanh toán. Việc tính tiền chưa ghi nhận giao dịch thanh toán thành công.
+	3.3.8.4. Thanh toán
+Mục
+	Nội dung
+	UseCase ID
+	UC08.4
+	Tên Use Case
+	Thanh toán
+	Tác nhân
+	Nhân viên
+	Tóm tắt
+	Cho phép Nhân viên xác nhận khoản tiền khách đã thanh toán và ghi nhận giao dịch bán vé.
+	Dòng sự kiện chính
+	1. Sau khi tính tiền và khách đồng ý mua, Nhân viên chọn “Thanh toán”.
+2. Hệ thống hiển thị thông tin suất chiếu, danh sách ghế và tổng tiền.
+3. Hệ thống kiểm tra các ghế vẫn được giữ hợp lệ cho giao dịch. Nếu hợp lệ, hệ thống tiếp tục giữ ghế trong quá trình xử lý thanh toán.
+4. Nhân viên chọn phương thức thanh toán: tiền mặt, chuyển khoản hoặc thẻ.
+5. Nhân viên nhận tiền mặt hoặc kiểm tra kết quả thanh toán qua chuyển khoản, thẻ tại quầy.
+6. Khi đã nhận đủ tiền hoặc xác nhận thanh toán thành công, Nhân viên chọn “Hoàn tất giao dịch”; hệ thống kiểm tra thông tin thanh toán đầy đủ.
+7. Hệ thống lưu giao dịch thành công, gồm mã giao dịch, thời gian, Nhân viên thực hiện, phương thức thanh toán, các ghế và số tiền.
+8. Hệ thống chuyển các ghế của giao dịch sang “Đã bán” và thông báo “Thanh toán thành công”.
+9. Hệ thống tiếp tục thực hiện phát hành vé.
+	Dòng sự kiện phụ
+	3.1. Ghế không còn được giữ hợp lệ: Hệ thống không cho phép bắt đầu thanh toán và yêu cầu Nhân viên kiểm tra, chọn lại ghế trước khi nhận tiền.
+4.1. Khách hủy trước khi thanh toán hoặc thanh toán chưa thành công: Nhân viên chưa xác nhận hoàn tất; hệ thống chưa ghi nhận giao dịch thành công.
+5.1. Khách hủy trước khi thanh toán: Nhân viên hủy giao dịch; hệ thống giải phóng các ghế đang giữ.
+6.1. Thiếu thông tin thanh toán: Hệ thống yêu cầu bổ sung trước khi hoàn tất.
+7.1. Nhân viên kiểm tra giao dịch trước khi thực hiện lại để tránh ghi nhận trùng.
+	Tiền điều kiện
+	Nhân viên đã đăng nhập, có quyền bán vé, giao dịch đã được tính tiền và khách đồng ý mua.
+	Hậu điều kiện
+	Khi thành công, giao dịch được ghi nhận đã thanh toán, các ghế chuyển sang “Đã bán” và hệ thống thực hiện phát hành vé. Nếu chưa thanh toán thành công, hệ thống không phát hành vé.
+	3.3.8.5. Phát hành vé
+Mục
+	Nội dung
+	UseCase ID
+	UC08.5
+	Tên Use Case
+	Phát hành vé
+	Tác nhân
+	Nhân viên
+	Tóm tắt
+	Hệ thống tạo vé và hỗ trợ Nhân viên in vé cho giao dịch đã thanh toán thành công.
+	Dòng sự kiện chính
+	1. Hệ thống xác định giao dịch đã thanh toán thành công.
+2. Hệ thống lấy thông tin suất chiếu và các ghế đã bán trong giao dịch.
+3. Hệ thống tạo vé tương ứng với từng ghế, gồm mã vé, mã QR, tên phim, phòng, ngày giờ chiếu, vị trí ghế và giá vé.
+4. Hệ thống lưu vé với trạng thái chưa sử dụng và liên kết vé với giao dịch.
+5. Hệ thống hiển thị vé để Nhân viên kiểm tra và thực hiện in.
+6. Nhân viên kiểm tra vé đã in và giao vé cho khách.
+	Dòng sự kiện phụ
+	1.1. Giao dịch chưa thanh toán thành công: Hệ thống không cho phép phát hành vé.
+3.1. Giao dịch đã có vé được phát hành: Hệ thống sử dụng lại các vé đã lưu, không tạo thêm vé mới cho cùng ghế trong giao dịch.
+4.1. Giao dịch đã thanh toán vẫn được giữ để kiểm tra và tiếp tục phát hành vé.
+5.1. Nhân viên in lại vé đã lưu. Không tạo giao dịch mới hoặc thu tiền lần nữa.
+	Tiền điều kiện
+	Giao dịch bán vé đã được ghi nhận thanh toán thành công và các ghế tương ứng đã chuyển sang “Đã bán”.
+	Hậu điều kiện
+	Khi thành công, vé được lưu với trạng thái chưa sử dụng và được in để giao cho khách. Nếu chỉ việc in thất bại, dữ liệu vé và giao dịch vẫn được giữ nguyên.
+	3.3.8.6. Kiểm tra giao dịch
+Mục
+	Nội dung
+	UseCase ID
+	UC08.6
+	Tên Use Case
+	Kiểm tra giao dịch
+	Tác nhân
+	Nhân viên
+	Tóm tắt
+	Cho phép Nhân viên tra cứu và xem lại thông tin giao dịch bán vé để kiểm tra kết quả thanh toán và vé đã phát hành.
+	Dòng sự kiện chính
+	1. Nhân viên chọn chức năng “Kiểm tra giao dịch”.
+2. Hệ thống hiển thị giao diện tra cứu giao dịch.
+3. Nhân viên nhập mã giao dịch, mã vé hoặc chọn khoảng thời gian cần tra cứu.
+4. Nhân viên chọn “Tìm kiếm”.
+5. Hệ thống tìm các giao dịch phù hợp và hiển thị danh sách kết quả.
+6. Nhân viên chọn giao dịch cần xem.
+7. Hệ thống hiển thị mã giao dịch, thời gian, Nhân viên thực hiện, phương thức thanh toán, tổng tiền, trạng thái giao dịch và các vé liên quan.
+	Dòng sự kiện phụ
+	4.1. Nhân viên chưa nhập hoặc chọn tiêu chí: Hệ thống yêu cầu nhập thông tin tra cứu.
+4.2. Khoảng thời gian không hợp lệ: Hệ thống yêu cầu chọn lại.
+5.1. Không có giao dịch phù hợp: Hệ thống hiển thị danh sách kết quả trống và thông báo “Không tìm thấy giao dịch phù hợp”.
+	Tiền điều kiện
+	Nhân viên đã đăng nhập và có quyền sử dụng chức năng Kiểm tra giao dịch.
+	Hậu điều kiện
+	Hệ thống hiển thị thông tin giao dịch và các vé liên quan. Thao tác kiểm tra không làm thay đổi dữ liệu giao dịch, trạng thái ghế hoặc trạng thái vé.
+	
+
+3.3.9. Use-case Báo cáo và thống kê doanh thu (UC09)
+  
+
+3.3.9.1. Doanh thu theo thời gian
+Mục
+	Nội dung
+	UseCase ID
+	UC09.1
+	Tên Use Case
+	Doanh thu theo thời gian
+	Tác nhân
+	Admin
+	Tóm tắt
+	Cho phép Admin xem doanh thu bán vé theo ngày, tháng, năm hoặc khoảng thời gian được lựa chọn.
+	Dòng sự kiện chính
+	1. Admin chọn chức năng “Báo cáo và thống kê”.
+2. Admin chọn “Doanh thu theo thời gian”.
+3. Hệ thống hiển thị các tiêu chí lựa chọn thời gian.
+4. Admin chọn ngày, tháng, năm hoặc nhập khoảng thời gian cần xem.
+5. Admin chọn “Thống kê”.
+6. Hệ thống lấy các giao dịch bán vé đã thanh toán thành công có thời gian thanh toán thuộc phạm vi được chọn.
+7. Hệ thống tổng hợp số giao dịch, số vé bán và tổng doanh thu theo thời gian.
+8. Hệ thống hiển thị kết quả thống kê.
+	Dòng sự kiện phụ
+	5.1. Admin chưa chọn thời gian: Hệ thống yêu cầu chọn thời gian cần thống kê.
+5.2. Ngày bắt đầu lớn hơn ngày kết thúc: Hệ thống thông báo “Khoảng thời gian không hợp lệ” và yêu cầu chọn lại.
+6.1. Không có giao dịch thành công trong thời gian được chọn: Hệ thống hiển thị số giao dịch, số vé bán và doanh thu bằng 0.
+	Tiền điều kiện
+	Admin đã đăng nhập và có quyền xem báo cáo, thống kê.
+	Hậu điều kiện
+	Hệ thống hiển thị doanh thu bán vé theo thời gian đã chọn. Thao tác thống kê không làm thay đổi dữ liệu giao dịch.
+	3.3.9.2. Doanh thu theo phim
+Mục
+	Nội dung
+	UseCase ID
+	UC09.2
+	Tên Use Case
+	Doanh thu theo phim
+	Tác nhân
+	Admin
+	Tóm tắt
+	Cho phép Admin xem số lượng vé bán và doanh thu bán vé của từng phim trong khoảng thời gian được lựa chọn.
+	Dòng sự kiện chính
+	1. Admin truy cập chức năng “Báo cáo và thống kê”.
+2. Admin chọn “Doanh thu theo phim”.
+3. Hệ thống hiển thị danh sách phim và các trường chọn thời gian.
+4. Admin chọn một phim hoặc tất cả phim, đồng thời chọn khoảng thời gian cần xem.
+5. Admin chọn “Thống kê”.
+6. Hệ thống lấy các vé thuộc giao dịch đã thanh toán thành công trong thời gian được chọn và xác định phim tương ứng với từng vé.
+7. Hệ thống tổng hợp số lượng vé bán và doanh thu theo từng phim.
+8. Hệ thống hiển thị tên phim, số lượng vé bán và tổng doanh thu tương ứng.
+	Dòng sự kiện phụ
+	5.1. Admin chưa chọn thời gian hoặc khoảng thời gian không hợp lệ: Hệ thống thông báo và yêu cầu điều chỉnh.
+6.1. Phim không có vé bán trong thời gian được chọn: Hệ thống hiển thị số lượng vé và doanh thu của phim bằng 0.
+	Tiền điều kiện
+	Admin đã đăng nhập và có quyền xem báo cáo, thống kê.
+	Hậu điều kiện
+	Hệ thống hiển thị doanh thu theo phim và thời gian được chọn. Doanh thu được tính từ giá vé đã lưu trong giao dịch, không tính lại theo bảng giá hiện tại. Dữ liệu gốc được giữ nguyên.
+	3.3.9.3. Doanh thu theo nhân viên
+Mục
+	Nội dung
+	UseCase ID
+	UC09.3
+	Tên Use Case
+	Doanh thu theo nhân viên
+	Tác nhân
+	Admin
+	Tóm tắt
+	Cho phép Admin xem số giao dịch, số vé bán và doanh thu do từng Nhân viên thực hiện trong khoảng thời gian được lựa chọn.
+	Dòng sự kiện chính
+	1. Admin truy cập chức năng “Báo cáo và thống kê”.
+2. Admin chọn “Doanh thu theo nhân viên”.
+3. Hệ thống hiển thị danh sách nhân viên và các trường chọn thời gian.
+4. Admin chọn một nhân viên hoặc tất cả nhân viên, đồng thời chọn khoảng thời gian cần xem.
+5. Admin chọn “Thống kê”.
+6. Hệ thống lấy các giao dịch đã thanh toán thành công trong thời gian được chọn, theo Nhân viên được ghi nhận thực hiện giao dịch.
+7. Hệ thống tổng hợp số giao dịch, số vé bán và doanh thu theo từng Nhân viên.
+8. Hệ thống hiển thị mã nhân viên, họ tên và các số liệu tương ứng.
+	Dòng sự kiện phụ
+	5.1. Admin chưa chọn thời gian hoặc khoảng thời gian không hợp lệ: Hệ thống thông báo và yêu cầu điều chỉnh.
+6.1. Nhân viên không có giao dịch thành công trong thời gian được chọn: Hệ thống hiển thị số giao dịch, số vé bán và doanh thu bằng 0.
+	Tiền điều kiện
+	Admin đã đăng nhập và có quyền xem báo cáo, thống kê.
+	Hậu điều kiện
+	Hệ thống hiển thị doanh thu theo Nhân viên và thời gian được chọn. Việc thống kê không làm thay đổi hồ sơ nhân viên hoặc dữ liệu giao dịch.
+	3.3.9.4. Thống kê theo vé và F&B
+Mục
+	Nội dung
+	UseCase ID
+	UC09.4
+	Tên Use Case
+	Thống kê theo vé và F&B
+	Tác nhân
+	Admin
+	Tóm tắt
+	Cho phép Admin thống kê số lượng, trạng thái vé và xem số lượng tồn kho của các sản phẩm F&B.
+	Dòng sự kiện chính
+	1. Admin truy cập chức năng “Báo cáo và thống kê”.
+2. Admin chọn “Thống kê theo vé và F&B”.
+3. Hệ thống hiển thị hai lựa chọn: thống kê vé và thống kê F&B.
+4. Admin chọn loại thống kê cần xem.
+5. Nếu chọn thống kê vé, Admin chọn khoảng thời gian phát hành vé và có thể lọc theo phim hoặc suất chiếu.
+6. Nếu chọn thống kê F&B, Admin chọn tất cả sản phẩm hoặc lọc theo sản phẩm, tình trạng kinh doanh, còn hàng hay hết hàng.
+7. Admin chọn “Thống kê”.
+8. Hệ thống tổng hợp dữ liệu theo lựa chọn.
+9. Với thống kê vé, hệ thống hiển thị tổng số vé đã phát hành trong thời gian được chọn và số lượng theo trạng thái hiện tại: chưa sử dụng hoặc đã sử dụng.
+10. Với thống kê F&B, hệ thống hiển thị mã sản phẩm, tên sản phẩm, đơn vị tính, tình trạng kinh doanh và số lượng tồn kho hiện tại.
+	Dòng sự kiện phụ
+	7.1. Chưa chọn loại thống kê hoặc thiếu tiêu chí bắt buộc: Hệ thống yêu cầu bổ sung lựa chọn.
+7.2. Khoảng thời gian thống kê vé không hợp lệ: Hệ thống thông báo và yêu cầu chọn lại.
+8.1. Không có vé phù hợp: Hệ thống hiển thị các số lượng vé bằng 0.
+8.2. Không có sản phẩm phù hợp: Hệ thống hiển thị danh sách kết quả trống và thông báo “Không có sản phẩm phù hợp”.
+	Tiền điều kiện
+	Admin đã đăng nhập và có quyền xem báo cáo, thống kê.
+	Hậu điều kiện
+	Hệ thống hiển thị kết quả thống kê theo lựa chọn. F&B chỉ thống kê thông tin sản phẩm và tồn kho hiện tại, không thống kê doanh thu hoặc số lượng bán. Dữ liệu vé và sản phẩm không bị thay đổi.
+	
+
+3.4. Sequence Diagram
+3.4.1. Đăng nhập
+  
+
+3.4.2. Quản lý nhân viên
+        3.4.2.1 Thêm nhân viên
+  
+
+3.4.2.2 Sửa nhân viên
+  
+
+3.4.2.3 Xóa nhân viên
+  
+
+3.4.2.4 Xem thông tin chi tiết nhân viên
+  
+
+3.4.2.5 Tìm kiếm nhân viên
+  
+
+
+
+
+
+3.4.3. Kiểm tra phim
+                3.4.3.1. Thêm phim
+                          
+3.4.3.2. Sửa tên phim
+  
+
+3.4.3.3. Cập nhật poster phim
+  
+
+3.4.3.4. Cập nhật thể loại phim
+  
+
+3.4.3.5. Ngừng chiếu phim
+  
+
+3.4.3.6. Tra cứu phim
+  
+
+3.4.4. Quản lý lịch chiếu
+3.4.4.1. Tạo suất chiếu
+  
+
+3.4.4.2. Cập nhật phim chiếu
+  
+
+3.4.4.3. Thay đổi phòng chiếu
+  
+
+3.4.4.4. Đổi ngày chiếu
+  
+
+3.4.4.5. Đổi giờ chiếu
+  
+
+3.4.4.6. Kiểm tra lịch trùng
+  
+
+3.4.4.7. Hủy suất chiếu
+  
+
+3.4.5. Quản lý phòng chiếu
+3.4.5.1. Thêm ghế
+  
+
+3.4.5.2. Cập nhật thông tin ghế
+  
+
+3.4.5.3. Phân loại ghế
+  
+
+3.4.5.4. Thêm phòng chiếu
+  
+
+3.4.5.5. Tra cứu phòng chiếu
+  
+
+3.4.5.6. Cập nhật thông tin phòng chiếu
+  
+
+3.4.5.7. Cập nhật trạng thái phòng chiếu
+  
+
+3.4.6. Quản lý giá vé & F&B
+3.4.6.1. Thiết lập giá vé
+  
+
+3.4.6.2. Sửa giá vé
+  
+
+3.4.6.3. Thêm sản phẩm
+  
+
+3.4.6.4. Cập nhật sản phẩm
+  
+
+3.4.6.5. Quản lý giá bán
+  
+
+3.4.6.6. Kiểm tra tồn kho
+  
+
+3.4.7. Kiểm tra và xác nhận vé
+3.4.7.1. Tra cứu vé
+                          
+3.4.7.2. Kiểm tra tính hợp lệ của vé
+  
+
+3.4.7.3. Cập nhật trạng thái vé
+  
+
+3.4.8. Quản lý bán vé
+3.4.8.1. Tìm suất chiếu
+  
+
+3.4.8.2. Kiểm tra ghế trống
+  
+
+3.4.8.3. Tính tiền
+  
+
+3.4.8.4. Thanh toán
+  
+
+3.4.8.5. Phát hành vé
+  
+
+3.4.8.6. Kiểm tra giao dịch
+  
+
+3.4.9. Báo cáo thống kê
+ 3.4.9.1 Doanh thu theo thời gian
+  
+
+3.4.9.2 Doanh thu theo phim
+  
+
+3.4.9.3 Doanh thu theo nhân viên
+  
+
+3.4.9.4 Thống kê theo vé và F&B
+  
+
+
+
+3.5 Lược đồ cơ sở dữ liệu và bảng mô tả
+  
+
+3.5.1 Lược đồ CSDL
+
+
+3.5.2 Bảng mô tả tổng quát
+
+
+STT
+	Tên bảng
+	Mô tả
+	1
+	VAITRO
+	Lưu trữ danh sách vai trò người dùng, phục vụ phân quyền truy cập hệ thống.
+	2
+	TAIKHOAN
+	Lưu thông tin đăng nhập, mật khẩu đã băm, trạng thái tài khoản và vai trò của nhân viên.
+	3
+	NHANVIEN
+	Lưu trữ thông tin cá nhân và hồ sơ nhân viên làm việc tại rạp chiếu film.
+	4
+	GIAODICH
+	Quản lý các giao dịch bán vé do nhân viên thực hiện, bao gồm thời gian, tổng tiền và trạng thái giao dịch.
+	5
+	THANHTOAN
+	Lưu thông tin thanh toán của giao dịch, bao gồm phương thức, số tiền và thời điểm thanh toán.
+	6
+	GHE
+	Quản lý danh sách ghế, vị trí, loại ghế và trạng thái sử dụng trong từng phòng chiếu
+	7
+	GHE_SUATCHIEU 
+	Quản lý trạng thái từng ghế theo từng suất chiếu, thông tin giữ ghế, giao dịch và giá vé đã chốt. 
+	8 
+	VE 
+	Lưu trữ thông tin vé đã phát hành, suất chiếu, ghế, mã QR, giá vé và trạng thái vé. 
+	9 
+	BANGGIAVE 
+	Quản lý giá vé theo loại ghế, loại thời điểm và loại phòng chiếu. 
+	10
+	LOAIGHE 
+	Lưu danh mục các loại ghế như ghế thường, ghế VIP hoặc ghế đôi. 
+	11 
+	SUATCHIEU 
+	Quản lý lịch chiếu phim, phòng chiếu, thời gian bắt đầu, thời gian trả phòng và trạng thái suất chiếu. 
+	12
+	LOAITHOIDIEM 
+	Lưu danh mục các loại thời điểm áp dụng cho việc xác định giá vé. 
+	13 
+	PHONGCHIEU 
+	Quản lý thông tin phòng chiếu, loại phòng, thời gian dọn phòng và trạng thái hoạt động. 
+	14
+	LOAIPHONG 
+	Lưu danh mục loại phòng chiếu và định dạng chiếu tương ứng. 
+	15
+	PHIM 
+	Lưu trữ thông tin phim như tên phim, thời lượng, đạo diễn, ngày khởi chiếu, giới hạn tuổi và trạng thái. 
+	16 
+	PHIM_THELOAI 
+	Bảng trung gian thể hiện quan hệ nhiều–nhiều giữa phim và thể loại. 
+	17
+	THELOAI 
+	Lưu danh mục thể loại phim, phục vụ phân loại và tra cứu. 
+	18 
+	SANPHAM 
+	Quản lý danh mục sản phẩm F&B, giá bán, số lượng tồn kho và tình trạng kinh doanh. 
+	
+
+4.3. Bảng mô tả chi tiết
+VAITRO
+
+
+STT
+	Thuộc tính
+	Kiểu dữ liệu
+	Mô tả
+	1
+	MaVaiTro
+	INT
+	Khóa chính, mã định danh duy nhất của vai trò.
+	2
+	TenVaiTro
+	NVARCHAR(30) 
+	Tên vai trò, chẳng hạn Admin hoặc Nhân viên; không được trùng lặp. 
+	
+
+
+
+TAIKHOAN
+
+
+STT
+	Thuộc tính
+	Kiểu dữ liệu
+	Mô tả
+	1
+	MaTK 
+	INT 
+	Khóa chính, mã định danh tài khoản. 
+	2
+	MaVaiTro
+	INT
+	Khóa ngoại tham chiếu VAITRO, xác định quyền truy cập. 
+	3
+	MaNV
+	VARCHAR(10 )
+	Khóa ngoại tham chiếu NHANVIEN, đồng thời có ràng buộc duy nhất. 
+	4
+	TenDangNhap
+	VARCHAR(50) 
+	Tên đăng nhập của tài khoản, không được trùng lặp. 
+	5
+	MatKhauHash
+	VARCHAR(255) 
+	Giá trị băm mật khẩu dùng để xác thực đăng nhập. 
+	6
+	TrangThai
+	NVARCHAR(20)
+	Trạng thái hoạt động của tài khoản, chẳng hạn đang hoạt động hoặc bị khóa. 
+	
+
+NHANVIEN
+
+
+STT
+	Thuộc tính
+	Kiểu dữ liệu
+	Mô tả
+	1
+	MaNV
+	VARCHAR(10) 
+	Khóa chính, mã định danh duy nhất của nhân viên. 
+	2
+	HoTen
+	NVARCHAR(100 
+	Họ và tên đầy đủ của nhân viên. 
+	3
+	NgaySinh
+	DATE 
+	Ngày, tháng, năm sinh của nhân viên. 
+	4
+	SoDienThoai
+	VARCHAR(15) 
+	Số điện thoại liên hệ của nhân viên. 
+	5
+	Email
+	VARCHAR(100)
+	Địa chỉ thư điện tử của nhân viên. 
+	6
+	DiaChi
+	NVARCHAR(200) 
+	Địa chỉ liên hệ của nhân viên. 
+	7
+	ChucVu
+	NVARCHAR(50) 
+	Chức vụ hoặc vị trí công việc của nhân viên tại rạp. 
+	
+
+GIAODICH
+
+
+STT
+	Thuộc tính
+	Kiểu dữ liệu
+	Mô tả
+	1
+	MaGiaoDich
+	VARCHAR(20) 
+	Khóa chính, mã định danh duy nhất của giao dịch. 
+	2
+	MaNV
+	VARCHAR(10) 
+	Khóa ngoại tham chiếu NHANVIEN, xác định nhân viên thực hiện giao dịch. 
+	3
+	ThoiGianTao
+	DATETIME 
+	Ngày và giờ tạo giao dịch.  
+	4
+	TongTien
+	DECIMAL(12,0) 
+	Tổng số tiền của giao dịch. 
+	5
+	TrangThai
+	NVARCHAR(40)
+	Trạng thái xử lý của giao dịch, chẳng hạn chờ thanh toán, hoàn tất hoặc đã hủy. 
+	
+
+THANHTOAN
+
+
+STT
+	Thuộc tính
+	Kiểu dữ liệu
+	Mô tả
+	1
+	MaGhe
+	INT
+	Khóa chính, mã định danh duy nhất của ghế. 
+	2
+	MaPhong
+	VARCHAR(10)
+	Khóa chính, mã định danh duy nhất của ghế. 
+	3
+	MaLoaiGhe
+	INT
+	Khóa ngoại tham chiếu LOAIGHE, xác định loại ghế. 
+	4
+	HangGhe
+	CHAR(2)
+	Ký hiệu hàng ghế trong phòng chiếu. 
+	5
+	SoGhe
+	INT
+	Số thứ tự ghế trong hàng. 
+	6
+	TrangThai
+	NVARCHAR(30)
+	Trạng thái sử dụng vật lý của ghế, chẳng hạn đang hoạt động hoặc bảo trì. 
+	
+
+GHE
+
+
+STT
+	Thuộc tính
+	Kiểu dữ liệu
+	Mô tả
+	1
+	MaGhe 
+	
+
+	
+
+	2
+	
+
+	
+
+	
+
+	3
+	
+
+	
+
+	
+
+	4
+	
+
+	
+
+	
+
+	5
+	
+
+	
+
+	
+
+	6
+	
+
+	
+
+	
+
+	
+
+GHE_SUATCHIEU
+VE
+BANGGIAVE
+LOAIGHE
+SUATCHIEU
+LOAITHOIDIEM
+PHONGCHIEU
+LOAIPHONG
+PHIM
+PHIM_THELOAI
+THELOAI
+SANPHAM
+________________
+=======CỦA LÊ VĂN HIẾU CẤM XÓA
+Danh sách lớp nghiệp vụ dự kiến
+
+
+**Tổng cộng 17 lớp nghiệp vụ.**
+
+
+Căn cứ S2_Nhom08_Lan3.docx, mục 3.3, 3.4 và 3.5.2; đối chiếu thêm hai trang của LuocDo_CSDL_RapChieuPhim (2).drawio. Đây là đề xuất thiết kế trước triển khai. Tên lớp dùng tiếng Việt không dấu để thống nhất với thuật ngữ báo cáo.
+
+
+| STT | Tên lớp dự kiến | Mô tả trách nhiệm | Căn cứ đối chiếu |
+| --- | --- | --- | --- |
+| 1 | TaiKhoan | Lưu tên đăng nhập, mật khẩu đã băm, trạng thái tài khoản và liên kết với nhân viên, vai trò. | UC01; TAIKHOAN |
+| 2 | VaiTro | Biểu diễn vai trò Admin hoặc Nhân viên để xác định quyền truy cập. | UC01 và tác nhân UC02–UC09; VAITRO |
+| 3 | NhanVien | Lưu hồ sơ nhân viên và xác định người thực hiện giao dịch bán vé. | UC02, UC08, UC09.3; NHANVIEN |
+| 4 | Phim | Lưu thông tin phim, thời lượng, định dạng, poster, giới hạn tuổi và trạng thái chiếu. | UC03, UC04; PHIM |
+| 5 | TheLoai | Biểu diễn danh mục thể loại dùng để phân loại và tra cứu phim. | UC03.2.3, UC03.4; THELOAI |
+| 6 | SuatChieu | Biểu diễn lịch chiếu của phim tại một phòng, thời gian bắt đầu, trả phòng và trạng thái. | UC04, UC08.1; SUATCHIEU |
+| 7 | PhongChieu | Lưu thông tin phòng, thời gian dọn phòng và trạng thái hoạt động; sức chứa được tính từ danh sách ghế. | UC05, UC04; PHONGCHIEU |
+| 8 | LoaiPhong | Biểu diễn loại phòng và định dạng chiếu được hỗ trợ; làm căn cứ kiểm tra lịch chiếu và áp giá vé. | UC04, UC06; LOAIPHONG |
+| 9 | Ghe | Biểu diễn vị trí ghế trong phòng, loại ghế và tình trạng sử dụng vật lý. | UC05.1.1–UC05.1.3; GHE |
+| 10 | LoaiGhe | Biểu diễn danh mục loại ghế, phục vụ phân loại và xác định giá vé. | UC05.1.3, UC06.1; LOAIGHE |
+| 11 | GheSuatChieu | Biểu diễn ghế trong từng suất chiếu, trạng thái trống/giữ/bán, hạn giữ, giao dịch giữ và giá vé đã chốt. | UC08.2–UC08.5; GHE_SUATCHIEU; RB02–RB04 |
+| 12 | LoaiThoiDiem | Biểu diễn loại ngày thường, cuối tuần hoặc ngày lễ dùng để xác định giá vé của suất chiếu. | UC04, UC06.1; LOAITHOIDIEM; RB06 |
+| 13 | BangGiaVe | Lưu mức giá áp dụng cho tổ hợp loại ghế, loại phòng và loại thời điểm. | UC06.1.1–UC06.1.2, UC08.3; BANGGIAVE |
+| 14 | GiaoDich | Biểu diễn lần bán vé, nhân viên thực hiện, thời gian, tổng tiền và trạng thái xử lý. | UC08.2–UC08.6, UC09.1–UC09.3; GIAODICH |
+| 15 | ThanhToan | Lưu phương thức, số tiền và thời điểm thanh toán thành công của một giao dịch. | UC08.4, UC08.6, UC09; THANHTOAN; RB04 |
+| 16 | Ve | Biểu diễn vé phát hành cho một ghế trong một suất, giao dịch liên quan, mã QR, giá đã chốt và trạng thái sử dụng. | UC07, UC08.5, UC09; VE |
+| 17 | SanPham | Lưu tên sản phẩm F&B, đơn vị tính, giá bán, số lượng tồn kho và tình trạng kinh doanh. | UC06.2.1–UC06.2.4, UC09.4; SANPHAM
+==========
+________________

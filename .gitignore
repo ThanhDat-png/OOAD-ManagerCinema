@@ -11,3 +11,4 @@
 .DS_Store
 Thumbs.db
 /config/mysql-client.cnf
+/tools/apache-maven-*/
