@@ -18,14 +18,6 @@ def build_drawio():
     ET.SubElement(root1, 'mxCell', {'id': '0'})
     ET.SubElement(root1, 'mxCell', {'id': '1', 'parent': '0'})
 
-    # Title for Page 1 (Clean, simple, black text, no colored banner)
-    title_box1 = ET.SubElement(root1, 'mxCell', {
-        'id': 'p1_title',
-        'value': 'SƠ ĐỒ LỚP Ở MỨC PHÂN TÍCH - HỆ THỐNG QUẢN LÝ RẠP CHIẾU PHIM',
-        'style': 'text;html=0;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1;fontColor=#000000;',
-        'vertex': '1', 'parent': '1'
-    })
-    ET.SubElement(title_box1, 'mxGeometry', {'x': '50', 'y': '15', 'width': '2250', 'height': '40', 'as': 'geometry'})
 
     def add_class_box(root, cid, name, attrs, methods, x, y, w, h_attr, h_meth):
         start_size = 38 if '\n' in name else 28
@@ -210,40 +202,40 @@ def build_drawio():
 
     # Page 1 Relationships (Orthogonal, Pure Black & White UML, 0 Collisions)
     # 1. VaiTro - TaiKhoan (Vertical straight)
-    add_p1_edge(root1, 'c_VaiTro', 'c_TaiKhoan', s_mult='1', t_mult='0..*', label='phanQuyen')
+    add_p1_edge(root1, 'c_VaiTro', 'c_TaiKhoan', s_mult='1', t_mult='0..*', label='')
 
     # 2. NhanVien - TaiKhoan (Horizontal straight)
-    add_p1_edge(root1, 'c_NhanVien', 'c_TaiKhoan', s_mult='1', t_mult='0..1', label='soHuu')
+    add_p1_edge(root1, 'c_NhanVien', 'c_TaiKhoan', s_mult='1', t_mult='0..1', label='')
 
     # 3. TheLoai - Phim (Horizontal straight)
-    add_p1_edge(root1, 'c_TheLoai', 'c_Phim', s_mult='1..*', t_mult='1..*', label='thuocTheLoai')
+    add_p1_edge(root1, 'c_TheLoai', 'c_Phim', s_mult='1..*', t_mult='1..*', label='')
 
     # 4. LoaiPhong - PhongChieu (Horizontal straight)
-    add_p1_edge(root1, 'c_LoaiPhong', 'c_PhongChieu', s_mult='1', t_mult='0..*', label='thuocLoai')
+    add_p1_edge(root1, 'c_LoaiPhong', 'c_PhongChieu', s_mult='1', t_mult='0..*', label='')
 
     # 5. PhongChieu - Ghe (Aggregation: hollow diamond at PhongChieu)
     add_p1_edge(root1, 'c_PhongChieu', 'c_Ghe', s_mult='1', t_mult='1..*', label='', start_arrow='diamondThin', start_fill='0', start_size='16')
 
     # 6. LoaiGhe - Ghe (Horizontal straight)
-    add_p1_edge(root1, 'c_LoaiGhe', 'c_Ghe', s_mult='1', t_mult='0..*', label='dinhDanhLoai')
+    add_p1_edge(root1, 'c_LoaiGhe', 'c_Ghe', s_mult='1', t_mult='0..*', label='')
 
     # 7. NhanVien - GiaoDich (Drops to open corridor y=940 and turns right to GiaoDich)
-    add_p1_edge(root1, 'c_NhanVien', 'c_GiaoDich', s_mult='1', t_mult='0..*', label='thucHien', points=[(600, 940), (830, 940)])
+    add_p1_edge(root1, 'c_NhanVien', 'c_GiaoDich', s_mult='1', t_mult='0..*', label='', points=[(600, 940), (830, 940)])
 
     # 8. Phim - SuatChieu (Drops to open corridor y=420 and turns right to SuatChieu)
-    add_p1_edge(root1, 'c_Phim', 'c_SuatChieu', s_mult='1', t_mult='0..*', label='chieuTrong', points=[(540, 420), (930, 420)])
+    add_p1_edge(root1, 'c_Phim', 'c_SuatChieu', s_mult='1', t_mult='0..*', label='', points=[(540, 420), (930, 420)])
 
     # 9. LoaiThoiDiem - SuatChieu (Drops down from LoaiThoiDiem to SuatChieu)
-    add_p1_edge(root1, 'c_LoaiThoiDiem', 'c_SuatChieu', s_mult='1', t_mult='0..*', label='apDung', points=[(890, 300), (990, 300)])
+    add_p1_edge(root1, 'c_LoaiThoiDiem', 'c_SuatChieu', s_mult='1', t_mult='0..*', label='', points=[(890, 300), (990, 300)])
 
     # 10. SuatChieu - GheSuatChieu (Composition: solid black diamond at SuatChieu)
     add_p1_edge(root1, 'c_SuatChieu', 'c_GheSuatChieu', s_mult='1', t_mult='1..*', label='', start_arrow='diamondThin', start_fill='1', start_size='16')
 
     # 11. PhongChieu - SuatChieu (Routed via corridor at y=400)
-    add_p1_edge(root1, 'c_PhongChieu', 'c_SuatChieu', s_mult='1', t_mult='0..*', label='dienRaTai', points=[(1500, 400), (1070, 400)])
+    add_p1_edge(root1, 'c_PhongChieu', 'c_SuatChieu', s_mult='1', t_mult='0..*', label='', points=[(1500, 400), (1070, 400)])
 
     # 12. Ghe - GheSuatChieu (Routed via corridor at y=380)
-    add_p1_edge(root1, 'c_Ghe', 'c_GheSuatChieu', s_mult='1', t_mult='0..*', label='thamGia', points=[(1820, 380), (1420, 380)])
+    add_p1_edge(root1, 'c_Ghe', 'c_GheSuatChieu', s_mult='1', t_mult='0..*', label='', points=[(1820, 380), (1420, 380)])
 
     # 13. LoaiPhong - BangGiaVe (Routed via corridor at y=360)
     add_p1_edge(root1, 'c_LoaiPhong', 'c_BangGiaVe', s_mult='1', t_mult='0..*', label='', points=[(1190, 360), (1740, 360)])
@@ -255,7 +247,7 @@ def build_drawio():
     add_p1_edge(root1, 'c_LoaiThoiDiem', 'c_BangGiaVe', s_mult='1', t_mult='0..*', label='', points=[(950, 320), (1810, 320)])
 
     # 16. BangGiaVe - GheSuatChieu (Horizontal straight)
-    add_p1_edge(root1, 'c_BangGiaVe', 'c_GheSuatChieu', s_mult='0..1', t_mult='0..*', label='chotGia')
+    add_p1_edge(root1, 'c_BangGiaVe', 'c_GheSuatChieu', s_mult='0..1', t_mult='0..*', label='')
 
     # 17. GiaoDich - ThanhToan (Composition: solid black diamond at GiaoDich)
     add_p1_edge(root1, 'c_GiaoDich', 'c_ThanhToan', s_mult='1', t_mult='0..1', label='', start_arrow='diamondThin', start_fill='1', start_size='16')
@@ -264,13 +256,13 @@ def build_drawio():
     add_p1_edge(root1, 'c_GiaoDich', 'c_Ve', s_mult='1', t_mult='1..*', label='', start_arrow='diamondThin', start_fill='1', start_size='16')
 
     # 19. GheSuatChieu - Ve (Vertical routed via corridor y=750)
-    add_p1_edge(root1, 'c_GheSuatChieu', 'c_Ve', s_mult='1', t_mult='0..1', label='phatHanh', points=[(1350, 750), (1300, 750)])
+    add_p1_edge(root1, 'c_GheSuatChieu', 'c_Ve', s_mult='1', t_mult='0..1', label='', points=[(1350, 750), (1300, 750)])
 
     # 20. GiaoDich - GheSuatChieu (Routed via corridor y=800)
-    add_p1_edge(root1, 'c_GiaoDich', 'c_GheSuatChieu', s_mult='0..1', t_mult='0..*', label='giuHoacBan', points=[(950, 800), (1450, 800)])
+    add_p1_edge(root1, 'c_GiaoDich', 'c_GheSuatChieu', s_mult='0..1', t_mult='0..*', label='', points=[(950, 800), (1450, 800)])
 
     # 21. BangGiaVe - Ve (Routed via corridor y=880)
-    add_p1_edge(root1, 'c_BangGiaVe', 'c_Ve', s_mult='1', t_mult='0..*', label='giaChuan', points=[(1810, 880), (1400, 880)])
+    add_p1_edge(root1, 'c_BangGiaVe', 'c_Ve', s_mult='1', t_mult='0..*', label='', points=[(1810, 880), (1400, 880)])
 
 
     # =========================================================================
@@ -288,15 +280,6 @@ def build_drawio():
     ET.SubElement(root2, 'mxCell', {'id': '0'})
     ET.SubElement(root2, 'mxCell', {'id': '1', 'parent': '0'})
 
-    # Title Banner for Page 2 (Clean black text, no colored banner)
-    p2_title = ET.SubElement(root2, 'mxCell', {
-        'id': 'p2_title_box',
-        'value': 'SƠ ĐỒ LỚP Ở MỨC THIẾT KẾ - KIẾN TRÚC BA TẦNG KẾT HỢP ĐỐI TƯỢNG TRUYỀN TẢI DỮ LIỆU',
-        'style': 'text;html=0;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1;fontColor=#000000;',
-        'vertex': '1', 'parent': '1'
-    })
-    ET.SubElement(p2_title, 'mxGeometry', {'x': '40', 'y': '20', 'width': '3800', 'height': '40', 'as': 'geometry'})
-
     def add_package_frame(root, pid, title, x, y, w, h):
         pkg = ET.SubElement(root, 'mxCell', {
             'id': pid,
@@ -308,25 +291,29 @@ def build_drawio():
         return pkg
 
     def add_design_box(root, cid, stereotype, name, methods, x, y, w, h, subtitle=''):
-        lines = []
-        if stereotype:
-            lines.append(f"«{stereotype}»")
-        lines.append(name)
-        if subtitle:
-            lines.append(f"({subtitle})")
-        if methods:
-            num_dashes = max(24, int((w - 20) / 6.0))
-            lines.append("─" * num_dashes)
-            lines.extend(methods)
-        val = "\n".join(lines)
-        style = "rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1;fontSize=11;fontColor=#000000;spacingLeft=8;spacingRight=8;spacingTop=6;spacingBottom=6;"
+        hdr_val = f"«{stereotype}»\n{name}" if stereotype else name
+        lines_count = len(hdr_val.split('\n'))
+        start_size = 28 if lines_count == 1 else (38 if lines_count == 2 else 18 * lines_count)
+
+        hdr_style = f"swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize={start_size};horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=0;whiteSpace=wrap;rounded=0;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1;fontSize=12;fontColor=#000000;"
         cls_cell = ET.SubElement(root, 'mxCell', {
             'id': cid,
-            'value': val,
-            'style': style,
+            'value': hdr_val,
+            'style': hdr_style,
             'vertex': '1', 'parent': '1'
         })
         ET.SubElement(cls_cell, 'mxGeometry', {'x': str(x), 'y': str(y), 'width': str(w), 'height': str(h), 'as': 'geometry'})
+
+        body_h = max(20, h - start_size)
+        body_val = '\n'.join(methods) if methods else ''
+        body_style = 'text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;spacingRight=8;spacingTop=4;spacingBottom=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=0;fontSize=11;fontColor=#000000;'
+        body_cell = ET.SubElement(root, 'mxCell', {
+            'id': f'{cid}_body',
+            'value': body_val,
+            'style': body_style,
+            'vertex': '1', 'parent': cid
+        })
+        ET.SubElement(body_cell, 'mxGeometry', {'y': str(start_size), 'width': str(w), 'height': str(body_h), 'as': 'geometry'})
         return cls_cell
 
     edge_p2_cnt = 0
@@ -364,42 +351,42 @@ def build_drawio():
     # LAYER 1: Presentation Layer (cinema.view)
     y_gui = 130
     h_gui = 95
-    add_design_box(root2, 'v_DangNhap', '', 'DangNhapWindow', ['+ DangNhapWindow(service)', '- authenticate(service): void'], col_x(0), y_gui, col_w, h_gui, subtitle='Màn hình đăng nhập UC01')
-    add_design_box(root2, 'v_NhanVien', '', 'NhanVienPanel', ['+ NhanVienPanel(session)', '- refresh(): void'], col_x(1), y_gui, col_w, h_gui, subtitle='Quản lý nhân sự UC02')
-    add_design_box(root2, 'v_Phim', '', 'PhimPanel', ['+ PhimPanel(session)', '- refresh(): void'], col_x(2), y_gui, col_w, h_gui, subtitle='Quản lý phim UC03')
-    add_design_box(root2, 'v_LichChieu', '', 'LichChieuPanel', ['+ LichChieuPanel(session)', '- refresh(): void'], col_x(3), y_gui, col_w, h_gui, subtitle='Lập lịch chiếu UC04')
-    add_design_box(root2, 'v_PhongChieu', '', 'PhongChieuPanel', ['+ PhongChieuPanel(session)', '- refresh(): void'], col_x(4), y_gui, col_w, h_gui, subtitle='Phòng và Ghế UC05')
-    add_design_box(root2, 'v_GiaVeFnB', '', 'GiaVeFnBPanel', ['+ GiaVeFnBPanel(session)', '- refresh(): void'], col_x(5), y_gui, col_w, h_gui, subtitle='Giá vé và Sản phẩm UC06')
-    add_design_box(root2, 'v_KiemTraVe', '', 'KiemTraVePanel', ['+ KiemTraVePanel(session)', '- check(): void'], col_x(7), y_gui, col_w, h_gui, subtitle='Soát vé QR UC07')
-    add_design_box(root2, 'v_BanVe', '', 'BanVePanel', ['+ BanVePanel(session)', '+ requestClose(): boolean'], col_x(8), y_gui, col_w, h_gui, subtitle='Bán vé quầy UC08')
-    add_design_box(root2, 'v_BaoCao', '', 'BaoCaoPanel', ['+ BaoCaoPanel(session)', '- timeTab(): JPanel'], col_x(9), y_gui, col_w, h_gui, subtitle='Thống kê báo cáo UC09')
-    add_design_box(root2, 'v_Cinema', '', 'CinemaWindow', ['+ open(session): void'], col_x(10), 120, col_w, 85, subtitle='Khung chính ứng dụng')
-    add_design_box(root2, 'v_UIHelpers', '', 'cinema.view.ui.*', ['Tokens, Skin, Theme', 'SeatVisual, SalesViews', 'ReadOnlyViews, Forms'], col_x(10), 225, col_w, 90, subtitle='Thư viện hỗ trợ giao diện')
+    add_design_box(root2, 'v_DangNhap', '', 'DangNhapWindow', ['+ DangNhapWindow(service)', '- authenticate(service): void'], col_x(0), y_gui, col_w, h_gui)
+    add_design_box(root2, 'v_NhanVien', '', 'NhanVienPanel', ['+ NhanVienPanel(session)', '- refresh(): void'], col_x(1), y_gui, col_w, h_gui)
+    add_design_box(root2, 'v_Phim', '', 'PhimPanel', ['+ PhimPanel(session)', '- refresh(): void'], col_x(2), y_gui, col_w, h_gui)
+    add_design_box(root2, 'v_LichChieu', '', 'LichChieuPanel', ['+ LichChieuPanel(session)', '- refresh(): void'], col_x(3), y_gui, col_w, h_gui)
+    add_design_box(root2, 'v_PhongChieu', '', 'PhongChieuPanel', ['+ PhongChieuPanel(session)', '- refresh(): void'], col_x(4), y_gui, col_w, h_gui)
+    add_design_box(root2, 'v_GiaVeFnB', '', 'GiaVeFnBPanel', ['+ GiaVeFnBPanel(session)', '- refresh(): void'], col_x(5), y_gui, col_w, h_gui)
+    add_design_box(root2, 'v_KiemTraVe', '', 'KiemTraVePanel', ['+ KiemTraVePanel(session)', '- check(): void'], col_x(7), y_gui, col_w, h_gui)
+    add_design_box(root2, 'v_BanVe', '', 'BanVePanel', ['+ BanVePanel(session)', '+ requestClose(): boolean'], col_x(8), y_gui, col_w, h_gui)
+    add_design_box(root2, 'v_BaoCao', '', 'BaoCaoPanel', ['+ BaoCaoPanel(session)', '- timeTab(): JPanel'], col_x(9), y_gui, col_w, h_gui)
+    add_design_box(root2, 'v_Cinema', '', 'CinemaWindow', ['+ open(session): void'], col_x(10), 120, col_w, 85)
+    add_design_box(root2, 'v_UIHelpers', '', 'cinema.view.ui.*', ['Tokens, Skin, Theme', 'SeatVisual, SalesViews', 'ReadOnlyViews, Forms'], col_x(10), 225, col_w, 90)
 
     # LAYER 2: Business Logic Layer (cinema.controller)
     # Row 1: BUS Classes (y=400, h=165)
     y_bus = 400
     h_bus = 165
-    add_design_box(root2, 'b_DangNhap', '', 'DangNhapBUS', ['+ login(username, password): PhienDangNhap'], col_x(0), y_bus, col_w, h_bus, subtitle='cinema.controller.auth')
-    add_design_box(root2, 'b_NhanVien', '', 'NhanVienBUS', ['+ search(keyword): List<NhanVien>', '+ create(input): NhanVien', '+ update(input): void', '+ delete(id): void', '+ detail(id): NhanVien'], col_x(1), y_bus, col_w, h_bus, subtitle='cinema.controller.staff')
-    add_design_box(root2, 'b_Phim', '', 'PhimBUS', ['+ genres(): List<TheLoai>', '+ search(name, genre, status): List<Phim>', '+ create(input, image): Phim', '+ rename(id, name): void', '+ stop(id): void'], col_x(2), y_bus, col_w, h_bus, subtitle='cinema.controller.film')
-    add_design_box(root2, 'b_LichChieu', '', 'LichChieuBUS', ['+ list(date, room): List<SuatChieu>', '+ create(film, room, start): SuatChieu', '+ changeFilm(id, film): SuatChieu', '+ cancel(id): void'], col_x(3), y_bus, col_w, h_bus, subtitle='cinema.controller.schedule')
-    add_design_box(root2, 'b_PhongChieu', '', 'PhongChieuBUS', ['+ search(text, type, state): List<PhongChieu>', '+ create(name, type, clean, state): PhongChieu', '+ seats(room): List<Ghe>', '+ addSeat(room, row, num, type, state): Ghe'], col_x(4), y_bus, col_w, h_bus, subtitle='cinema.controller.room')
-    add_design_box(root2, 'b_GiaVe', '', 'GiaVeBUS', ['+ list(): List<BangGiaVe>', '+ create(seat, room, period, price): BangGiaVe', '+ updatePrice(id, price): BangGiaVe'], col_x(5), y_bus, col_w, h_bus, subtitle='cinema.controller.pricing')
-    add_design_box(root2, 'b_SanPham', '', 'SanPhamBUS', ['+ search(text, inStock): List<SanPham>', '+ create(input): void', '+ updateInfo(input): void', '+ updatePrice(id, amount): void'], col_x(6), y_bus, col_w, h_bus, subtitle='cinema.controller.pricing')
-    add_design_box(root2, 'b_Ve', '', 'VeBUS', ['+ rooms(): List<PhongChieu>', '+ shows(date, room): List<SuatChieu>', '+ check(ticket, type, room, show): KetQua', '+ confirm(ticket, room, show): ThongTin'], col_x(7), y_bus, col_w, h_bus, subtitle='cinema.controller.admission')
-    add_design_box(root2, 'b_BanVe', '', 'BanVeBUS', ['+ shows(name, date, time): List<SuatBan>', '+ hold(show, seats, txId): GioHang', '+ pay(txId, method, amount): List<ThongTin>', '+ cancel(txId): void'], col_x(8), y_bus, col_w, h_bus, subtitle='cinema.controller.sales')
-    add_design_box(root2, 'b_BaoCao', '', 'BaoCaoBUS', ['+ theoThoiGian(range): TongHop', '+ theoPhim(range, film): List<TheoPhim>', '+ theoNhanVien(range, emp): List<TheoNhanVien>', '+ ve(range, film, show): ThongKeVe'], col_x(9), y_bus, col_w, h_bus, subtitle='cinema.controller.revenue')
+    add_design_box(root2, 'b_DangNhap', '', 'DangNhapBUS', ['+ login(username, password): PhienDangNhap'], col_x(0), y_bus, col_w, h_bus)
+    add_design_box(root2, 'b_NhanVien', '', 'NhanVienBUS', ['+ search(keyword): List<NhanVien>', '+ create(input): NhanVien', '+ update(input): void', '+ delete(id): void', '+ detail(id): NhanVien'], col_x(1), y_bus, col_w, h_bus)
+    add_design_box(root2, 'b_Phim', '', 'PhimBUS', ['+ genres(): List<TheLoai>', '+ search(name, genre, status): List<Phim>', '+ create(input, image): Phim', '+ rename(id, name): void', '+ stop(id): void'], col_x(2), y_bus, col_w, h_bus)
+    add_design_box(root2, 'b_LichChieu', '', 'LichChieuBUS', ['+ list(date, room): List<SuatChieu>', '+ create(film, room, start): SuatChieu', '+ changeFilm(id, film): SuatChieu', '+ cancel(id): void'], col_x(3), y_bus, col_w, h_bus)
+    add_design_box(root2, 'b_PhongChieu', '', 'PhongChieuBUS', ['+ search(text, type, state): List<PhongChieu>', '+ create(name, type, clean, state): PhongChieu', '+ seats(room): List<Ghe>', '+ addSeat(room, row, num, type, state): Ghe'], col_x(4), y_bus, col_w, h_bus)
+    add_design_box(root2, 'b_GiaVe', '', 'GiaVeBUS', ['+ list(): List<BangGiaVe>', '+ create(seat, room, period, price): BangGiaVe', '+ updatePrice(id, price): BangGiaVe'], col_x(5), y_bus, col_w, h_bus)
+    add_design_box(root2, 'b_SanPham', '', 'SanPhamBUS', ['+ search(text, inStock): List<SanPham>', '+ create(input): void', '+ updateInfo(input): void', '+ updatePrice(id, amount): void'], col_x(6), y_bus, col_w, h_bus)
+    add_design_box(root2, 'b_Ve', '', 'VeBUS', ['+ rooms(): List<PhongChieu>', '+ shows(date, room): List<SuatChieu>', '+ check(ticket, type, room, show): KetQua', '+ confirm(ticket, room, show): ThongTin'], col_x(7), y_bus, col_w, h_bus)
+    add_design_box(root2, 'b_BanVe', '', 'BanVeBUS', ['+ shows(name, date, time): List<SuatBan>', '+ hold(show, seats, txId): GioHang', '+ pay(txId, method, amount): List<ThongTin>', '+ cancel(txId): void'], col_x(8), y_bus, col_w, h_bus)
+    add_design_box(root2, 'b_BaoCao', '', 'BaoCaoBUS', ['+ theoThoiGian(range): TongHop', '+ theoPhim(range, film): List<TheoPhim>', '+ theoNhanVien(range, emp): List<TheoNhanVien>', '+ ve(range, film, show): ThongKeVe'], col_x(9), y_bus, col_w, h_bus)
 
     # Row 2: Helper Classes (y=630, h=105)
     y_hlp = 630
     h_hlp = 105
-    add_design_box(root2, 'h_Auth', '', 'PasswordHasher\nPhienDangNhap', ['+ hash(password): String', '+ matches(password, stored): boolean', '+ laAdmin(): boolean'], col_x(0), y_hlp, col_w, h_hlp, subtitle='Bảo mật đăng nhập')
-    add_design_box(root2, 'h_Film', '', 'PosterStore', ['+ importImage(source): String', '+ resolve(stored): Path', '+ discard(stored): void'], col_x(2), y_hlp, col_w, h_hlp, subtitle='Lưu trữ tệp áp phích')
-    add_design_box(root2, 'h_Pricing', '', 'MoneyRules', ['+ positive(value, message): BigDecimal'], col_x(5), y_hlp, col_w, h_hlp, subtitle='Quy tắc tiền tệ')
-    add_design_box(root2, 'h_Admission', '', 'DocMaQR\nThoiGianVaoPhong', ['+ read(file): String', '+ load(): ThoiGianVaoPhong'], col_x(7), y_hlp, col_w, h_hlp, subtitle='Xác thực soát vé')
-    add_design_box(root2, 'h_Sales', '', 'InVe', ['+ preview(info): BufferedImage', '+ print(g, format, page): int'], col_x(8), y_hlp, col_w, h_hlp, subtitle='Định dạng in vé')
-    add_design_box(root2, 'h_Revenue', '', 'KhoangThongKe', ['+ ngay(date): KhoangThongKe', '+ thang(month): KhoangThongKe', '+ nam(year): KhoangThongKe'], col_x(9), y_hlp, col_w, h_hlp, subtitle='Lọc khoảng thời gian')
+    add_design_box(root2, 'h_Auth', '', 'PasswordHasher\nPhienDangNhap', ['+ hash(password): String', '+ matches(password, stored): boolean', '+ laAdmin(): boolean'], col_x(0), y_hlp, col_w, h_hlp)
+    add_design_box(root2, 'h_Film', '', 'PosterStore', ['+ importImage(source): String', '+ resolve(stored): Path', '+ discard(stored): void'], col_x(2), y_hlp, col_w, h_hlp)
+    add_design_box(root2, 'h_Pricing', '', 'MoneyRules', ['+ positive(value, message): BigDecimal'], col_x(5), y_hlp, col_w, h_hlp)
+    add_design_box(root2, 'h_Admission', '', 'DocMaQR\nThoiGianVaoPhong', ['+ read(file): String', '+ load(): ThoiGianVaoPhong'], col_x(7), y_hlp, col_w, h_hlp)
+    add_design_box(root2, 'h_Sales', '', 'InVe', ['+ preview(info): BufferedImage', '+ print(g, format, page): int'], col_x(8), y_hlp, col_w, h_hlp)
+    add_design_box(root2, 'h_Revenue', '', 'KhoangThongKe', ['+ ngay(date): KhoangThongKe', '+ thang(month): KhoangThongKe', '+ nam(year): KhoangThongKe'], col_x(9), y_hlp, col_w, h_hlp)
 
     # LAYER 3: Data Access Layer (cinema.dao & cinema.db)
     # Row 1: DAOs (y=900, h=160, d_BanVe h=185)
@@ -419,7 +406,7 @@ def build_drawio():
     # Database Utility centered under DAO row
     add_design_box(root2, 'd_Database', 'utility', 'Database',
                    ['+ connect(): Connection'],
-                   1700, 1200, 400, 100, subtitle='config/database.properties')
+                   1700, 1200, 400, 100)
 
     # LAYER 4: DTO / Domain Model Layer (cinema.model)
     y_m1 = 1430

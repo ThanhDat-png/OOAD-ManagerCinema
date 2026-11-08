@@ -158,9 +158,14 @@ def verify_diagram():
         assert w >= 210, f"{cid} width {w} is too narrow"
         assert h >= 100, f"{cid} height {h} is too short"
 
-    # Verify Page 1 relationships (Aggregation & Composition markers)
+    # Title must be removed on Page 1 canvas
+    assert "p1_title" not in p1_cells, "p1_title must be removed from Page 1 canvas"
+
+    # Verify Page 1 relationships (Aggregation & Composition markers, empty middle labels)
     p1_edges = [c for c in p1_root.findall("mxCell") if c.attrib.get("edge") == "1"]
     assert len(p1_edges) == 21, f"Expected 21 edges on Page 1, found {len(p1_edges)}"
+    for e in p1_edges:
+        assert e.attrib.get("value", "") == "", f"Edge {e.attrib.get('id')} has non-empty label: {e.attrib.get('value')}"
 
     # Check composition & aggregation on Page 1
     edge_map = {(e.attrib.get("source"), e.attrib.get("target")): e for e in p1_edges}
@@ -180,22 +185,25 @@ def verify_diagram():
     assert ('c_GiaoDich', 'c_Ve') in edge_map
     e_comp3 = edge_map[('c_GiaoDich', 'c_Ve')].attrib.get("style", "")
     assert "startArrow=diamondThin" in e_comp3 and "startFill=1" in e_comp3, "GiaoDich-Ve must be composition (solid diamond)"
-    print("  ✓ Page 1 standard 3-compartment UML classes, dimensions, and relationships verified")
+    print("  ✓ Page 1 standard 3-compartment UML classes, dimensions, empty edge labels, and relationships verified")
 
     # Verify Page 2 (3-Layer Architecture)
     p2 = pages["SoDoLop_ThietKe_3Tang"]
     p2_root = p2.find(".//root")
-    d_db = None
-    for cell in p2_root.findall("mxCell"):
-        if cell.attrib.get("id") == "d_Database":
-            d_db = cell
-            break
+    cells_by_id = {c.attrib.get("id"): c for c in p2_root.findall("mxCell")}
+
+    # Title must be removed on Page 2 canvas
+    assert "p2_title_box" not in cells_by_id, "p2_title_box must be removed from Page 2 canvas"
+
+    d_db = cells_by_id.get("d_Database")
     assert d_db is not None, "d_Database not found on Page 2"
     val = d_db.attrib.get("value", "")
     assert "«utility»" in val, f"Expected «utility» in d_Database, got: {val}"
-    assert "+ connect(): Connection" in val, f"Expected + connect(): Connection, got: {val}"
-    assert "config/database.properties" in val, f"Expected config/database.properties, got: {val}"
-    print("  ✓ d_Database stereotype, method, and subtitle are correct")
+    assert "Database" in val, f"Expected Database in d_Database, got: {val}"
+    d_db_body = cells_by_id.get("d_Database_body")
+    assert d_db_body is not None, "d_Database_body not found on Page 2"
+    assert "+ connect(): Connection" in d_db_body.attrib.get("value", ""), "Expected + connect(): Connection in d_Database_body"
+    print("  ✓ d_Database stereotype and method verified")
 
     expected_snippets = {
         "v_DangNhap": ["DangNhapWindow(service)", "authenticate(service): void"],
@@ -228,13 +236,26 @@ def verify_diagram():
         "d_BaoCao": ["theoThoiGian(range): TongHop", "theoPhim(range, film): List<TheoPhim>", "theoNhanVien(range, emp): List<TheoNhanVien>", "ve(range, film, show): ThongKeVe"]
     }
 
-    cells_by_id = {c.attrib.get("id"): c for c in p2_root.findall("mxCell")}
     for cid, snips in expected_snippets.items():
         assert cid in cells_by_id, f"Cell {cid} not found"
-        cell_val = cells_by_id[cid].attrib.get("value", "")
+        body_cell = cells_by_id.get(f"{cid}_body")
+        assert body_cell is not None, f"Body compartment {cid}_body not found"
+        body_val = body_cell.attrib.get("value", "")
         for s in snips:
-            assert s in cell_val, f"Snippet '{s}' not found in {cid}: {cell_val}"
+            assert s in body_val, f"Snippet '{s}' not found in {cid}_body: {body_val}"
     print("  ✓ All exact Java method names on Page 2 verified")
+
+    # Assert that all boxes on both Page 1 and Page 2 use swimlane
+    for page_name in ["SoDoLop_PhanTich", "SoDoLop_ThietKe_3Tang"]:
+        page = pages[page_name]
+        p_root = page.find(".//root")
+        top_boxes = [c for c in p_root.findall("mxCell") if c.attrib.get("vertex") == "1" and c.attrib.get("parent") == "1"]
+        assert len(top_boxes) > 0, f"No top boxes found on {page_name}"
+        for b in top_boxes:
+            b_style = b.attrib.get("style", "")
+            b_id = b.attrib.get("id", "")
+            assert "swimlane" in b_style, f"Box {b_id} on {page_name} must use swimlane style, got: {b_style}"
+    print("  ✓ All boxes on Page 1 and Page 2 use swimlane style")
 
     c1 = check_collisions('SoDoLop_PhanTich')
     c2 = check_collisions('SoDoLop_ThietKe_3Tang')
@@ -244,6 +265,14 @@ def verify_diagram():
 
     with open("docs/SoDoLop_RapChieuPhim.drawio", encoding="utf-8") as f:
         content = f.read()
+
+    # Assert that no fake Unicode dashes and no subtitle parentheses appear in diagram
+    assert "─" not in content, "Found fake Unicode dash line '─' in diagram"
+    assert re.search(r'&#10;\([^)]+\)', content) is None, "Found subtitle in parentheses in diagram"
+    for kw in ['(Màn hình', '(Quản lý', '(Lập lịch', '(Phòng và', '(Giá vé', '(Soát vé', '(Bán vé', '(Thống kê', '(Khung chính', '(Thư viện', '(cinema.controller', '(Bảo mật', '(Lưu trữ', '(Quy tắc', '(Xác thực', '(Định dạng', '(Lọc', '(config/database.properties']:
+        assert kw not in content, f"Found subtitle keyword '{kw}' in diagram"
+    print("  ✓ Zero fake Unicode dashes '─' and zero subtitle parentheses verified across diagram")
+
     html_tags = re.findall(r'&lt;/?(b|i|br|span|div|hr|font)\b[^&]*?&gt;', content, re.IGNORECASE)
     assert len(html_tags) == 0, f"Found HTML tags in diagram: {set(html_tags)}"
     print("  ✓ Zero HTML tag leakage verified across all pages")
