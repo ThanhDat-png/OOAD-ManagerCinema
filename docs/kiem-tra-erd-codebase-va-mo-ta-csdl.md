@@ -79,7 +79,7 @@ Lưu trữ thông tin tài khoản đăng nhập của nhân viên và liên k�
 | 3 | MaNV | VARCHAR(10) | Khóa ngoại | Duy nhất, tham chiếu NHANVIEN | Nhân viên sở hữu tài khoản, mỗi người có tối đa một tài khoản |
 | 4 | TenDangNhap | VARCHAR(50) | Khóa duy nhất | Không rỗng, duy nhất | Tên đăng nhập vào hệ thống |
 | 5 | MatKhauHash | VARCHAR(255) | | Không rỗng | Chuỗi mật khẩu đã được băm an toàn |
-| 6 | TrangThai | NVARCHAR(20) | | Mặc định Đang hoạt động | Trạng thái gồm Đang hoạt động, Bị khóa hoặc Ngừng hoạt động |
+| 6 | TrangThai | NVARCHAR(20) | | Mặc định Đang hoạt động | Trạng thái gồm Đang hoạt động hoặc Ngưng hoạt động |
 
 ### 3.4. Bảng THELOAI
 Lưu danh mục thể loại phim dùng để phân loại và hỗ trợ tìm kiếm.
@@ -101,7 +101,7 @@ Lưu thông tin hồ sơ và trạng thái khai thác của các bộ phim chi�
 | 5 | NgayKhoiChieu | DATE | | Không rỗng | Ngày bắt đầu khởi chiếu phim tại rạp |
 | 6 | GioiHanTuoi | INT | | Không âm | Độ tuổi tối thiểu được phép xem phim |
 | 7 | Poster | VARCHAR(255) | | Không rỗng | Đường dẫn tệp ảnh áp phích của phim |
-| 8 | TrangThai | NVARCHAR(20) | | Không rỗng | Trạng thái chiếu gồm Đang chiếu hoặc Ngừng chiếu |
+| 8 | TrangThai | NVARCHAR(20) | | Không rỗng | Trạng thái chiếu gồm Sắp chiếu, Đang chiếu hoặc Ngừng chiếu |
 | 9 | DinhDangChieu | NVARCHAR(20) | | Không rỗng | Định dạng chiếu của phim gồm 2D hoặc 3D |
 
 ### 3.6. Bảng PHIM_THELOAI
@@ -130,7 +130,7 @@ Lưu thông tin phòng chiếu phim và thời gian dọn phòng sau mỗi suấ
 | 2 | MaLoaiPhong | INT | Khóa ngoại | Tham chiếu LOAIPHONG | Xác định loại phòng và định dạng chiếu |
 | 3 | TenPhong | NVARCHAR(50) | Khóa duy nhất | Không rỗng, duy nhất | Tên phòng chiếu hiển thị trên giao diện |
 | 4 | ThoiGianDonPhong | INT | | Không âm | Thời gian dọn dẹp vệ sinh tính theo phút |
-| 5 | TrangThai | NVARCHAR(30) | | Không rỗng | Trạng thái hoạt động gồm Đang hoạt động hoặc Đang sửa chữa |
+| 5 | TrangThai | NVARCHAR(30) | | Không rỗng | Trạng thái hoạt động gồm Đang hoạt động, Tạm ngừng hoạt động hoặc Bảo trì |
 
 ### 3.9. Bảng LOAIGHE
 Lưu danh mục các loại ghế trong phòng chiếu.
@@ -171,7 +171,7 @@ Lưu thông tin lịch chiếu của các phim tại từng phòng theo khung gi
 | 4 | MaLoaiThoiDiem | INT | Khóa ngoại | Tham chiếu LOAITHOIDIEM | Loại thời điểm để xác định giá |
 | 5 | ThoiGianBatDau | DATETIME | | Không rỗng | Thời điểm bắt đầu phát phim |
 | 6 | ThoiGianTraPhong | DATETIME | | Lớn hơn ThoiGianBatDau | Thời điểm kết thúc chiếu cộng thời gian dọn phòng |
-| 7 | TrangThai | NVARCHAR(20) | | Không rỗng | Trạng thái suất gồm Lên lịch, Đang chiếu, Đã chiếu, Đã hủy |
+| 7 | TrangThai | NVARCHAR(20) | | Không rỗng | Trạng thái suất gồm Sắp chiếu, Đang chiếu, Đã chiếu hoặc Đã hủy |
 
 ### 3.13. Bảng BANGGIAVE
 Lưu định mức giá vé áp dụng cho từng tổ hợp ba tiêu chuẩn.
@@ -193,7 +193,7 @@ Lưu các giao dịch bán vé do nhân viên thực hiện tại quầy.
 | 2 | MaNV | VARCHAR(10) | Khóa ngoại | Tham chiếu NHANVIEN, không xóa cha | Nhân viên thực hiện giao dịch |
 | 3 | ThoiGianTao | DATETIME | | Không rỗng | Thời điểm bắt đầu giao dịch |
 | 4 | TongTien | DECIMAL(12,0) | | Không âm | Tổng số tiền cần thanh toán |
-| 5 | TrangThai | NVARCHAR(40) | | Không rỗng | Trạng thái gồm Chờ thanh toán, Hoàn tất hoặc Đã hủy |
+| 5 | TrangThai | NVARCHAR(40) | | Không rỗng | Trạng thái gồm Chờ thanh toán, Đang thanh toán, Đã thanh toán, Đã hủy hoặc Hết hạn |
 
 ### 3.15. Bảng THANHTOAN
 Lưu thông tin thanh toán thành công của giao dịch.
@@ -214,7 +214,7 @@ Lưu trạng thái và kiểm soát đặt chỗ của từng ghế trong từng
 | 1 | MaSuat | INT | Khóa chính ghép, Khóa ngoại | Tham chiếu SUATCHIEU | Suất chiếu chứa ghế |
 | 2 | MaGhe | INT | Khóa chính ghép, Khóa ngoại | Tham chiếu GHE | Ghế vật lý trong phòng chiếu |
 | 3 | MaGiaoDich | VARCHAR(20) | Khóa ngoại | Có thể rỗng, tham chiếu GIAODICH | Giao dịch đang giữ hoặc đã mua ghế |
-| 4 | TrangThai | NVARCHAR(20) | | Không rỗng | Trạng thái gồm Trống, Đang giữ hoặc Đã bán |
+| 4 | TrangThai | NVARCHAR(20) | | Không rỗng | Trạng thái gồm Trống, Đang giữ, Đã bán hoặc Không khả dụng |
 | 5 | ThoiGianHetHanGiu | DATETIME | | Có thể rỗng | Thời điểm hết hạn khóa giữ chỗ tạm thời |
 | 6 | MaGia | INT | Khóa ngoại | Có thể rỗng, tham chiếu BANGGIAVE | Mức giá vé áp dụng cho ghế |
 | 7 | GiaVeChot | DECIMAL(12,0) | | Có thể rỗng, lớn hơn 0 | Đơn giá vé chốt tại thời điểm giữ hoặc bán |
@@ -231,7 +231,7 @@ Lưu thông tin vé xem phim đã phát hành cho khách hàng.
 | 5 | MaGia | INT | Khóa ngoại | Tham chiếu BANGGIAVE | Mức giá vé áp dụng |
 | 6 | MaQR | VARCHAR(100) | Khóa duy nhất | Không rỗng, duy nhất | Chuỗi mã phản hồi nhanh dùng để soát vé vào phòng |
 | 7 | GiaVe | DECIMAL(12,0) | | Lớn hơn 0 | Giá tiền vé chính thức thu |
-| 8 | TrangThai | NVARCHAR(20) | | Không rỗng | Trạng thái vé gồm Đã phát hành, Đã soát vé hoặc Đã hủy |
+| 8 | TrangThai | NVARCHAR(20) | | Không rỗng | Trạng thái vé gồm Chưa sử dụng hoặc Đã sử dụng |
 | 9 | ThoiGianPhatHanh | DATETIME | | Không rỗng | Thời điểm in và phát hành vé |
 | 10 | HangGheLucPhatHanh | CHAR(2) | | Không rỗng | Ký hiệu hàng ghế tại thời điểm phát hành vé để bảo toàn lịch sử |
 | 11 | SoGheLucPhatHanh | INT | | Không rỗng | Số thứ tự ghế tại thời điểm phát hành vé để bảo toàn lịch sử |

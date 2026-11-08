@@ -16,7 +16,7 @@ Hệ thống quản lý rạp chiếu phim có 17 lớp nghiệp vụ được t
 | 8 | LoaiPhong | Lớp danh mục | Biểu diễn danh mục phân loại phòng và định dạng chiếu hỗ trợ gồm 2D hoặc 3D | UC04, UC05, UC06, Sơ đồ 3.4.4, 3.4.5 |
 | 9 | Ghe | Lớp thực thể thành phần | Biểu diễn vị trí ghế vật lý trong phòng chiếu, thuộc phòng nào, loại ghế nào và trạng thái sẵn sàng hay bảo trì | UC05, Sơ đồ 3.4.5 |
 | 10 | LoaiGhe | Lớp danh mục | Biểu diễn danh mục loại ghế gồm ghế thường, ghế VIP, ghế đôi để phân loại vị trí và tính giá vé | UC05, UC06, Sơ đồ 3.4.5, 3.4.6 |
-| 11 | GheSuatChieu | Lớp kết hợp | Biểu diễn trạng thái của ghế trong từng suất chiếu cụ thể gồm trống, đang giữ hoặc đã bán, thời hạn giữ tạm và giá vé đã chốt | UC08, Sơ đồ 3.4.8 |
+| 11 | GheSuatChieu | Lớp kết hợp | Biểu diễn trạng thái của ghế trong từng suất chiếu cụ thể gồm Trống, Đang giữ, Đã bán hoặc Không khả dụng, thời hạn giữ tạm và giá vé đã chốt | UC08, Sơ đồ 3.4.8 |
 | 12 | LoaiThoiDiem | Lớp danh mục | Biểu diễn danh mục thời điểm chiếu gồm ngày thường, cuối tuần, ngày lễ dùng để áp bảng giá vé | UC04, UC06, Sơ đồ 3.4.4, 3.4.6 |
 | 13 | BangGiaVe | Lớp tham số bảng giá | Lưu mức giá vé quy định cho từng tổ hợp ba yếu tố gồm loại ghế, loại phòng và loại thời điểm chiếu | UC06.1, UC08, Sơ đồ 3.4.6, 3.4.8 |
 | 14 | GiaoDich | Lớp giao dịch chính | Biểu diễn một lần bán vé tại quầy do nhân viên thực hiện, thời gian tạo, tổng số tiền và trạng thái xử lý | UC08, UC09, Sơ đồ 3.4.8, 3.4.9 |
@@ -33,7 +33,7 @@ Theo quy định thiết kế sơ đồ lớp phân tích, các thuộc tính kh
   - `- maTK: int`: Mã định danh tài khoản.
   - `- tenDangNhap: String`: Tên đăng nhập duy nhất của tài khoản.
   - `- matKhauHash: String`: Chuỗi mật khẩu đã băm bằng thuật toán an toàn.
-  - `- trangThai: String`: Trạng thái hoạt động của tài khoản gồm Đang hoạt động, Bị khóa hoặc Ngừng hoạt động.
+  - `- trangThai: String`: Trạng thái hoạt động của tài khoản gồm Đang hoạt động hoặc Ngưng hoạt động.
 - Phương thức nghiệp vụ:
   - `+ dangHoatDong(): boolean`: Kiểm tra tài khoản có ở trạng thái được phép đăng nhập hay không.
   - `+ doiMatKhau(mkMoi: String): void`: Cập nhật mật khẩu mới đã băm cho tài khoản.
@@ -69,7 +69,7 @@ Theo quy định thiết kế sơ đồ lớp phân tích, các thuộc tính kh
   - `- ngayKhoiChieu: LocalDate`: Ngày bắt đầu khởi chiếu phim tại rạp.
   - `- gioiHanTuoi: int`: Độ tuổi tối thiểu của khán giả được phép xem phim.
   - `- poster: String`: Đường dẫn lưu tệp áp phích của phim.
-  - `- trangThai: String`: Trạng thái chiếu gồm Đang chiếu hoặc Ngừng chiếu.
+  - `- trangThai: String`: Trạng thái chiếu gồm Sắp chiếu, Đang chiếu hoặc Ngừng chiếu.
   - `- dinhDangChieu: String`: Định dạng của phim gồm 2D hoặc 3D.
 - Phương thức nghiệp vụ:
   - `+ ngungChieu(): void`: Chuyển trạng thái phim sang ngừng chiếu khi hết hạn khai thác.
@@ -88,7 +88,7 @@ Theo quy định thiết kế sơ đồ lớp phân tích, các thuộc tính kh
   - `- maSuat: int`: Mã định danh suất chiếu tự tăng.
   - `- thoiGianBatDau: LocalDateTime`: Thời điểm bắt đầu chiếu phim.
   - `- thoiGianTraPhong: LocalDateTime`: Thời điểm kết thúc chiếu cộng thời gian dọn phòng để hoàn trả phòng.
-  - `- trangThai: String`: Trạng thái suất chiếu gồm Lên lịch, Đang chiếu, Đã chiếu hoặc Đã hủy.
+  - `- trangThai: String`: Trạng thái suất chiếu gồm Sắp chiếu, Đang chiếu, Đã chiếu hoặc Đã hủy.
 - Phương thức nghiệp vụ:
   - `+ kiemTraKhungGio(batDau: LocalDateTime, ketThuc: LocalDateTime): boolean`: Kiểm tra khoảng thời gian chiếu có hợp lệ hay không.
   - `+ coTheBanVe(): boolean`: Kiểm tra suất chiếu có đang ở trạng thái cho phép mở bán vé hay không.
@@ -99,7 +99,7 @@ Theo quy định thiết kế sơ đồ lớp phân tích, các thuộc tính kh
   - `- maPhong: String`: Mã định danh phòng chiếu.
   - `- tenPhong: String`: Tên phòng chiếu như Phòng 01, Phòng 02.
   - `- thoiGianDonPhong: int`: Số phút cần thiết để dọn dẹp phòng sau mỗi ca chiếu.
-  - `- trangThai: String`: Trạng thái phòng gồm Đang hoạt động hoặc Đang sửa chữa.
+  - `- trangThai: String`: Trạng thái phòng gồm Đang hoạt động, Tạm ngừng hoạt động hoặc Bảo trì.
   - `/ sucChua: int`: Thuộc tính dẫn xuất thể hiện sức chứa của phòng, tính bằng tổng số ghế vật lý ở trạng thái sẵn sàng sử dụng.
 - Phương thức nghiệp vụ:
   - `+ tinhSucChua(): int`: Tính toán tổng số lượng ghế hoạt động của phòng.
@@ -118,7 +118,7 @@ Theo quy định thiết kế sơ đồ lớp phân tích, các thuộc tính kh
   - `- maGhe: int`: Mã định danh của ghế vật lý trong phòng.
   - `- hangGhe: String`: Ký hiệu chữ cái của hàng ghế như A, B, C.
   - `- soGhe: int`: Số thứ tự của ghế trong hàng như 1, 2, 3.
-  - `- trangThai: String`: Trạng thái vật lý của ghế gồm Sẵn sàng sử dụng hoặc Đang bảo trì.
+  - `- trangThai: String`: Trạng thái vật lý của ghế gồm Sẵn sàng sử dụng hoặc Bảo trì.
 - Phương thức nghiệp vụ:
   - `+ sanSangSuDung(): boolean`: Kiểm tra ghế có đủ điều kiện vật lý để xếp chỗ cho khách hay không.
   - `+ chuyenBaoTri(): void`: Đánh dấu chuyển ghế sang trạng thái hỏng hóc cần bảo trì.
@@ -132,7 +132,7 @@ Theo quy định thiết kế sơ đồ lớp phân tích, các thuộc tính kh
 
 ### 2.11. Lớp GheSuatChieu
 - Thuộc tính:
-  - `- trangThai: String`: Trạng thái của vị trí ghế trong suất chiếu gồm Trống, Đang giữ hoặc Đã bán.
+  - `- trangThai: String`: Trạng thái của vị trí ghế trong suất chiếu gồm Trống, Đang giữ, Đã bán hoặc Không khả dụng.
   - `- thoiGianHetHanGiu: LocalDateTime`: Thời điểm hết hạn khóa giữ chỗ tạm thời khi nhân viên đang thao tác bán.
   - `- giaVeChot: BigDecimal`: Giá tiền vé được chốt tại thời điểm đưa ghế vào giao dịch bán.
 - Phương thức nghiệp vụ:
@@ -160,7 +160,7 @@ Theo quy định thiết kế sơ đồ lớp phân tích, các thuộc tính kh
   - `- maGiaoDich: String`: Mã định danh giao dịch gồm tiền tố GD và chuỗi số thời gian.
   - `- thoiGianTao: LocalDateTime`: Thời điểm tạo giao dịch tại quầy.
   - `- tongTien: BigDecimal`: Tổng số tiền thanh toán của các vé trong giao dịch.
-  - `- trangThai: String`: Trạng thái xử lý gồm Chờ thanh toán, Hoàn tất hoặc Đã hủy.
+  - `- trangThai: String`: Trạng thái xử lý gồm Chờ thanh toán, Đang thanh toán, Đã thanh toán, Đã hủy hoặc Hết hạn.
 - Phương thức nghiệp vụ:
   - `+ tinhTongTien(): BigDecimal`: Tính tổng tiền từ các vé hoặc ghế đã chọn trong giao dịch.
   - `+ hoanTatGiaoDich(): void`: Đánh dấu giao dịch đã thanh toán thành công.
@@ -180,14 +180,14 @@ Theo quy định thiết kế sơ đồ lớp phân tích, các thuộc tính kh
   - `- maVe: String`: Mã định danh vé phát hành.
   - `- maQR: String`: Chuỗi mã hóa phản hồi nhanh in trên vé để quét vào phòng chiếu.
   - `- giaVe: BigDecimal`: Mức giá vé chính thức thu tiền tại thời điểm in vé.
-  - `- trangThai: String`: Trạng thái vé gồm Đã phát hành, Đã soát vé hoặc Đã hủy.
+  - `- trangThai: String`: Trạng thái vé gồm Chưa sử dụng hoặc Đã sử dụng.
   - `- thoiGianPhatHanh: LocalDateTime`: Thời điểm in vé trao cho khách hàng.
   - `- hangGheLucPhatHanh: String`: Ký hiệu hàng ghế tại thời điểm phát hành vé để lưu vết lịch sử.
   - `- soGheLucPhatHanh: int`: Số thứ tự ghế tại thời điểm phát hành vé để lưu vết lịch sử.
   - `- tenLoaiGheLucPhatHanh: String`: Tên loại ghế tại thời điểm phát hành vé để lưu vết lịch sử.
 - Phương thức nghiệp vụ:
   - `+ kiemTraHopLe(): boolean`: Kiểm tra vé có đúng suất chiếu, đúng phòng và chưa qua cửa soát hay không.
-  - `+ danhDauSuDung(): void`: Đổi trạng thái vé sang đã soát vé khi khách hàng đi qua cửa vào phòng.
+  - `+ danhDauSuDung(): void`: Đổi trạng thái vé sang Đã sử dụng khi khách hàng đi qua cửa vào phòng.
 
 ### 2.17. Lớp SanPham
 - Thuộc tính:

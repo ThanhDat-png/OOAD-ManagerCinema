@@ -326,16 +326,16 @@ def build_drawio():
     # =========================================================================
     add_package_frame(root2, 'pkg_gui', 'TẦNG GIAO DIỆN - package cinema.view', 40, 90, 2720, 230, fill='#F0FFF4', stroke='#38A169')
 
-    add_design_box(root2, 'v_DangNhap', '', 'DangNhapWindow', ['+ hienThi(): void', '+ xuLyDangNhap(): void'], 60, 130, 230, 85, fill='#ffffff', stroke='#38A169', subtitle='Màn hình đăng nhập UC01')
-    add_design_box(root2, 'v_Cinema', '', 'CinemaWindow', ['+ chuyenTab(tab): void', '+ khoiTaoMenu(): void'], 310, 130, 230, 85, fill='#ffffff', stroke='#38A169', subtitle='Khung chính ứng dụng')
-    add_design_box(root2, 'v_NhanVien', '', 'NhanVienPanel', ['+ taiDanhSach(): void', '+ luuNhanVien(): void'], 560, 130, 230, 85, fill='#ffffff', stroke='#38A169', subtitle='Quản lý nhân sự UC02')
-    add_design_box(root2, 'v_Phim', '', 'PhimPanel', ['+ taiDanhSach(): void', '+ luuPhim(): void'], 810, 130, 230, 85, fill='#ffffff', stroke='#38A169', subtitle='Quản lý phim UC03')
-    add_design_box(root2, 'v_LichChieu', '', 'LichChieuPanel', ['+ taiLichChieu(): void', '+ themSuat(): void'], 1060, 130, 230, 85, fill='#ffffff', stroke='#38A169', subtitle='Lập lịch chiếu UC04')
-    add_design_box(root2, 'v_PhongChieu', '', 'PhongChieuPanel', ['+ soDoPhong(): void', '+ capNhatGhe(): void'], 1310, 130, 230, 85, fill='#ffffff', stroke='#38A169', subtitle='Phòng và Ghế UC05')
-    add_design_box(root2, 'v_GiaVeFnB', '', 'GiaVeFnBPanel', ['+ suaGiaVe(): void', '+ suaTonKhoSP(): void'], 1560, 130, 230, 85, fill='#ffffff', stroke='#38A169', subtitle='Giá vé và Sản phẩm UC06')
-    add_design_box(root2, 'v_KiemTraVe', '', 'KiemTraVePanel', ['+ quetMaQR(code): void', '+ xacNhanVao(): void'], 1810, 130, 230, 85, fill='#ffffff', stroke='#38A169', subtitle='Soát vé QR UC07')
-    add_design_box(root2, 'v_BanVe', '', 'BanVePanel', ['+ chonSuat(): void', '+ chonGhe(): void', '+ thanhToan(): void'], 2060, 130, 240, 95, fill='#ffffff', stroke='#38A169', subtitle='Bán vé quầy UC08')
-    add_design_box(root2, 'v_BaoCao', '', 'BaoCaoPanel', ['+ xemDoanhThu(): void', '+ xuatBaoCao(): void'], 2320, 130, 230, 85, fill='#ffffff', stroke='#38A169', subtitle='Thống kê báo cáo UC09')
+    add_design_box(root2, 'v_DangNhap', '', 'DangNhapWindow', ['+ DangNhapWindow(service)', '- authenticate(service): void'], 60, 130, 230, 85, fill='#ffffff', stroke='#38A169', subtitle='Màn hình đăng nhập UC01')
+    add_design_box(root2, 'v_Cinema', '', 'CinemaWindow', ['+ open(session): void'], 310, 130, 230, 85, fill='#ffffff', stroke='#38A169', subtitle='Khung chính ứng dụng')
+    add_design_box(root2, 'v_NhanVien', '', 'NhanVienPanel', ['+ NhanVienPanel(session)', '- refresh(): void'], 560, 130, 230, 85, fill='#ffffff', stroke='#38A169', subtitle='Quản lý nhân sự UC02')
+    add_design_box(root2, 'v_Phim', '', 'PhimPanel', ['+ PhimPanel(session)', '- refresh(): void'], 810, 130, 230, 85, fill='#ffffff', stroke='#38A169', subtitle='Quản lý phim UC03')
+    add_design_box(root2, 'v_LichChieu', '', 'LichChieuPanel', ['+ LichChieuPanel(session)', '- refresh(): void'], 1060, 130, 230, 85, fill='#ffffff', stroke='#38A169', subtitle='Lập lịch chiếu UC04')
+    add_design_box(root2, 'v_PhongChieu', '', 'PhongChieuPanel', ['+ PhongChieuPanel(session)', '- refresh(): void'], 1310, 130, 230, 85, fill='#ffffff', stroke='#38A169', subtitle='Phòng và Ghế UC05')
+    add_design_box(root2, 'v_GiaVeFnB', '', 'GiaVeFnBPanel', ['+ GiaVeFnBPanel(session)', '- refresh(): void'], 1560, 130, 230, 85, fill='#ffffff', stroke='#38A169', subtitle='Giá vé và Sản phẩm UC06')
+    add_design_box(root2, 'v_KiemTraVe', '', 'KiemTraVePanel', ['+ KiemTraVePanel(session)', '- check(): void'], 1810, 130, 230, 85, fill='#ffffff', stroke='#38A169', subtitle='Soát vé QR UC07')
+    add_design_box(root2, 'v_BanVe', '', 'BanVePanel', ['+ BanVePanel(session)', '+ requestClose(): boolean'], 2060, 130, 240, 85, fill='#ffffff', stroke='#38A169', subtitle='Bán vé quầy UC08')
+    add_design_box(root2, 'v_BaoCao', '', 'BaoCaoPanel', ['+ BaoCaoPanel(session)', '- timeTab(): JPanel'], 2320, 130, 230, 85, fill='#ffffff', stroke='#38A169', subtitle='Thống kê báo cáo UC09')
     add_design_box(root2, 'v_UIHelpers', '', 'cinema.view.ui.*', ['Tokens, Skin, Theme', 'SeatVisual, SalesViews', 'ReadOnlyViews, Forms'], 2570, 130, 170, 85, fill='#F7FAFC', stroke='#718096', subtitle='Thư viện hỗ trợ giao diện')
 
     # =========================================================================
@@ -343,45 +343,45 @@ def build_drawio():
     # =========================================================================
     add_package_frame(root2, 'pkg_bus', 'TẦNG NGHIỆP VỤ - package cinema.controller.*', 40, 380, 2720, 310, fill='#EBF8FF', stroke='#3182CE')
 
-    add_design_box(root2, 'b_DangNhap', '', 'DangNhapBUS', ['+ dangNhap(u, p): TaiKhoan', '+ layThongTinNV(ma): NhanVien'], 60, 420, 230, 110, fill='#ffffff', stroke='#3182CE', subtitle='cinema.controller.auth')
-    add_design_box(root2, 'b_NhanVien', '', 'NhanVienBUS', ['+ danhSach(): List<NhanVien>', '+ themNV(nv): void', '+ suaNV(nv): void'], 310, 420, 230, 110, fill='#ffffff', stroke='#3182CE', subtitle='cinema.controller.staff')
-    add_design_box(root2, 'b_Phim', '', 'PhimBUS', ['+ danhSachPhim(): List<Phim>', '+ luuPhim(phim): void', '+ ngungChieu(ma): void'], 560, 420, 230, 110, fill='#ffffff', stroke='#3182CE', subtitle='cinema.controller.film')
-    add_design_box(root2, 'b_LichChieu', '', 'LichChieuBUS', ['+ laySuatChieu(ngay): List', '+ kiemTraTrungLich(sc): bool', '+ kiemTraDonPhong(): bool'], 810, 420, 230, 110, fill='#ffffff', stroke='#3182CE', subtitle='cinema.controller.schedule')
-    add_design_box(root2, 'b_PhongChieu', '', 'PhongChieuBUS', ['+ danhSachPhong(): List', '+ laySoDoGhe(maP): List', '+ capNhatTrangThaiGhe(): void'], 1060, 420, 230, 110, fill='#ffffff', stroke='#3182CE', subtitle='cinema.controller.room')
-    add_design_box(root2, 'b_GiaVe', '', 'GiaVeBUS', ['+ layBangGia(): List', '+ capNhatGia(maG, gia): void', '+ tinhGiaVe(loaiG, p, td): BigDecimal'], 1310, 420, 230, 110, fill='#ffffff', stroke='#3182CE', subtitle='cinema.controller.pricing')
-    add_design_box(root2, 'b_SanPham', '', 'SanPhamBUS', ['+ danhSachSP(): List', '+ capNhatTon(ma, delta): void', '+ suaThongTinSP(sp): void'], 1560, 420, 230, 110, fill='#ffffff', stroke='#3182CE', subtitle='cinema.controller.pricing')
-    add_design_box(root2, 'b_Ve', '', 'VeBUS', ['+ kiemTraVe(qr): KetQua', '+ xacNhanSoatVe(maVe): bool', '+ kiemTraKhungGioVao(): bool'], 1810, 420, 230, 110, fill='#ffffff', stroke='#3182CE', subtitle='cinema.controller.admission')
-    add_design_box(root2, 'b_BanVe', '', 'BanVeBUS', ['+ giuGhe(suat, ghe): bool', '+ taoGiaoDich(nv, ghe, pt): GD', '+ inVe(maVe): byte[]'], 2060, 420, 240, 110, fill='#ffffff', stroke='#3182CE', subtitle='cinema.controller.sales')
-    add_design_box(root2, 'b_BaoCao', '', 'BaoCaoBUS', ['+ thongKeTongHop(khoang): TH', '+ thongKePhim(khoang): List', '+ thongKeNhanVien(khoang): List'], 2320, 420, 230, 110, fill='#ffffff', stroke='#3182CE', subtitle='cinema.controller.revenue')
+    add_design_box(root2, 'b_DangNhap', '', 'DangNhapBUS', ['+ login(username, password): PhienDangNhap'], 60, 420, 230, 105, fill='#ffffff', stroke='#3182CE', subtitle='cinema.controller.auth')
+    add_design_box(root2, 'b_NhanVien', '', 'NhanVienBUS', ['+ search(keyword): List<NhanVien>', '+ create(input): NhanVien', '+ update(input): void', '+ delete(id): void', '+ detail(id): NhanVien'], 310, 420, 230, 125, fill='#ffffff', stroke='#3182CE', subtitle='cinema.controller.staff')
+    add_design_box(root2, 'b_Phim', '', 'PhimBUS', ['+ genres(): List<TheLoai>', '+ search(name, genre, status): List<Phim>', '+ create(input, image): Phim', '+ rename(id, name): void', '+ stop(id): void'], 560, 420, 230, 135, fill='#ffffff', stroke='#3182CE', subtitle='cinema.controller.film')
+    add_design_box(root2, 'b_LichChieu', '', 'LichChieuBUS', ['+ list(date, room): List<SuatChieu>', '+ create(film, room, start): SuatChieu', '+ changeFilm(id, film): SuatChieu', '+ cancel(id): void'], 810, 420, 230, 120, fill='#ffffff', stroke='#3182CE', subtitle='cinema.controller.schedule')
+    add_design_box(root2, 'b_PhongChieu', '', 'PhongChieuBUS', ['+ search(text, type, state): List<PhongChieu>', '+ create(name, type, clean, state): PhongChieu', '+ seats(room): List<Ghe>', '+ addSeat(room, row, num, type, state): Ghe'], 1060, 420, 230, 125, fill='#ffffff', stroke='#3182CE', subtitle='cinema.controller.room')
+    add_design_box(root2, 'b_GiaVe', '', 'GiaVeBUS', ['+ list(): List<BangGiaVe>', '+ create(seat, room, period, price): BangGiaVe', '+ updatePrice(id, price): BangGiaVe'], 1310, 420, 230, 110, fill='#ffffff', stroke='#3182CE', subtitle='cinema.controller.pricing')
+    add_design_box(root2, 'b_SanPham', '', 'SanPhamBUS', ['+ search(text, inStock): List<SanPham>', '+ create(input): void', '+ updateInfo(input): void', '+ updatePrice(id, amount): void'], 1560, 420, 230, 120, fill='#ffffff', stroke='#3182CE', subtitle='cinema.controller.pricing')
+    add_design_box(root2, 'b_Ve', '', 'VeBUS', ['+ rooms(): List<PhongChieu>', '+ shows(date, room): List<SuatChieu>', '+ check(ticket, type, room, show): KetQua', '+ confirm(ticket, room, show): ThongTin'], 1810, 420, 230, 120, fill='#ffffff', stroke='#3182CE', subtitle='cinema.controller.admission')
+    add_design_box(root2, 'b_BanVe', '', 'BanVeBUS', ['+ shows(name, date, time): List<SuatBan>', '+ hold(show, seats, txId): GioHang', '+ pay(txId, method, amount): List<ThongTin>', '+ cancel(txId): void'], 2060, 420, 240, 120, fill='#ffffff', stroke='#3182CE', subtitle='cinema.controller.sales')
+    add_design_box(root2, 'b_BaoCao', '', 'BaoCaoBUS', ['+ theoThoiGian(range): TongHop', '+ theoPhim(range, film): List<TheoPhim>', '+ theoNhanVien(range, emp): List<TheoNhanVien>', '+ ve(range, film, show): ThongKeVe'], 2320, 420, 230, 120, fill='#ffffff', stroke='#3182CE', subtitle='cinema.controller.revenue')
 
     # BUS Helpers
-    add_design_box(root2, 'h_Auth', '', 'PasswordHasher\nPhienDangNhap', ['+ hashPassword(plain): String', '+ verify(plain, hash): bool'], 60, 550, 230, 80, fill='#F7FAFC', stroke='#4A5568', subtitle='Bảo mật đăng nhập')
-    add_design_box(root2, 'h_Film', '', 'PosterStore', ['+ luuPoster(bytes): String', '+ docPoster(ten): byte[]'], 560, 550, 230, 80, fill='#F7FAFC', stroke='#4A5568', subtitle='Lưu trữ tệp áp phích')
-    add_design_box(root2, 'h_Pricing', '', 'MoneyRules', ['+ lamTronTien(tien): BigDecimal', '+ parseTien(str): BigDecimal'], 1310, 550, 230, 80, fill='#F7FAFC', stroke='#4A5568', subtitle='Quy tắc tiền tệ')
-    add_design_box(root2, 'h_Admission', '', 'DocMaQR\nThoiGianVaoPhong', ['+ giaiMaQR(raw): String', '+ trongKhungGioVao(suat): bool'], 1810, 550, 230, 80, fill='#F7FAFC', stroke='#4A5568', subtitle='Xác thực soát vé')
-    add_design_box(root2, 'h_Sales', '', 'InVe', ['+ renderVePDF(ve): byte[]', '+ taoNoiDungIn(ve): String'], 2060, 550, 240, 80, fill='#F7FAFC', stroke='#4A5568', subtitle='Định dạng in vé')
-    add_design_box(root2, 'h_Revenue', '', 'KhoangThongKe', ['+ homNay(): Khoang', '+ thangNay(): Khoang', '+ tuNgayDenNgay(t, d): Khoang'], 2320, 550, 230, 80, fill='#F7FAFC', stroke='#4A5568', subtitle='Lọc khoảng thời gian')
+    add_design_box(root2, 'h_Auth', '', 'PasswordHasher\nPhienDangNhap', ['+ hash(password): String', '+ matches(password, stored): boolean', '+ laAdmin(): boolean'], 60, 570, 230, 90, fill='#F7FAFC', stroke='#4A5568', subtitle='Bảo mật đăng nhập')
+    add_design_box(root2, 'h_Film', '', 'PosterStore', ['+ importImage(source): String', '+ resolve(stored): Path', '+ discard(stored): void'], 560, 570, 230, 90, fill='#F7FAFC', stroke='#4A5568', subtitle='Lưu trữ tệp áp phích')
+    add_design_box(root2, 'h_Pricing', '', 'MoneyRules', ['+ positive(value, message): BigDecimal'], 1310, 570, 230, 75, fill='#F7FAFC', stroke='#4A5568', subtitle='Quy tắc tiền tệ')
+    add_design_box(root2, 'h_Admission', '', 'DocMaQR\nThoiGianVaoPhong', ['+ read(file): String', '+ load(): ThoiGianVaoPhong'], 1810, 570, 230, 85, fill='#F7FAFC', stroke='#4A5568', subtitle='Xác thực soát vé')
+    add_design_box(root2, 'h_Sales', '', 'InVe', ['+ preview(info): BufferedImage', '+ print(g, format, page): int'], 2060, 570, 240, 85, fill='#F7FAFC', stroke='#4A5568', subtitle='Định dạng in vé')
+    add_design_box(root2, 'h_Revenue', '', 'KhoangThongKe', ['+ ngay(date): KhoangThongKe', '+ thang(month): KhoangThongKe', '+ nam(year): KhoangThongKe'], 2320, 570, 230, 90, fill='#F7FAFC', stroke='#4A5568', subtitle='Lọc khoảng thời gian')
 
     # =========================================================================
     # LAYER 3: Data Access Layer (cinema.dao & cinema.db)
     # =========================================================================
     add_package_frame(root2, 'pkg_dao', 'TẦNG TRUY XUẤT DỮ LIỆU - package cinema.dao và cinema.db', 40, 740, 2720, 290, fill='#FFF5F5', stroke='#E53E3E')
 
-    add_design_box(root2, 'd_TaiKhoan', '', 'TaiKhoanDAO', ['+ findByUsername(): TaiKhoan', '+ updatePassword(): void'], 60, 780, 220, 85, fill='#ffffff', stroke='#E53E3E')
-    add_design_box(root2, 'd_NhanVien', '', 'NhanVienDAO', ['+ findAll(): List<NhanVien>', '+ insert(nv): void', '+ update(nv): void'], 300, 780, 220, 85, fill='#ffffff', stroke='#E53E3E')
-    add_design_box(root2, 'd_PhimTheLoai', '', 'PhimDAO\nTheLoaiDAO', ['+ findAll(): List<Phim>', '+ insert(p, theLoai): void', '+ stopShowing(maP): void'], 540, 780, 230, 95, fill='#ffffff', stroke='#E53E3E')
-    add_design_box(root2, 'd_SuatChieu', '', 'SuatChieuDAO', ['+ findByDate(d): List<SuatChieu>', '+ insert(sc): int', '+ cancel(maS): void'], 790, 780, 220, 85, fill='#ffffff', stroke='#E53E3E')
-    add_design_box(root2, 'd_PhongGhe', '', 'PhongChieuDAO\nGheDAO', ['+ findAllRooms(): List', '+ findSeats(maP): List<Ghe>', '+ updateSeat(g): void'], 1030, 780, 220, 95, fill='#ffffff', stroke='#E53E3E')
-    add_design_box(root2, 'd_BangGia', '', 'BangGiaVeDAO\nLoaiThoiDiemDAO', ['+ findAllPrices(): List', '+ updatePrice(ma, val): void', '+ findMatchPrice(): BangGiaVe'], 1270, 780, 230, 95, fill='#ffffff', stroke='#E53E3E')
-    add_design_box(root2, 'd_SanPham', '', 'SanPhamDAO', ['+ findAll(): List<SanPham>', '+ updateStock(ma, d): void', '+ update(sp): void'], 1520, 780, 220, 85, fill='#ffffff', stroke='#E53E3E')
-    add_design_box(root2, 'd_Ve', '', 'VeDAO', ['+ findByQR(code): Ve', '+ markUsed(maVe): bool', '+ insert(ve): void'], 1760, 780, 220, 85, fill='#ffffff', stroke='#E53E3E')
-    add_design_box(root2, 'd_BanVe', '', 'BanVeDAO\nGiuGheDAO\nGiaoDichDAO', ['+ lockSeat(s, g, exp): bool', '+ createTransaction(gd): void', '+ issueTicket(ve): void'], 2000, 780, 240, 105, fill='#ffffff', stroke='#E53E3E')
-    add_design_box(root2, 'd_BaoCao', '', 'BaoCaoDAO', ['+ reportSummary(k): TongHop', '+ reportByFilm(k): List', '+ reportByStaff(k): List'], 2260, 780, 220, 85, fill='#ffffff', stroke='#E53E3E')
+    add_design_box(root2, 'd_TaiKhoan', '', 'TaiKhoanDAO', ['+ findByUsername(user): Optional<TaiKhoan>'], 60, 780, 220, 85, fill='#ffffff', stroke='#E53E3E')
+    add_design_box(root2, 'd_NhanVien', '', 'NhanVienDAO', ['+ search(keyword): List<NhanVien>', '+ insert(emp, hash, role): void', '+ update(emp): void', '+ delete(id): void'], 300, 780, 220, 115, fill='#ffffff', stroke='#E53E3E')
+    add_design_box(root2, 'd_PhimTheLoai', '', 'PhimDAO\nTheLoaiDAO', ['+ search(name, genre, status): List<Phim>', '+ insert(film): void', '+ stop(id): void', '+ all(): List<TheLoai>'], 540, 780, 230, 115, fill='#ffffff', stroke='#E53E3E')
+    add_design_box(root2, 'd_SuatChieu', '', 'SuatChieuDAO', ['+ list(date, room): List<SuatChieu>', '+ create(film, room, start, holidays): SuatChieu', '+ modify(id, edit, holidays): SuatChieu', '+ cancel(id): void'], 790, 780, 220, 115, fill='#ffffff', stroke='#E53E3E')
+    add_design_box(root2, 'd_PhongGhe', '', 'PhongChieuDAO\nGheDAO', ['+ search(key, type, state): List<PhongChieu>', '+ insert(room): void', '+ list(room): List<Ghe>', '+ insert(room, row, num, type, state): Ghe'], 1030, 780, 220, 115, fill='#ffffff', stroke='#E53E3E')
+    add_design_box(root2, 'd_BangGia', '', 'BangGiaVeDAO\nLoaiThoiDiemDAO', ['+ all(): List<BangGiaVe>', '+ insert(seat, room, period, price): int', '+ updatePrice(id, price): void'], 1270, 780, 230, 105, fill='#ffffff', stroke='#E53E3E')
+    add_design_box(root2, 'd_SanPham', '', 'SanPhamDAO', ['+ search(key, inStock): List<SanPham>', '+ insert(product): void', '+ updateInfo(product): void', '+ updatePrice(id, price): void'], 1520, 780, 220, 115, fill='#ffffff', stroke='#E53E3E')
+    add_design_box(root2, 'd_Ve', '', 'VeDAO', ['+ inspect(code, type): Optional<ThongTin>', '+ confirm(maVe, truoc, sau, val): ThongTin'], 1760, 780, 220, 95, fill='#ffffff', stroke='#E53E3E')
+    add_design_box(root2, 'd_BanVe', '', 'BanVeDAO\nGiuGheDAO\nGiaoDichDAO', ['+ search(name, date, time): List<SuatBan>', '+ hold(show, seats, staff, id, min): GioHang', '+ pay(id, method, amount): List<ThongTin>', '+ cancel(id): void'], 2000, 780, 240, 115, fill='#ffffff', stroke='#E53E3E')
+    add_design_box(root2, 'd_BaoCao', '', 'BaoCaoDAO', ['+ theoThoiGian(range): TongHop', '+ theoPhim(range, film): List<TheoPhim>', '+ theoNhanVien(range, emp): List<TheoNhanVien>', '+ ve(range, film, show): ThongKeVe'], 2260, 780, 220, 115, fill='#ffffff', stroke='#E53E3E')
 
-    # Central Database Singleton centered under DAO row
-    add_design_box(root2, 'd_Database', 'singleton', 'Database',
-                   ['- instance: Database', '+ getConnection(): Connection', '+ runInTransaction(tx): T'],
-                   1180, 920, 340, 95, fill='#FEFCBF', stroke='#B7791F', subtitle='Quản lý kết nối MySQL qua HikariCP')
+    # Utility Database centered under DAO row
+    add_design_box(root2, 'd_Database', 'utility', 'Database',
+                   ['+ connect(): Connection'],
+                   1180, 920, 340, 80, fill='#FEFCBF', stroke='#B7791F', subtitle='Kết nối MySQL qua JDBC từ config/database.properties')
 
     # =========================================================================
     # LAYER 4: DTO / Domain Model Layer (cinema.model)
@@ -429,29 +429,29 @@ def build_drawio():
                 ET.SubElement(arr, 'mxPoint', {'x': str(px), 'y': str(py)})
         return edge_cell
 
-    # Layer 1 (GUI) -> Layer 2 (BUS) calls (All vertical straight lines, zero collisions)
+    # Layer 1 (GUI) -> Layer 2 (BUS) calls
     add_p2_edge(root2, 'v_DangNhap', 'b_DangNhap', label='«call»')
-    add_p2_edge(root2, 'v_NhanVien', 'b_NhanVien', label='«call»')
-    add_p2_edge(root2, 'v_Phim', 'b_Phim', label='«call»')
-    add_p2_edge(root2, 'v_LichChieu', 'b_LichChieu', label='«call»')
-    add_p2_edge(root2, 'v_PhongChieu', 'b_PhongChieu', label='«call»')
-    add_p2_edge(root2, 'v_GiaVeFnB', 'b_GiaVe', label='«call»')
+    add_p2_edge(root2, 'v_NhanVien', 'b_NhanVien', label='«call»', points=[(675, 340), (425, 340)])
+    add_p2_edge(root2, 'v_Phim', 'b_Phim', label='«call»', points=[(925, 345), (675, 345)])
+    add_p2_edge(root2, 'v_LichChieu', 'b_LichChieu', label='«call»', points=[(1175, 350), (925, 350)])
+    add_p2_edge(root2, 'v_PhongChieu', 'b_PhongChieu', label='«call»', points=[(1425, 355), (1175, 355)])
+    add_p2_edge(root2, 'v_GiaVeFnB', 'b_GiaVe', label='«call»', points=[(1675, 360), (1425, 360)])
     add_p2_edge(root2, 'v_GiaVeFnB', 'b_SanPham', label='«call»')
     add_p2_edge(root2, 'v_KiemTraVe', 'b_Ve', label='«call»')
     add_p2_edge(root2, 'v_BanVe', 'b_BanVe', label='«call»')
     add_p2_edge(root2, 'v_BaoCao', 'b_BaoCao', label='«call»')
 
-    # Layer 2 (BUS) -> Layer 3 (DAO) calls (All vertical straight lines, zero collisions)
-    add_p2_edge(root2, 'b_DangNhap', 'd_TaiKhoan', label='«call»')
+    # Layer 2 (BUS) -> Layer 3 (DAO) calls (routed via dedicated corridors to avoid helper boxes)
+    add_p2_edge(root2, 'b_DangNhap', 'd_TaiKhoan', label='«call»', points=[(300, 480), (300, 720), (170, 720)])
     add_p2_edge(root2, 'b_NhanVien', 'd_NhanVien', label='«call»')
-    add_p2_edge(root2, 'b_Phim', 'd_PhimTheLoai', label='«call»')
+    add_p2_edge(root2, 'b_Phim', 'd_PhimTheLoai', label='«call»', points=[(800, 480), (800, 720), (655, 720)])
     add_p2_edge(root2, 'b_LichChieu', 'd_SuatChieu', label='«call»')
     add_p2_edge(root2, 'b_PhongChieu', 'd_PhongGhe', label='«call»')
-    add_p2_edge(root2, 'b_GiaVe', 'd_BangGia', label='«call»')
+    add_p2_edge(root2, 'b_GiaVe', 'd_BangGia', label='«call»', points=[(1550, 480), (1550, 720), (1385, 720)])
     add_p2_edge(root2, 'b_SanPham', 'd_SanPham', label='«call»')
-    add_p2_edge(root2, 'b_Ve', 'd_Ve', label='«call»')
-    add_p2_edge(root2, 'b_BanVe', 'd_BanVe', label='«call»')
-    add_p2_edge(root2, 'b_BaoCao', 'd_BaoCao', label='«call»')
+    add_p2_edge(root2, 'b_Ve', 'd_Ve', label='«call»', points=[(2050, 480), (2050, 720), (1870, 720)])
+    add_p2_edge(root2, 'b_BanVe', 'd_BanVe', label='«call»', points=[(2310, 480), (2310, 720), (2120, 720)])
+    add_p2_edge(root2, 'b_BaoCao', 'd_BaoCao', label='«call»', points=[(2565, 480), (2565, 720), (2370, 720)])
 
     # Layer 3 (DAO) -> Database Singleton via dedicated routing in the open band (y=895)
     # DAOs to the left of Database (x <= 1180): drop to y=895, turn right to Database
