@@ -1,68 +1,232 @@
-# Danh sách lớp nghiệp vụ dự kiến
+# Danh sách và đặc tả lớp nghiệp vụ
 
-**Tổng cộng 17 lớp nghiệp vụ.**
+Hệ thống quản lý rạp chiếu phim có 17 lớp nghiệp vụ được trích xuất từ 9 ca sử dụng và các sơ đồ tuần tự trong tài liệu đặc tả. Dưới đây là bảng phân loại lớp, bảng đặc tả chi tiết thuộc tính và phương thức, cùng bảng các mối quan hệ giữa các lớp.
 
-Căn cứ S2_Nhom08_Lan3.docx, mục 3.3, 3.4 và 3.5.2; đối chiếu thêm hai trang của LuocDo_CSDL_RapChieuPhim (2).drawio. Đây là đề xuất thiết kế trước triển khai. Tên lớp dùng tiếng Việt không dấu để thống nhất với thuật ngữ báo cáo.
+## 1. Bảng phân loại 17 lớp nghiệp vụ
 
-| STT | Tên lớp dự kiến | Mô tả trách nhiệm | Căn cứ đối chiếu |
-| --- | --- | --- | --- |
-| 1 | TaiKhoan | Lưu tên đăng nhập, mật khẩu đã băm, trạng thái tài khoản và liên kết với nhân viên, vai trò. | UC01; TAIKHOAN |
-| 2 | VaiTro | Biểu diễn vai trò Admin hoặc Nhân viên để xác định quyền truy cập. | UC01 và tác nhân UC02–UC09; VAITRO |
-| 3 | NhanVien | Lưu hồ sơ nhân viên và xác định người thực hiện giao dịch bán vé. | UC02, UC08, UC09.3; NHANVIEN |
-| 4 | Phim | Lưu thông tin phim, thời lượng, định dạng, poster, giới hạn tuổi và trạng thái chiếu. | UC03, UC04; PHIM |
-| 5 | TheLoai | Biểu diễn danh mục thể loại dùng để phân loại và tra cứu phim. | UC03.2.3, UC03.4; THELOAI |
-| 6 | SuatChieu | Biểu diễn lịch chiếu của phim tại một phòng, thời gian bắt đầu, trả phòng và trạng thái. | UC04, UC08.1; SUATCHIEU |
-| 7 | PhongChieu | Lưu thông tin phòng, thời gian dọn phòng và trạng thái hoạt động; sức chứa được tính từ danh sách ghế. | UC05, UC04; PHONGCHIEU |
-| 8 | LoaiPhong | Biểu diễn loại phòng và định dạng chiếu được hỗ trợ; làm căn cứ kiểm tra lịch chiếu và áp giá vé. | UC04, UC06; LOAIPHONG |
-| 9 | Ghe | Biểu diễn vị trí ghế trong phòng, loại ghế và tình trạng sử dụng vật lý. | UC05.1.1–UC05.1.3; GHE |
-| 10 | LoaiGhe | Biểu diễn danh mục loại ghế, phục vụ phân loại và xác định giá vé. | UC05.1.3, UC06.1; LOAIGHE |
-| 11 | GheSuatChieu | Biểu diễn ghế trong từng suất chiếu, trạng thái trống/giữ/bán, hạn giữ, giao dịch giữ và giá vé đã chốt. | UC08.2–UC08.5; GHE_SUATCHIEU; RB02–RB04 |
-| 12 | LoaiThoiDiem | Biểu diễn loại ngày thường, cuối tuần hoặc ngày lễ dùng để xác định giá vé của suất chiếu. | UC04, UC06.1; LOAITHOIDIEM; RB06 |
-| 13 | BangGiaVe | Lưu mức giá áp dụng cho tổ hợp loại ghế, loại phòng và loại thời điểm. | UC06.1.1–UC06.1.2, UC08.3; BANGGIAVE |
-| 14 | GiaoDich | Biểu diễn lần bán vé, nhân viên thực hiện, thời gian, tổng tiền và trạng thái xử lý. | UC08.2–UC08.6, UC09.1–UC09.3; GIAODICH |
-| 15 | ThanhToan | Lưu phương thức, số tiền và thời điểm thanh toán thành công của một giao dịch. | UC08.4, UC08.6, UC09; THANHTOAN; RB04 |
-| 16 | Ve | Biểu diễn vé phát hành cho một ghế trong một suất, giao dịch liên quan, mã QR, giá đã chốt và trạng thái sử dụng. | UC07, UC08.5, UC09; VE |
-| 17 | SanPham | Lưu tên sản phẩm F&B, đơn vị tính, giá bán, số lượng tồn kho và tình trạng kinh doanh. | UC06.2.1–UC06.2.4, UC09.4; SANPHAM |
+| STT | Tên lớp | Phân loại lớp | Trách nhiệm nghiệp vụ | Căn cứ ca sử dụng và tuần tự |
+| --- | --- | --- | --- | --- |
+| 1 | TaiKhoan | Lớp thực thể chính | Lưu tên đăng nhập, mật khẩu đã băm, trạng thái hoạt động; liên kết với nhân viên và vai trò để xác thực quyền truy cập | UC01, Sơ đồ 3.4.1 |
+| 2 | VaiTro | Lớp danh mục | Biểu diễn hai vai trò Admin và Nhân viên để phân quyền chức năng | UC01, Tác nhân hệ thống, Sơ đồ 3.4.1 |
+| 3 | NhanVien | Lớp thực thể chính | Lưu hồ sơ thông tin cá nhân của nhân viên và xác định người phụ trách các giao dịch bán vé | UC02, UC08, Sơ đồ 3.4.2, 3.4.8 |
+| 4 | Phim | Lớp thực thể chính | Lưu thông tin phim, thời lượng, định dạng, ảnh áp phích, đạo diễn, ngày khởi chiếu, giới hạn độ tuổi và trạng thái chiếu | UC03, UC04, Sơ đồ 3.4.3, 3.4.4 |
+| 5 | TheLoai | Lớp danh mục | Biểu diễn danh mục thể loại phim phục vụ phân loại và tra cứu | UC03, Sơ đồ 3.4.3 |
+| 6 | SuatChieu | Lớp thực thể chính | Biểu diễn lịch chiếu của một phim tại một phòng, thời gian bắt đầu, thời gian dọn phòng xong để trả phòng và trạng thái suất | UC04, UC08, Sơ đồ 3.4.4, 3.4.8 |
+| 7 | PhongChieu | Lớp thực thể chính | Lưu thông tin phòng chiếu, định dạng phòng, thời gian dọn phòng và trạng thái hoạt động; sức chứa được tính từ danh sách ghế | UC04, UC05, Sơ đồ 3.4.4, 3.4.5 |
+| 8 | LoaiPhong | Lớp danh mục | Biểu diễn danh mục phân loại phòng và định dạng chiếu hỗ trợ gồm 2D hoặc 3D | UC04, UC05, UC06, Sơ đồ 3.4.4, 3.4.5 |
+| 9 | Ghe | Lớp thực thể thành phần | Biểu diễn vị trí ghế vật lý trong phòng chiếu, thuộc phòng nào, loại ghế nào và trạng thái sẵn sàng hay bảo trì | UC05, Sơ đồ 3.4.5 |
+| 10 | LoaiGhe | Lớp danh mục | Biểu diễn danh mục loại ghế gồm ghế thường, ghế VIP, ghế đôi để phân loại vị trí và tính giá vé | UC05, UC06, Sơ đồ 3.4.5, 3.4.6 |
+| 11 | GheSuatChieu | Lớp kết hợp | Biểu diễn trạng thái của ghế trong từng suất chiếu cụ thể gồm trống, đang giữ hoặc đã bán, thời hạn giữ tạm và giá vé đã chốt | UC08, Sơ đồ 3.4.8 |
+| 12 | LoaiThoiDiem | Lớp danh mục | Biểu diễn danh mục thời điểm chiếu gồm ngày thường, cuối tuần, ngày lễ dùng để áp bảng giá vé | UC04, UC06, Sơ đồ 3.4.4, 3.4.6 |
+| 13 | BangGiaVe | Lớp tham số bảng giá | Lưu mức giá vé quy định cho từng tổ hợp ba yếu tố gồm loại ghế, loại phòng và loại thời điểm chiếu | UC06.1, UC08, Sơ đồ 3.4.6, 3.4.8 |
+| 14 | GiaoDich | Lớp giao dịch chính | Biểu diễn một lần bán vé tại quầy do nhân viên thực hiện, thời gian tạo, tổng số tiền và trạng thái xử lý | UC08, UC09, Sơ đồ 3.4.8, 3.4.9 |
+| 15 | ThanhToan | Lớp giao dịch thành phần | Lưu thông tin kết quả thanh toán thành công của một giao dịch gồm phương thức thanh toán, số tiền và thời điểm hoàn tất | UC08, UC09, Sơ đồ 3.4.8, 3.4.9 |
+| 16 | Ve | Lớp giao dịch kết quả | Biểu diễn vé phát hành cho một ghế trong một suất chiếu, mã phản hồi nhanh, giá vé đã chốt, trạng thái vé và dữ liệu hàng số ghế lưu vết | UC07, UC08, Sơ đồ 3.4.7, 3.4.8 |
+| 17 | SanPham | Lớp thực thể danh mục và kho | Lưu thông tin sản phẩm ăn uống, đơn vị tính, giá bán niêm yết, số lượng tồn kho và tình trạng kinh doanh | UC06.2, UC09.4, Sơ đồ 3.4.6, 3.4.9 |
 
-## Các quyết định và điểm cần rà soát
+## 2. Đặc tả chi tiết thuộc tính và phương thức của 17 lớp
 
-- PHIM_THELOAI được biểu diễn bằng quan hệ nhiều–nhiều giữa Phim và TheLoai. Dự kiến Phim chứa danh sách thể loại. Bảng liên kết vẫn tồn tại trong CSDL; hiện chưa có thuộc tính nghiệp vụ riêng để cần một lớp PhimTheLoai.
-- Ghe và GheSuatChieu có trách nhiệm riêng. Một lớp biểu diễn ghế vật lý, lớp còn lại lưu tình trạng ghế theo từng suất, thời hạn giữ và giá đã chốt.
-- GiaoDich và ThanhToan được tách theo báo cáo. Một giao dịch có thể đang chờ hoặc bị hủy; ThanhToan lưu kết quả đã xác nhận thành công, tối đa một bản ghi cho mỗi giao dịch.
-- Kết quả UC09 được tính từ giao dịch, thanh toán, vé và sản phẩm. Lớp chứa kết quả thống kê sẽ được xác định khi triển khai UC09 và thống kê riêng nếu phát sinh. Báo cáo hiện chưa yêu cầu một thực thể BaoCao lưu độc lập.
-- UC09.4 chỉ thống kê vé và tồn kho F&B. Phạm vi hiện tại chưa có luồng bán sản phẩm F&B, doanh thu F&B, hồ sơ khách hàng hoặc hoàn tiền vé.
-- Mục 3.5.3 của báo cáo còn thiếu mô tả nhiều bảng. Phần mang tiêu đề THANHTOAN đang ghi thuộc tính của GHE. Khi xác định thuộc tính lớp, cần đối chiếu lược đồ và quy tắc cùng đặc tả ca sử dụng, rồi chỉnh phần mô tả báo cáo.
-- 17 lớp là các lớp đối tượng nghiệp vụ dự kiến đưa vào phần danh sách lớp. Các lớp Swing, DAO, Controller/BUS và lớp kỹ thuật sẽ được thống kê riêng sau triển khai.
-- Bước tiếp theo là xác định thuộc tính và quan hệ của TaiKhoan, VaiTro, NhanVien cho UC01, đối chiếu luồng đăng nhập rồi triển khai. Class diagram cuối cùng được dựng từ code đã kiểm tra.
+Theo quy định thiết kế sơ đồ lớp phân tích, các thuộc tính khóa ngoại dùng để liên kết kỹ thuật không được lặp lại trong phần thuộc tính của lớp nếu giữa các lớp đó đã có đường kết hợp thể hiện mối quan hệ. Dưới đây là đặc tả chi tiết của từng lớp.
 
-## Cập nhật khi triển khai UC01
+### 2.1. Lớp TaiKhoan
+- Thuộc tính:
+  - `- maTK: int`: Mã định danh tài khoản.
+  - `- tenDangNhap: String`: Tên đăng nhập duy nhất của tài khoản.
+  - `- matKhauHash: String`: Chuỗi mật khẩu đã băm bằng thuật toán an toàn.
+  - `- trangThai: String`: Trạng thái hoạt động của tài khoản gồm Đang hoạt động, Bị khóa hoặc Ngừng hoạt động.
+- Phương thức nghiệp vụ:
+  - `+ dangHoatDong(): boolean`: Kiểm tra tài khoản có ở trạng thái được phép đăng nhập hay không.
+  - `+ doiMatKhau(mkMoi: String): void`: Cập nhật mật khẩu mới đã băm cho tài khoản.
+  - `+ kiemTraDangNhap(matKhau: String): boolean`: Xác thực mật khẩu nhập vào với mã băm lưu trữ.
 
-TaiKhoan và NhanVien dùng record Java 17. VaiTro được biểu diễn bằng enum cho hai vai trò trong báo cáo. Danh sách 17 đối tượng nghiệp vụ tiếp tục dùng để đối chiếu, khi lập class diagram cần ghi đúng kiểu record/enum và quan hệ thực tế trong code.
+### 2.2. Lớp VaiTro
+- Thuộc tính:
+  - `- maVaiTro: int`: Mã định danh vai trò.
+  - `- tenVaiTro: String`: Tên vai trò gồm Admin hoặc Nhân viên.
+- Phương thức nghiệp vụ:
+  - `+ getTen(): String`: Lấy tên vai trò.
+  - `+ fromDatabase(ten: String): VaiTro`: Chuyển đổi tên vai trò từ cơ sở dữ liệu sang đối tượng vai trò.
 
-## Cập nhật UC03
+### 2.3. Lớp NhanVien
+- Thuộc tính:
+  - `- maNV: String`: Mã nhân viên gồm ký tự NV và ba chữ số.
+  - `- hoTen: String`: Họ và tên đầy đủ của nhân viên.
+  - `- ngaySinh: LocalDate`: Ngày tháng năm sinh của nhân viên.
+  - `- soDienThoai: String`: Số điện thoại liên lạc.
+  - `- email: String`: Hòm thư điện tử.
+  - `- diaChi: String`: Địa chỉ nơi ở của nhân viên.
+  - `- chucVu: String`: Vị trí công tác của nhân viên tại rạp.
+- Phương thức nghiệp vụ:
+  - `+ capNhatThongTin(hoTen: String, sdt: String, email: String, diaChi: String, chucVu: String): void`: Cập nhật hồ sơ nhân viên.
+  - `+ getHoTen(): String`: Lấy họ tên nhân viên phục vụ hiển thị.
 
-Phim và TheLoai đã được triển khai bằng record Java 17, quan hệ nhiều–nhiều được biểu diễn bằng danh sách TheLoai trong Phim và bảng PHIM_THELOAI. Khi làm class diagram cần lấy thuộc tính và kiểu dữ liệu thực tế từ hai record này. Xem UC03.md để đối chiếu quy tắc và các quyết định thiết kế.
+### 2.4. Lớp Phim
+- Thuộc tính:
+  - `- maPhim: String`: Mã phim duy nhất.
+  - `- tenPhim: String`: Tên gọi của bộ phim.
+  - `- thoiLuong: int`: Thời lượng chiếu phim tính theo phút, phải lớn hơn 0.
+  - `- daoDien: String`: Tên đạo diễn thực hiện phim.
+  - `- ngayKhoiChieu: LocalDate`: Ngày bắt đầu khởi chiếu phim tại rạp.
+  - `- gioiHanTuoi: int`: Độ tuổi tối thiểu của khán giả được phép xem phim.
+  - `- poster: String`: Đường dẫn lưu tệp áp phích của phim.
+  - `- trangThai: String`: Trạng thái chiếu gồm Đang chiếu hoặc Ngừng chiếu.
+  - `- dinhDangChieu: String`: Định dạng của phim gồm 2D hoặc 3D.
+- Phương thức nghiệp vụ:
+  - `+ ngungChieu(): void`: Chuyển trạng thái phim sang ngừng chiếu khi hết hạn khai thác.
+  - `+ dangChieu(): boolean`: Kiểm tra phim có đang trong giai đoạn được xếp lịch chiếu hay không.
+  - `+ withTheLoai(theLoai: List<TheLoai>): Phim`: Gán danh sách các thể loại phim cho đối tượng phim.
 
-## Cập nhật UC04
+### 2.5. Lớp TheLoai
+- Thuộc tính:
+  - `- maTheLoai: int`: Mã định danh thể loại.
+  - `- tenTheLoai: String`: Tên thể loại phim như Hành động, Hoạt hình, Tình cảm.
+- Phương thức nghiệp vụ:
+  - `+ getTen(): String`: Lấy tên thể loại phim.
 
-Đã triển khai SuatChieu, PhongChieu, LoaiPhong và LoaiThoiDiem bằng record Java 17. PhongChieu chứa LoaiPhong. SuatChieu lưu mã phim/phòng/loại thời điểm. Lớp đối tượng cho ghế, vé, thanh toán sẽ được bổ sung khi triển khai các ca sử dụng tương ứng; schema phụ thuộc đã có để kiểm tra điều kiện của UC04.
+### 2.6. Lớp SuatChieu
+- Thuộc tính:
+  - `- maSuat: int`: Mã định danh suất chiếu tự tăng.
+  - `- thoiGianBatDau: LocalDateTime`: Thời điểm bắt đầu chiếu phim.
+  - `- thoiGianTraPhong: LocalDateTime`: Thời điểm kết thúc chiếu cộng thời gian dọn phòng để hoàn trả phòng.
+  - `- trangThai: String`: Trạng thái suất chiếu gồm Lên lịch, Đang chiếu, Đã chiếu hoặc Đã hủy.
+- Phương thức nghiệp vụ:
+  - `+ kiemTraKhungGio(batDau: LocalDateTime, ketThuc: LocalDateTime): boolean`: Kiểm tra khoảng thời gian chiếu có hợp lệ hay không.
+  - `+ coTheBanVe(): boolean`: Kiểm tra suất chiếu có đang ở trạng thái cho phép mở bán vé hay không.
+  - `+ huySuat(): void`: Hủy bỏ suất chiếu khi có sự cố kỹ thuật hoặc thay đổi lịch.
 
-## Cập nhật UC05
+### 2.7. Lớp PhongChieu
+- Thuộc tính:
+  - `- maPhong: String`: Mã định danh phòng chiếu.
+  - `- tenPhong: String`: Tên phòng chiếu như Phòng 01, Phòng 02.
+  - `- thoiGianDonPhong: int`: Số phút cần thiết để dọn dẹp phòng sau mỗi ca chiếu.
+  - `- trangThai: String`: Trạng thái phòng gồm Đang hoạt động hoặc Đang sửa chữa.
+  - `/ sucChua: int`: Thuộc tính dẫn xuất thể hiện sức chứa của phòng, tính bằng tổng số ghế vật lý ở trạng thái sẵn sàng sử dụng.
+- Phương thức nghiệp vụ:
+  - `+ tinhSucChua(): int`: Tính toán tổng số lượng ghế hoạt động của phòng.
+  - `+ dangHoatDong(): boolean`: Kiểm tra phòng có đang sẵn sàng tiếp nhận suất chiếu mới hay không.
 
-Đã triển khai Ghe và LoaiGhe bằng record. Ghe chứa LoaiGhe và mã phòng. VE được bổ sung dữ liệu hàng/số/tên loại ghế tại lúc phát hành ở migration 008 để phục vụ bảo toàn lịch sử. Khi tạo model Ve và class diagram cần đối chiếu các trường này với tài liệu UC05.md.
+### 2.8. Lớp LoaiPhong
+- Thuộc tính:
+  - `- maLoaiPhong: int`: Mã định danh loại phòng.
+  - `- tenLoaiPhong: String`: Tên loại phòng như Phòng 2D tiêu chuẩn, Phòng 3D kỹ thuật số.
+  - `- dinhDangChieu: String`: Chuẩn định dạng phòng hỗ trợ gồm 2D hoặc 3D.
+- Phương thức nghiệp vụ:
+  - `+ getDinhDang(): String`: Lấy chuẩn định dạng hỗ trợ của loại phòng.
 
-## Cập nhật UC06
+### 2.9. Lớp Ghe
+- Thuộc tính:
+  - `- maGhe: int`: Mã định danh của ghế vật lý trong phòng.
+  - `- hangGhe: String`: Ký hiệu chữ cái của hàng ghế như A, B, C.
+  - `- soGhe: int`: Số thứ tự của ghế trong hàng như 1, 2, 3.
+  - `- trangThai: String`: Trạng thái vật lý của ghế gồm Sẵn sàng sử dụng hoặc Đang bảo trì.
+- Phương thức nghiệp vụ:
+  - `+ sanSangSuDung(): boolean`: Kiểm tra ghế có đủ điều kiện vật lý để xếp chỗ cho khách hay không.
+  - `+ chuyenBaoTri(): void`: Đánh dấu chuyển ghế sang trạng thái hỏng hóc cần bảo trì.
 
-Đã triển khai BangGiaVe và SanPham bằng record Java 17. BangGiaVe tham chiếu LoaiGhe, LoaiPhong, LoaiThoiDiem; các giá trị tiền dùng BigDecimal. SanPham lưu tồn kho int và giá bán BigDecimal. Khi dựng class diagram cần dùng đúng thuộc tính/quan hệ từ code hiện tại.
+### 2.10. Lớp LoaiGhe
+- Thuộc tính:
+  - `- maLoaiGhe: int`: Mã định danh loại ghế.
+  - `- tenLoaiGhe: String`: Tên loại ghế gồm Ghế thường, Ghế VIP, Ghế đôi.
+- Phương thức nghiệp vụ:
+  - `+ getTen(): String`: Lấy tên loại ghế.
 
-## Cập nhật UC07
+### 2.11. Lớp GheSuatChieu
+- Thuộc tính:
+  - `- trangThai: String`: Trạng thái của vị trí ghế trong suất chiếu gồm Trống, Đang giữ hoặc Đã bán.
+  - `- thoiGianHetHanGiu: LocalDateTime`: Thời điểm hết hạn khóa giữ chỗ tạm thời khi nhân viên đang thao tác bán.
+  - `- giaVeChot: BigDecimal`: Giá tiền vé được chốt tại thời điểm đưa ghế vào giao dịch bán.
+- Phương thức nghiệp vụ:
+  - `+ kiemTraHetHanGiu(): boolean`: Kiểm tra thời hạn giữ chỗ tạm thời đã trôi qua hay chưa.
+  - `+ giuGhe(hanGiu: LocalDateTime): void`: Khóa giữ chỗ tạm thời ghế cho một giao dịch.
+  - `+ xacNhanBan(): void`: Chuyển trạng thái ghế sang đã bán sau khi thanh toán thành công.
+  - `+ giaiPhongGhe(): void`: Xóa trạng thái giữ để trả ghế về trạng thái trống khi hủy giao dịch hoặc hết giờ giữ.
 
-Đã triển khai Ve bằng record với giá đã chốt và ba thuộc tính nhãn ghế LucPhatHanh. Khi dựng class diagram cần đối chiếu model Ve hiện tại với lược đồ đã bổ sung ở UC05. Kiểu cấu hình ThoiGianVaoPhong, loại mã và các kiểu kết quả/hiển thị là thành phần hỗ trợ cho UC07.
+### 2.12. Lớp LoaiThoiDiem
+- Thuộc tính:
+  - `- maLoaiThoiDiem: int`: Mã định danh loại thời điểm.
+  - `- tenLoaiThoiDiem: String`: Tên loại thời điểm gồm Ngày thường, Cuối tuần hoặc Ngày lễ.
+- Phương thức nghiệp vụ:
+  - `+ getTen(): String`: Lấy tên loại thời điểm.
 
-## Cập nhật UC08
+### 2.13. Lớp BangGiaVe
+- Thuộc tính:
+  - `- maGia: int`: Mã định danh của mức giá quy định.
+  - `- giaVe: BigDecimal`: Mức tiền vé niêm yết tính bằng đồng Việt Nam, phải lớn hơn 0.
+- Phương thức nghiệp vụ:
+  - `+ capNhatGia(giaMoi: BigDecimal): void`: Thay đổi đơn giá vé áp dụng cho tổ hợp loại ghế, phòng và thời điểm tương ứng.
 
-Đã triển khai GiaoDich, ThanhToan và GheSuatChieu bằng record Java 17. Như vậy đủ 17 kiểu đối tượng nghiệp vụ đã dự kiến: 16 record và 1 enum VaiTro; không tính BUS/DAO/Swing, kiểu cấu hình và các kiểu kết quả hỗ trợ. GiaoDich lưu mã nhân viên, ThanhToan lưu mã giao dịch, GheSuatChieu chứa Ghe cùng mã suất/giao dịch và giá/thời hạn giữ đã chốt. Class diagram cuối cùng phải lấy đúng thuộc tính/quan hệ thực tế từ code và thống kê riêng lớp hỗ trợ. Xem UC08.md.
+### 2.14. Lớp GiaoDich
+- Thuộc tính:
+  - `- maGiaoDich: String`: Mã định danh giao dịch gồm tiền tố GD và chuỗi số thời gian.
+  - `- thoiGianTao: LocalDateTime`: Thời điểm tạo giao dịch tại quầy.
+  - `- tongTien: BigDecimal`: Tổng số tiền thanh toán của các vé trong giao dịch.
+  - `- trangThai: String`: Trạng thái xử lý gồm Chờ thanh toán, Hoàn tất hoặc Đã hủy.
+- Phương thức nghiệp vụ:
+  - `+ tinhTongTien(): BigDecimal`: Tính tổng tiền từ các vé hoặc ghế đã chọn trong giao dịch.
+  - `+ hoanTatGiaoDich(): void`: Đánh dấu giao dịch đã thanh toán thành công.
+  - `+ huyGiaoDich(): void`: Hủy bỏ giao dịch khi khách đổi ý hoặc quá thời hạn thanh toán.
 
-## Cập nhật UC09
+### 2.15. Lớp ThanhToan
+- Thuộc tính:
+  - `- maThanhToan: int`: Mã định danh bản ghi thanh toán.
+  - `- phuongThuc: String`: Hình thức thanh toán gồm Tiền mặt, Chuyển khoản hoặc Thẻ.
+  - `- soTien: BigDecimal`: Số tiền đã thu của khách hàng, phải đúng bằng tổng tiền giao dịch.
+  - `- thoiGianThanhToan: LocalDateTime`: Thời điểm xác nhận tiền vào hệ thống thành công.
+- Phương thức nghiệp vụ:
+  - `+ xacNhanThanhToan(): boolean`: Kiểm tra tính hợp lệ của số tiền thu và thời điểm thanh toán.
 
-Giữ nguyên 17 kiểu đối tượng nghiệp vụ. Không thêm thực thể BaoCao lưu trong CSDL. BaoCaoDAO có các record TongHop, TheoPhim, TheoNhanVien, ThongKeVe chứa kết quả truy vấn; BaoCaoBUS.DanhMuc là dữ liệu nạp bộ lọc. KhoangThongKe là kiểu hỗ trợ khoảng ngày, BaoCaoPanel là lớp giao diện. Khi thống kê lớp thực tế hoặc dựng class diagram, liệt kê riêng các kiểu hỗ trợ này và quan hệ sử dụng, không gộp vào danh sách 17 thực thể/kiểu nghiệp vụ dự kiến.
+### 2.16. Lớp Ve
+- Thuộc tính:
+  - `- maVe: String`: Mã định danh vé phát hành.
+  - `- maQR: String`: Chuỗi mã hóa phản hồi nhanh in trên vé để quét vào phòng chiếu.
+  - `- giaVe: BigDecimal`: Mức giá vé chính thức thu tiền tại thời điểm in vé.
+  - `- trangThai: String`: Trạng thái vé gồm Đã phát hành, Đã soát vé hoặc Đã hủy.
+  - `- thoiGianPhatHanh: LocalDateTime`: Thời điểm in vé trao cho khách hàng.
+  - `- hangGheLucPhatHanh: String`: Ký hiệu hàng ghế tại thời điểm phát hành vé để lưu vết lịch sử.
+  - `- soGheLucPhatHanh: int`: Số thứ tự ghế tại thời điểm phát hành vé để lưu vết lịch sử.
+  - `- tenLoaiGheLucPhatHanh: String`: Tên loại ghế tại thời điểm phát hành vé để lưu vết lịch sử.
+- Phương thức nghiệp vụ:
+  - `+ kiemTraHopLe(): boolean`: Kiểm tra vé có đúng suất chiếu, đúng phòng và chưa qua cửa soát hay không.
+  - `+ danhDauSuDung(): void`: Đổi trạng thái vé sang đã soát vé khi khách hàng đi qua cửa vào phòng.
+
+### 2.17. Lớp SanPham
+- Thuộc tính:
+  - `- maSP: String`: Mã sản phẩm đồ ăn thức uống.
+  - `- tenSP: String`: Tên gọi sản phẩm như Bắp rang bơ phô mai, Nước ngọt có ga.
+  - `- moTa: String`: Mô tả chi tiết quy cách đóng gói và dung tích sản phẩm.
+  - `- donViTinh: String`: Đơn vị tính như Ly, Hộp, Chai, Bịch.
+  - `- giaBan: BigDecimal`: Giá bán lẻ niêm yết của sản phẩm, phải lớn hơn 0.
+  - `- soLuongTon: int`: Số lượng hàng hóa thực tế còn trong kho, không được nhỏ hơn 0.
+  - `- tinhTrangKinhDoanh: String`: Tình trạng bán gồm Đang kinh doanh hoặc Ngừng kinh doanh.
+- Phương thức nghiệp vụ:
+  - `+ capNhatTonKho(soLuongThayDoi: int): void`: Điều chỉnh tăng hoặc giảm số lượng tồn kho khi nhập hàng hoặc kiểm kê.
+  - `+ conHang(): boolean`: Kiểm tra sản phẩm còn tồn kho lớn hơn 0 để sẵn sàng bán hay không.
+
+## 3. Bảng các mối quan hệ và quy tắc chuyển đổi sang cơ sở dữ liệu quan hệ
+
+Bảng dưới đây tổng hợp tất cả các mối quan hệ giữa 17 lớp nghiệp vụ trong sơ đồ lớp, kèm theo bản số hai đầu và quy tắc ánh xạ tương ứng sang 18 bảng cơ sở dữ liệu theo tài liệu thiết kế hướng đối tượng.
+
+| STT | Lớp nguồn | Lớp đích | Loại quan hệ | Bản số nguồn | Bản số đích | Ý nghĩa nghiệp vụ | Quy tắc ánh xạ sang CSDL |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | VaiTro | TaiKhoan | Liên kết một nhiều | 1 | 0..* | Một vai trò được cấp cho nhiều tài khoản người dùng; mỗi tài khoản thuộc đúng một vai trò | Quy tắc số 3: Đưa khóa chính MaVaiTro vào bảng TAIKHOAN làm khóa ngoại |
+| 2 | NhanVien | TaiKhoan | Liên kết một một | 1 | 0..1 | Mỗi nhân viên có tối đa một tài khoản đăng nhập; một tài khoản gắn liền với đúng một nhân viên | Quy tắc số 2: Đưa MaNV vào bảng TAIKHOAN làm khóa ngoại có ràng buộc duy nhất |
+| 3 | NhanVien | GiaoDich | Liên kết một nhiều | 1 | 0..* | Một nhân viên chịu trách nhiệm thực hiện nhiều giao dịch bán vé; mỗi giao dịch do một nhân viên xử lý | Quy tắc số 3: Đưa MaNV vào bảng GIAODICH làm khóa ngoại |
+| 4 | TheLoai | Phim | Liên kết nhiều nhiều | 1..* | 1..* | Một phim thuộc về một hoặc nhiều thể loại; một thể loại có nhiều phim khác nhau | Quy tắc số 4: Tạo bảng trung gian PHIM_THELOAI có khóa chính ghép gồm MaPhim và MaTheLoai |
+| 5 | Phim | SuatChieu | Liên kết một nhiều | 1 | 0..* | Một bộ phim có thể được xếp vào nhiều suất chiếu; mỗi suất chiếu phục vụ chiếu đúng một phim | Quy tắc số 3: Đưa MaPhim vào bảng SUATCHIEU làm khóa ngoại |
+| 6 | LoaiPhong | PhongChieu | Liên kết một nhiều | 1 | 0..* | Một loại phòng phân loại cho nhiều phòng chiếu; mỗi phòng chiếu thuộc đúng một loại phòng | Quy tắc số 8 và số 3: Đưa MaLoaiPhong vào bảng PHONGCHIEU làm khóa ngoại |
+| 7 | PhongChieu | SuatChieu | Liên kết một nhiều | 1 | 0..* | Một phòng chiếu tổ chức nhiều suất chiếu theo các khung giờ khác nhau; mỗi suất diễn ra tại một phòng | Quy tắc số 3: Đưa MaPhong vào bảng SUATCHIEU làm khóa ngoại |
+| 8 | PhongChieu | Ghe | Thu nạp một nhiều | 1 | 1..* | Một phòng chiếu chứa nhiều ghế vật lý; ghế thuộc phòng chiếu nhưng nếu phòng tạm ngừng thì ghế vẫn tồn tại | Quy tắc số 3: Đưa MaPhong vào bảng GHE làm khóa ngoại |
+| 9 | LoaiGhe | Ghe | Liên kết một nhiều | 1 | 0..* | Một loại ghế phân loại cho nhiều ghế vật lý; mỗi ghế thuộc đúng một loại ghế | Quy tắc số 8 và số 3: Đưa MaLoaiGhe vào bảng GHE làm khóa ngoại |
+| 10 | SuatChieu | GheSuatChieu | Hợp thành một nhiều | 1 | 1..* | Suất chiếu bao gồm các trạng thái ghế trong suất; nếu suất chiếu bị hủy thì các ghế suất chiếu bị hủy theo | Quy tắc số 7: Bảng GHE_SUATCHIEU có khóa chính ghép gồm MaSuat và MaGhe |
+| 11 | Ghe | GheSuatChieu | Liên kết một nhiều | 1 | 0..* | Một ghế vật lý tham gia vào nhiều suất chiếu khác nhau qua thực thể trạng thái ghế suất chiếu | Quy tắc số 3: Đưa MaGhe vào bảng GHE_SUATCHIEU tham gia khóa chính và khóa ngoại |
+| 12 | LoaiThoiDiem | SuatChieu | Liên kết một nhiều | 1 | 0..* | Mỗi suất chiếu được gắn với một loại thời điểm chiếu để làm căn cứ tính giá vé | Quy tắc số 8 và số 3: Đưa MaLoaiThoiDiem vào bảng SUATCHIEU làm khóa ngoại |
+| 13 | LoaiGhe | BangGiaVe | Liên kết một nhiều | 1 | 0..* | Loại ghế là một tiêu chí cấu thành nên mức giá vé | Quy tắc số 3: Đưa MaLoaiGhe vào bảng BANGGIAVE làm khóa ngoại |
+| 14 | LoaiPhong | BangGiaVe | Liên kết một nhiều | 1 | 0..* | Loại phòng chiếu là một tiêu chí cấu thành nên mức giá vé | Quy tắc số 3: Đưa MaLoaiPhong vào bảng BANGGIAVE làm khóa ngoại |
+| 15 | LoaiThoiDiem | BangGiaVe | Liên kết một nhiều | 1 | 0..* | Loại thời điểm ngày thường hay lễ là tiêu chí cấu thành nên mức giá vé | Quy tắc số 3: Đưa MaLoaiThoiDiem vào bảng BANGGIAVE làm khóa ngoại |
+| 16 | BangGiaVe | GheSuatChieu | Liên kết không bắt buộc | 0..1 | 0..* | Giá vé chuẩn áp dụng cho ghế khi được nhân viên đưa vào thao tác giữ hoặc bán | Đưa MaGia vào bảng GHE_SUATCHIEU làm khóa ngoại cho phép rỗng khi ghế đang trống |
+| 17 | BangGiaVe | Ve | Liên kết một nhiều | 1 | 0..* | Mỗi vé phát hành được căn cứ từ một mức giá chuẩn quy định trong bảng giá | Quy tắc số 3: Đưa MaGia vào bảng VE làm khóa ngoại |
+| 18 | GiaoDich | ThanhToan | Hợp thành một một | 1 | 0..1 | Mỗi giao dịch có tối đa một bản ghi xác nhận thanh toán thành công; bản ghi thanh toán không tồn tại độc lập | Quy tắc số 2: Đưa MaGiaoDich vào bảng THANHTOAN làm khóa ngoại duy nhất |
+| 19 | GiaoDich | Ve | Hợp thành một nhiều | 1 | 1..* | Giao dịch phát hành ra một hoặc nhiều vé xem phim cho khách hàng | Quy tắc số 3 và số 7: Đưa MaGiaoDich vào bảng VE làm khóa ngoại |
+| 20 | GiaoDich | GheSuatChieu | Liên kết không bắt buộc | 0..1 | 0..* | Ghế suất chiếu được giữ hoặc bán trong một giao dịch cụ thể | Đưa MaGiaoDich vào bảng GHE_SUATCHIEU làm khóa ngoại cho phép rỗng khi ghế chưa ai chọn |
+| 21 | GheSuatChieu | Ve | Liên kết một một | 1 | 0..1 | Một ghế trong một suất chiếu khi thanh toán thành công phát hành ra đúng một vé; một vé ứng với một ghế suất | Đưa khóa ghép MaSuat, MaGhe, MaGiaoDich vào bảng VE làm khóa ngoại tham chiếu |
+| 22 | SanPham | Không liên kết | Thực thể độc lập | 1 | 0 | Quản lý danh mục và tồn kho hàng hóa độc lập, chưa bán tích hợp trong giao dịch vé ở phạm vi hiện tại | Quy tắc số 1: Ánh xạ thành bảng SANPHAM độc lập trong cơ sở dữ liệu |
