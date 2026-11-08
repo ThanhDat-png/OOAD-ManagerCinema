@@ -12,3 +12,5 @@
 Thumbs.db
 /config/mysql-client.cnf
 /tools/apache-maven-*/
+__pycache__/
+*.pyc

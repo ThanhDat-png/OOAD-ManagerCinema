@@ -1,5 +1,6 @@
 import xml.etree.ElementTree as ET
 import sys
+import re
 sys.stdout.reconfigure(encoding='utf-8')
 
 def get_full_path(edge, boxes):
@@ -123,6 +124,65 @@ def verify_diagram():
     assert "SoDoLop_PhanTich" in pages, "Page 1 missing"
     assert "SoDoLop_ThietKe_3Tang" in pages, "Page 2 missing"
 
+    # Verify Page 1 (Analysis Diagram) structure & UML compliance
+    p1 = pages["SoDoLop_PhanTich"]
+    p1_root = p1.find(".//root")
+    p1_cells = {c.attrib.get("id"): c for c in p1_root.findall("mxCell")}
+
+    expected_p1_classes = [
+        'c_VaiTro', 'c_TaiKhoan', 'c_NhanVien', 'c_TheLoai', 'c_Phim',
+        'c_LoaiPhong', 'c_PhongChieu', 'c_Ghe', 'c_LoaiGhe', 'c_LoaiThoiDiem',
+        'c_SuatChieu', 'c_GheSuatChieu', 'c_BangGiaVe', 'c_SanPham',
+        'c_ThanhToan', 'c_GiaoDich', 'c_Ve'
+    ]
+    for cid in expected_p1_classes:
+        assert cid in p1_cells, f"Page 1 missing class {cid}"
+        cls_cell = p1_cells[cid]
+        c_style = cls_cell.attrib.get("style", "")
+        assert "swimlane" in c_style, f"{cid} must be a UML swimlane"
+        assert "fillColor=#FFFFFF" in c_style, f"{cid} must have fillColor=#FFFFFF"
+        assert "strokeColor=#000000" in c_style, f"{cid} must have strokeColor=#000000"
+        assert "fontColor=#000000" in c_style, f"{cid} must have fontColor=#000000"
+        assert "rounded=0" in c_style, f"{cid} must have rounded=0 (sharp corners)"
+        assert "html=0" in c_style, f"{cid} must have html=0"
+
+        # Check child compartments: attrs, sep, methods
+        assert f"{cid}_attrs" in p1_cells, f"{cid} missing attributes compartment"
+        assert f"{cid}_sep" in p1_cells, f"{cid} missing separator line"
+        assert f"{cid}_methods" in p1_cells, f"{cid} missing methods compartment"
+
+        # Check generous bounding box dimensions so no text overflows
+        geom = cls_cell.find("mxGeometry")
+        w = float(geom.attrib.get("width", 0))
+        h = float(geom.attrib.get("height", 0))
+        assert w >= 210, f"{cid} width {w} is too narrow"
+        assert h >= 100, f"{cid} height {h} is too short"
+
+    # Verify Page 1 relationships (Aggregation & Composition markers)
+    p1_edges = [c for c in p1_root.findall("mxCell") if c.attrib.get("edge") == "1"]
+    assert len(p1_edges) == 21, f"Expected 21 edges on Page 1, found {len(p1_edges)}"
+
+    # Check composition & aggregation on Page 1
+    edge_map = {(e.attrib.get("source"), e.attrib.get("target")): e for e in p1_edges}
+    # Aggregation: PhongChieu ◇--- Ghe
+    assert ('c_PhongChieu', 'c_Ghe') in edge_map
+    e_agg = edge_map[('c_PhongChieu', 'c_Ghe')].attrib.get("style", "")
+    assert "startArrow=diamondThin" in e_agg and "startFill=0" in e_agg, "PhongChieu-Ghe must be aggregation (hollow diamond)"
+    # Composition: SuatChieu ◆--- GheSuatChieu
+    assert ('c_SuatChieu', 'c_GheSuatChieu') in edge_map
+    e_comp1 = edge_map[('c_SuatChieu', 'c_GheSuatChieu')].attrib.get("style", "")
+    assert "startArrow=diamondThin" in e_comp1 and "startFill=1" in e_comp1, "SuatChieu-GheSuatChieu must be composition (solid diamond)"
+    # Composition: GiaoDich ◆--- ThanhToan
+    assert ('c_GiaoDich', 'c_ThanhToan') in edge_map
+    e_comp2 = edge_map[('c_GiaoDich', 'c_ThanhToan')].attrib.get("style", "")
+    assert "startArrow=diamondThin" in e_comp2 and "startFill=1" in e_comp2, "GiaoDich-ThanhToan must be composition (solid diamond)"
+    # Composition: GiaoDich ◆--- Ve
+    assert ('c_GiaoDich', 'c_Ve') in edge_map
+    e_comp3 = edge_map[('c_GiaoDich', 'c_Ve')].attrib.get("style", "")
+    assert "startArrow=diamondThin" in e_comp3 and "startFill=1" in e_comp3, "GiaoDich-Ve must be composition (solid diamond)"
+    print("  ✓ Page 1 standard 3-compartment UML classes, dimensions, and relationships verified")
+
+    # Verify Page 2 (3-Layer Architecture)
     p2 = pages["SoDoLop_ThietKe_3Tang"]
     p2_root = p2.find(".//root")
     d_db = None
@@ -180,9 +240,8 @@ def verify_diagram():
     c2 = check_collisions('SoDoLop_ThietKe_3Tang')
     assert len(c1) == 0, f"Page 1 has {len(c1)} collisions: {c1}"
     assert len(c2) == 0, f"Page 2 has {len(c2)} collisions: {c2}"
-    print("  ✓ Geometry check: 0 box-edge intersections on Page 1 and Page 2")
+    print("  ✓ Geometry check: 0 box-edge intersections on Page 1 (21 edges) and Page 2 (30 edges)")
 
-    import re
     with open("docs/SoDoLop_RapChieuPhim.drawio", encoding="utf-8") as f:
         content = f.read()
     html_tags = re.findall(r'&lt;/?(b|i|br|span|div|hr|font)\b[^&]*?&gt;', content, re.IGNORECASE)
