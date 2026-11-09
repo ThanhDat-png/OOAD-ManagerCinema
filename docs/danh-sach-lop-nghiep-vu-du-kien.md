@@ -1,6 +1,8 @@
-# Danh sách và đặc tả lớp nghiệp vụ
+# Danh sách và đặc tả lớp nghiệp vụ (Data / Entity Classes)
 
-Hệ thống quản lý rạp chiếu phim có 17 lớp nghiệp vụ được trích xuất từ 9 ca sử dụng và các sơ đồ tuần tự trong tài liệu đặc tả. Dưới đây là bảng phân loại lớp, bảng đặc tả chi tiết thuộc tính và phương thức, cùng bảng các mối quan hệ giữa các lớp.
+Theo yêu cầu chuẩn mực của đồ án môn học Phân tích và Thiết kế Hướng đối tượng, trong Sơ đồ lớp (Class Diagram), sinh viên chỉ cần xây dựng các lớp dữ liệu / lớp thực thể (Data Classes / Entity Classes) tương ứng với các thực thể được lưu trữ trong cơ sở dữ liệu quan hệ. Sinh viên không cần xây dựng các lớp xử lý nghiệp vụ (Controller / BUS) hoặc các lớp giao diện (Boundary / GUI) trên sơ đồ lớp.
+
+Sơ đồ lớp của hệ thống quản lý rạp chiếu phim tập trung duy nhất vào 17 lớp thực thể dữ liệu được trích xuất từ 9 ca sử dụng và các sơ đồ tuần tự trong tài liệu đặc tả, tương ứng với các bảng thực thể được lưu trữ trong cơ sở dữ liệu. Dưới đây là bảng phân loại lớp, bảng đặc tả chi tiết thuộc tính và phương thức nghiệp vụ nội tại của thực thể, cùng bảng các mối quan hệ cấu trúc giữa 17 lớp thực thể này.
 
 ## 1. Bảng phân loại 17 lớp nghiệp vụ
 
@@ -26,7 +28,7 @@ Hệ thống quản lý rạp chiếu phim có 17 lớp nghiệp vụ được t
 
 ## 2. Đặc tả chi tiết thuộc tính và phương thức của 17 lớp
 
-Theo quy định thiết kế sơ đồ lớp phân tích, các thuộc tính khóa ngoại dùng để liên kết kỹ thuật không được lặp lại trong phần thuộc tính của lớp nếu giữa các lớp đó đã có đường kết hợp thể hiện mối quan hệ. Dưới đây là đặc tả chi tiết của từng lớp.
+Theo quy định thiết kế sơ đồ lớp thực thể dữ liệu, các thuộc tính khóa ngoại dùng để liên kết kỹ thuật không được lặp lại trong phần thuộc tính của lớp nếu giữa các lớp đó đã có đường kết hợp thể hiện mối quan hệ. Dưới đây là đặc tả chi tiết của từng lớp.
 
 ### 2.1. Lớp TaiKhoan
 - Thuộc tính:

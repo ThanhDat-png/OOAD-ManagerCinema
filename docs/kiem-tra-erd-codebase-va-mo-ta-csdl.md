@@ -1,21 +1,23 @@
 # Báo cáo kiểm tra mô hình lớp, lược đồ cơ sở dữ liệu và mã nguồn hệ thống
 
-Tài liệu này ghi nhận kết quả kiểm tra danh sách 17 lớp nghiệp vụ, lược đồ cơ sở dữ liệu, các lỗi trong tài liệu báo cáo và kết quả đối chiếu chéo với toàn bộ mã nguồn Java của dự án.
+Tài liệu này ghi nhận kết quả kiểm tra danh sách 17 lớp nghiệp vụ dữ liệu / thực thể, lược đồ cơ sở dữ liệu, các lỗi trong tài liệu báo cáo và kết quả đối chiếu chéo với toàn bộ mã nguồn Java của dự án.
 
 ## 1. Kết quả kiểm tra danh sách 17 lớp nghiệp vụ dự kiến
 
 ### 1.1. Đánh giá tính hợp lệ
-Danh sách 17 lớp nghiệp vụ đề xuất là hoàn toàn hợp lệ. Cả 17 lớp đều đại diện cho các thực thể thông tin cần thiết để vận hành đầy đủ 9 ca sử dụng của hệ thống quản lý rạp chiếu phim. Tên gọi tiếng Việt không dấu thống nhất với các mô hình phân tích.
+Danh sách 17 lớp nghiệp vụ đề xuất là hoàn toàn hợp lệ. Cả 17 lớp đều đại diện cho các thực thể thông tin cần thiết để vận hành đầy đủ 9 ca sử dụng của hệ thống quản lý rạp chiếu phim và được lưu trữ bền vững trong cơ sở dữ liệu.
+
+Theo đúng yêu cầu học thuật của đồ án môn học, trong Sơ đồ lớp (Class Diagram), sinh viên chỉ cần xây dựng các lớp dữ liệu / lớp thực thể (Data Classes / Entity Classes) tương ứng với các thực thể được lưu trữ trong cơ sở dữ liệu quan hệ, không cần xây dựng các lớp xử lý nghiệp vụ (Controller / BUS) hay các lớp giao diện (Boundary / GUI). Tên gọi tiếng Việt không dấu thống nhất với các mô hình phân tích và cơ sở dữ liệu. Mô hình Sơ đồ lớp trong tệp `docs/SoDoLop_RapChieuPhim.drawio` được tinh giản về duy nhất một trang chuẩn (`SoDoLop`) thể hiện trực quan 17 thực thể dữ liệu này.
 
 ### 1.2. Những điểm giữ lại
 - Giữ nguyên toàn bộ 17 lớp đối tượng: TaiKhoan, VaiTro, NhanVien, Phim, TheLoai, SuatChieu, PhongChieu, LoaiPhong, Ghe, LoaiGhe, GheSuatChieu, LoaiThoiDiem, BangGiaVe, GiaoDich, ThanhToan, Ve, SanPham.
 - Giữ nguyên phạm vi trách nhiệm nghiệp vụ cốt lõi của từng lớp đối tượng theo đúng 9 ca sử dụng.
-- Giữ nguyên quyết định thiết kế không tạo thêm lớp PhimTheLoai trong sơ đồ lớp phân tích, vì đây là mối liên kết nhiều nhiều thuần túy không có thuộc tính nghiệp vụ phát sinh riêng.
+- Giữ nguyên quyết định thiết kế không tạo thêm lớp PhimTheLoai trong sơ đồ lớp thực thể, vì đây là mối liên kết nhiều nhiều thuần túy không có thuộc tính nghiệp vụ phát sinh riêng.
 - Giữ nguyên quyết định không tạo bảng BaoCao độc lập trong cơ sở dữ liệu, vì số liệu thống kê được tổng hợp động từ các giao dịch, vé và tồn kho.
 
 ### 1.3. Những điểm sửa đổi và chuẩn hóa
 - Xóa dòng số 12 bị sao chép lặp lại hai lần cho lớp LoaiThoiDiem.
-- Sửa lại căn cứ đối chiếu: Bản dự thảo trước đây trích dẫn tên các bảng cơ sở dữ liệu viết hoa và các mã quy tắc nội bộ để chứng minh cho sự ra đời của lớp. Theo phương pháp luận phân tích thiết kế hướng đối tượng, sơ đồ lớp ở mức phân tích được xây dựng trước từ ca sử dụng và các thông điệp trong sơ đồ tuần tự; sau đó lược đồ cơ sở dữ liệu mới được ánh xạ từ sơ đồ lớp. Do đó, căn cứ của các lớp đã được sửa lại thành các ca sử dụng từ UC01 đến UC09 và các sơ đồ tuần tự từ 3.4.1 đến 3.4.9.
+- Sửa lại căn cứ đối chiếu: Bản dự thảo trước đây trích dẫn tên các bảng cơ sở dữ liệu viết hoa và các mã quy tắc nội bộ để chứng minh cho sự ra đời của lớp. Theo phương pháp luận phân tích thiết kế hướng đối tượng, sơ đồ lớp thực thể được xây dựng trước từ ca sử dụng và các thông điệp trong sơ đồ tuần tự; sau đó lược đồ cơ sở dữ liệu mới được ánh xạ từ sơ đồ lớp. Do đó, căn cứ của các lớp đã được sửa lại thành các ca sử dụng từ UC01 đến UC09 và các sơ đồ tuần tự từ 3.4.1 đến 3.4.9.
 - Bổ sung phân loại lớp theo đúng nội dung bài giảng sơ đồ lớp, bao gồm bốn nhóm: Lớp thực thể chính, Lớp giao dịch, Lớp kết hợp và Lớp danh mục.
 - Bổ sung thuộc tính dẫn xuất sức chứa cho lớp PhongChieu và ba thuộc tính lưu vết nhãn ghế tại thời điểm phát hành cho lớp Ve.
 - Bỏ các thuộc tính khóa ngoại mang tính kỹ thuật cơ sở dữ liệu ra khỏi danh sách thuộc tính của lớp khi giữa các lớp đã có đường nối quan hệ thể hiện liên kết.

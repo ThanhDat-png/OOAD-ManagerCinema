@@ -75,7 +75,9 @@ def line_intersects_box(p1, p2, box, tolerance=1e-5):
 
 def check_collisions(diag_name):
     tree = ET.parse('docs/SoDoLop_RapChieuPhim.drawio')
-    diag = [d for d in tree.findall('.//diagram') if d.attrib.get('name') == diag_name][0]
+    diags = [d for d in tree.findall('.//diagram') if d.attrib.get('name') == diag_name]
+    assert len(diags) > 0, f"Diagram {diag_name} not found"
+    diag = diags[0]
     root = diag.find('.//root')
     boxes = {}
     edges = []
@@ -121,23 +123,23 @@ def verify_diagram():
     print("=== 1. VERIFYING DIAGRAM ===")
     tree = ET.parse("docs/SoDoLop_RapChieuPhim.drawio")
     pages = {d.attrib.get("name"): d for d in tree.findall(".//diagram")}
-    assert "SoDoLop_PhanTich" in pages, "Page 1 missing"
-    assert "SoDoLop_ThietKe_3Tang" in pages, "Page 2 missing"
+    assert "SoDoLop" in pages, "Page 'SoDoLop' missing"
+    assert len(pages) == 1, f"Expected exactly 1 diagram page for Data/Entity classes, found {len(pages)}"
 
-    # Verify Page 1 (Analysis Diagram) structure & UML compliance
-    p1 = pages["SoDoLop_PhanTich"]
-    p1_root = p1.find(".//root")
-    p1_cells = {c.attrib.get("id"): c for c in p1_root.findall("mxCell")}
+    # Verify single page (SoDoLop) structure & UML compliance
+    p = pages["SoDoLop"]
+    p_root = p.find(".//root")
+    cells = {c.attrib.get("id"): c for c in p_root.findall("mxCell")}
 
-    expected_p1_classes = [
+    expected_classes = [
         'c_VaiTro', 'c_TaiKhoan', 'c_NhanVien', 'c_TheLoai', 'c_Phim',
         'c_LoaiPhong', 'c_PhongChieu', 'c_Ghe', 'c_LoaiGhe', 'c_LoaiThoiDiem',
         'c_SuatChieu', 'c_GheSuatChieu', 'c_BangGiaVe', 'c_SanPham',
         'c_ThanhToan', 'c_GiaoDich', 'c_Ve'
     ]
-    for cid in expected_p1_classes:
-        assert cid in p1_cells, f"Page 1 missing class {cid}"
-        cls_cell = p1_cells[cid]
+    for cid in expected_classes:
+        assert cid in cells, f"Class diagram missing class {cid}"
+        cls_cell = cells[cid]
         c_style = cls_cell.attrib.get("style", "")
         assert "swimlane" in c_style, f"{cid} must be a UML swimlane"
         assert "fillColor=#FFFFFF" in c_style, f"{cid} must have fillColor=#FFFFFF"
@@ -147,9 +149,9 @@ def verify_diagram():
         assert "html=0" in c_style, f"{cid} must have html=0"
 
         # Check child compartments: attrs, sep, methods
-        assert f"{cid}_attrs" in p1_cells, f"{cid} missing attributes compartment"
-        assert f"{cid}_sep" in p1_cells, f"{cid} missing separator line"
-        assert f"{cid}_methods" in p1_cells, f"{cid} missing methods compartment"
+        assert f"{cid}_attrs" in cells, f"{cid} missing attributes compartment"
+        assert f"{cid}_sep" in cells, f"{cid} missing separator line"
+        assert f"{cid}_methods" in cells, f"{cid} missing methods compartment"
 
         # Check generous bounding box dimensions so no text overflows
         geom = cls_cell.find("mxGeometry")
@@ -158,17 +160,17 @@ def verify_diagram():
         assert w >= 210, f"{cid} width {w} is too narrow"
         assert h >= 100, f"{cid} height {h} is too short"
 
-    # Title must be removed on Page 1 canvas
-    assert "p1_title" not in p1_cells, "p1_title must be removed from Page 1 canvas"
+    # Title must not be on canvas
+    assert "p1_title" not in cells, "p1_title must not be present on canvas"
 
-    # Verify Page 1 relationships (Aggregation & Composition markers, empty middle labels)
-    p1_edges = [c for c in p1_root.findall("mxCell") if c.attrib.get("edge") == "1"]
-    assert len(p1_edges) == 21, f"Expected 21 edges on Page 1, found {len(p1_edges)}"
-    for e in p1_edges:
+    # Verify relationships (Aggregation & Composition markers, empty middle labels)
+    edges = [c for c in p_root.findall("mxCell") if c.attrib.get("edge") == "1"]
+    assert len(edges) == 21, f"Expected 21 edges on Class Diagram, found {len(edges)}"
+    for e in edges:
         assert e.attrib.get("value", "") == "", f"Edge {e.attrib.get('id')} has non-empty label: {e.attrib.get('value')}"
 
-    # Check composition & aggregation on Page 1
-    edge_map = {(e.attrib.get("source"), e.attrib.get("target")): e for e in p1_edges}
+    # Check composition & aggregation
+    edge_map = {(e.attrib.get("source"), e.attrib.get("target")): e for e in edges}
     # Aggregation: PhongChieu ◇--- Ghe
     assert ('c_PhongChieu', 'c_Ghe') in edge_map
     e_agg = edge_map[('c_PhongChieu', 'c_Ghe')].attrib.get("style", "")
@@ -185,116 +187,11 @@ def verify_diagram():
     assert ('c_GiaoDich', 'c_Ve') in edge_map
     e_comp3 = edge_map[('c_GiaoDich', 'c_Ve')].attrib.get("style", "")
     assert "startArrow=diamondThin" in e_comp3 and "startFill=1" in e_comp3, "GiaoDich-Ve must be composition (solid diamond)"
-    print("  ✓ Page 1 standard 3-compartment UML classes, dimensions, empty edge labels, and relationships verified")
+    print("  ✓ Single page standard 3-compartment UML classes, dimensions, empty edge labels, and relationships verified")
 
-    # Verify Page 2 (3-Layer Architecture)
-    p2 = pages["SoDoLop_ThietKe_3Tang"]
-    p2_root = p2.find(".//root")
-    cells_by_id = {c.attrib.get("id"): c for c in p2_root.findall("mxCell")}
-
-    # Title must be removed on Page 2 canvas
-    assert "p2_title_box" not in cells_by_id, "p2_title_box must be removed from Page 2 canvas"
-
-    d_db = cells_by_id.get("d_Database")
-    assert d_db is not None, "d_Database not found on Page 2"
-    val = d_db.attrib.get("value", "")
-    assert "«utility»" in val, f"Expected «utility» in d_Database, got: {val}"
-    assert "Database" in val, f"Expected Database in d_Database, got: {val}"
-    d_db_body = cells_by_id.get("d_Database_body")
-    assert d_db_body is not None, "d_Database_body not found on Page 2"
-    assert "+ connect(): Connection" in d_db_body.attrib.get("value", ""), "Expected + connect(): Connection in d_Database_body"
-    print("  ✓ d_Database stereotype and method verified")
-
-    expected_snippets = {
-        "v_DangNhap": ["DangNhapWindow(service)", "authenticate(service): void"],
-        "v_Cinema": ["open(session): void"],
-        "b_DangNhap": ["login(username, password): PhienDangNhap"],
-        "b_NhanVien": ["search(keyword): List<NhanVien>", "delete(id): void"],
-        "b_Phim": ["genres(): List<TheLoai>", "search(name, genre, status): List<Phim>", "create(input, image): Phim", "rename(id, name): void", "stop(id): void"],
-        "b_LichChieu": ["list(date, room): List<SuatChieu>", "create(film, room, start): SuatChieu", "changeFilm(id, film): SuatChieu", "cancel(id): void"],
-        "b_PhongChieu": ["search(text, type, state): List<PhongChieu>", "create(name, type, clean, state): PhongChieu", "seats(room): List<Ghe>", "addSeat(room, row, num, type, state): Ghe"],
-        "b_GiaVe": ["list(): List<BangGiaVe>", "create(seat, room, period, price): BangGiaVe", "updatePrice(id, price): BangGiaVe"],
-        "b_SanPham": ["search(text, inStock): List<SanPham>", "create(input): void", "updateInfo(input): void", "updatePrice(id, amount): void"],
-        "b_Ve": ["rooms(): List<PhongChieu>", "shows(date, room): List<SuatChieu>", "check(ticket, type, room, show): KetQua", "confirm(ticket, room, show): ThongTin"],
-        "b_BanVe": ["shows(name, date, time): List<SuatBan>", "hold(show, seats, txId): GioHang", "pay(txId, method, amount): List<ThongTin>", "cancel(txId): void"],
-        "b_BaoCao": ["theoThoiGian(range): TongHop", "theoPhim(range, film): List<TheoPhim>", "theoNhanVien(range, emp): List<TheoNhanVien>", "ve(range, film, show): ThongKeVe"],
-        "h_Auth": ["hash(password): String", "matches(password, stored): boolean", "laAdmin(): boolean"],
-        "h_Film": ["importImage(source): String", "resolve(stored): Path", "discard(stored): void"],
-        "h_Pricing": ["positive(value, message): BigDecimal"],
-        "h_Admission": ["read(file): String", "load(): ThoiGianVaoPhong"],
-        "h_Sales": ["preview(info): BufferedImage", "print(g, format, page): int"],
-        "h_Revenue": ["ngay(date): KhoangThongKe", "thang(month): KhoangThongKe", "nam(year): KhoangThongKe"],
-        "d_TaiKhoan": ["findByUsername(user): Optional<TaiKhoan>"],
-        "d_NhanVien": ["search(keyword): List<NhanVien>", "insert(emp, hash, role): void", "update(emp): void", "delete(id): void"],
-        "d_PhimTheLoai": ["search(name, genre, status): List<Phim>", "insert(film): void", "stop(id): void", "all(): List<TheLoai>"],
-        "d_SuatChieu": ["list(date, room): List<SuatChieu>", "create(film, room, start, holidays): SuatChieu", "modify(id, edit, holidays): SuatChieu", "cancel(id): void"],
-        "d_PhongGhe": ["search(key, type, state): List<PhongChieu>", "insert(room): void", "list(room): List<Ghe>", "insert(room, row, num, type, state): Ghe"],
-        "d_BangGia": ["all(): List<BangGiaVe>", "insert(seat, room, period, price): int", "updatePrice(id, price): void"],
-        "d_SanPham": ["search(key, inStock): List<SanPham>", "insert(product): void", "updateInfo(product): void", "updatePrice(id, price): void"],
-        "d_Ve": ["inspect(code, type): Optional<ThongTin>", "confirm(maVe, truoc, sau, val): ThongTin"],
-        "d_BanVe": ["search(name, date, time): List<SuatBan>", "hold(show, seats, staff, id, min): GioHang", "pay(id, method, amount): List<ThongTin>", "cancel(id): void"],
-        "d_BaoCao": ["theoThoiGian(range): TongHop", "theoPhim(range, film): List<TheoPhim>", "theoNhanVien(range, emp): List<TheoNhanVien>", "ve(range, film, show): ThongKeVe"]
-    }
-
-    for cid, snips in expected_snippets.items():
-        assert cid in cells_by_id, f"Cell {cid} not found"
-        body_cell = cells_by_id.get(f"{cid}_body")
-        assert body_cell is not None, f"Body compartment {cid}_body not found"
-        body_val = body_cell.attrib.get("value", "")
-        for s in snips:
-            assert s in body_val, f"Snippet '{s}' not found in {cid}_body: {body_val}"
-    print("  ✓ All exact Java method names on Page 2 verified")
-
-    # Assert that all boxes on both Page 1 and Page 2 use swimlane
-    for page_name in ["SoDoLop_PhanTich", "SoDoLop_ThietKe_3Tang"]:
-        page = pages[page_name]
-        p_root = page.find(".//root")
-        top_boxes = [c for c in p_root.findall("mxCell") if c.attrib.get("vertex") == "1" and c.attrib.get("parent") == "1"]
-        assert len(top_boxes) > 0, f"No top boxes found on {page_name}"
-        for b in top_boxes:
-            b_style = b.attrib.get("style", "")
-            b_id = b.attrib.get("id", "")
-            assert "swimlane" in b_style, f"Box {b_id} on {page_name} must use swimlane style, got: {b_style}"
-    print("  ✓ All boxes on Page 1 and Page 2 use swimlane style")
-
-    # Verify Page 2 body compartments: align=left, spacingLeft=8, startSize, and height clearance
-    p2_classes = [c for c in p2_root.findall("mxCell") if c.attrib.get("vertex") == "1" and c.attrib.get("parent") == "1" and not c.attrib.get("id").startswith("pkg_")]
-    assert len(p2_classes) == 55, f"Expected 55 design classes on Page 2, found {len(p2_classes)}"
-    for cls in p2_classes:
-        cid = cls.attrib.get("id")
-        body_id = f"{cid}_body"
-        assert body_id in cells_by_id, f"{body_id} missing on Page 2"
-        body_cell = cells_by_id[body_id]
-        b_style = body_cell.attrib.get("style", "")
-        assert "align=left" in b_style, f"{body_id} missing align=left"
-        assert "spacingLeft=8" in b_style, f"{body_id} missing spacingLeft=8"
-
-        # Check startSize accommodating multi-line headers
-        c_style = cls.attrib.get("style", "")
-        m = re.search(r'startSize=(\d+)', c_style)
-        assert m, f"startSize missing in {cid}"
-        start_size = int(m.group(1))
-        hdr_lines = len(cls.attrib.get("value", "").split("\n"))
-        if hdr_lines == 1:
-            assert start_size >= 28, f"{cid} startSize {start_size} < 28 for single-line header"
-        elif hdr_lines == 2:
-            assert start_size >= 40, f"{cid} startSize {start_size} < 40 for two-line header"
-        else:
-            assert start_size >= 20 * hdr_lines, f"{cid} startSize {start_size} < {20 * hdr_lines} for {hdr_lines}-line header"
-
-        # Check body compartment height clearance
-        b_geom = body_cell.find("mxGeometry")
-        body_h = float(b_geom.attrib.get("height", 0))
-        lines = body_cell.attrib.get("value", "").split("\n") if body_cell.attrib.get("value") else []
-        needed_h = len(lines) * 15 + 4
-        assert body_h >= needed_h, f"{body_id} height {body_h} is insufficient for {len(lines)} lines (needed ~{needed_h})"
-    print("  ✓ All 55 Page 2 design classes: swimlane headers, align=left, spacingLeft=8, and height clearance verified")
-
-    c1 = check_collisions('SoDoLop_PhanTich')
-    c2 = check_collisions('SoDoLop_ThietKe_3Tang')
-    assert len(c1) == 0, f"Page 1 has {len(c1)} collisions: {c1}"
-    assert len(c2) == 0, f"Page 2 has {len(c2)} collisions: {c2}"
-    print("  ✓ Geometry check: 0 box-edge intersections on Page 1 (21 edges) and Page 2 (30 edges)")
+    c = check_collisions('SoDoLop')
+    assert len(c) == 0, f"Page SoDoLop has {len(c)} collisions: {c}"
+    print("  ✓ Geometry check: 0 box-edge intersections on SoDoLop (21 edges)")
 
     with open("docs/SoDoLop_RapChieuPhim.drawio", encoding="utf-8") as f:
         content = f.read()
@@ -309,7 +206,7 @@ def verify_diagram():
 
     html_tags = re.findall(r'&lt;/?(b|i|br|span|div|hr|font)\b[^&]*?&gt;', content, re.IGNORECASE)
     assert len(html_tags) == 0, f"Found HTML tags in diagram: {set(html_tags)}"
-    print("  ✓ Zero HTML tag leakage verified across all pages")
+    print("  ✓ Zero HTML tag leakage verified across diagram")
 
 def verify_statuses():
     print("\n=== 2. VERIFYING STATUS VALUES IN DOCS ===")
