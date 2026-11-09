@@ -162,7 +162,7 @@ def build_drawio():
 
     # Edge helper for Class Diagram
     edge_cnt1 = 0
-    def add_edge(root, source, target, s_mult='', t_mult='', label='', start_arrow='none', end_arrow='open', start_fill='0', end_fill='0', start_size='14', end_size='12', dashed='0', points=None, exit_x=None, exit_y=None, entry_x=None, entry_y=None):
+    def add_edge(root, source, target, s_mult='', t_mult='', label='', start_arrow='none', end_arrow='none', start_fill='0', end_fill='0', start_size='14', end_size='12', dashed='0', points=None, exit_x=None, exit_y=None, entry_x=None, entry_y=None):
         nonlocal edge_cnt1
         edge_cnt1 += 1
         eid = f'edge_{edge_cnt1}'
@@ -212,8 +212,10 @@ def build_drawio():
 
         return edge_cell
 
-    # 21 Structural Relationships (Orthogonal, Pure Black & White UML, 0 Collisions)
-    # Association: endArrow=open; Aggregation: startArrow=diamondThin, startFill=0, endArrow=none; Composition: startArrow=diamondThin, startFill=1, endArrow=none
+    # 21 Structural Relationships (Orthogonal, Pure Black & White UML, 0 Collisions, No Flow Arrows)
+    # Association: plain undirected line (startArrow=none, endArrow=none)
+    # Aggregation: hollow diamond (startArrow=diamondThin, startFill=0, endArrow=none)
+    # Composition: solid black diamond (startArrow=diamondThin, startFill=1, endArrow=none)
     # 1. VaiTro - TaiKhoan (Vertical straight)
     add_edge(root1, 'c_VaiTro', 'c_TaiKhoan', s_mult='1', t_mult='0..*', label='',
              exit_x=0.5, exit_y=1.0, entry_x=0.5, entry_y=0.0)
