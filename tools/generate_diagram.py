@@ -162,7 +162,7 @@ def build_drawio():
 
     # Edge helper for Class Diagram
     edge_cnt1 = 0
-    def add_edge(root, source, target, s_mult='', t_mult='', label='', start_arrow='none', end_arrow='none', start_fill='0', end_fill='0', start_size='14', end_size='14', dashed='0', points=None, exit_x=None, exit_y=None, entry_x=None, entry_y=None):
+    def add_edge(root, source, target, s_mult='', t_mult='', label='', start_arrow='none', end_arrow='open', start_fill='0', end_fill='0', start_size='14', end_size='12', dashed='0', points=None, exit_x=None, exit_y=None, entry_x=None, entry_y=None):
         nonlocal edge_cnt1
         edge_cnt1 += 1
         eid = f'edge_{edge_cnt1}'
@@ -213,6 +213,7 @@ def build_drawio():
         return edge_cell
 
     # 21 Structural Relationships (Orthogonal, Pure Black & White UML, 0 Collisions)
+    # Association: endArrow=open; Aggregation: startArrow=diamondThin, startFill=0, endArrow=none; Composition: startArrow=diamondThin, startFill=1, endArrow=none
     # 1. VaiTro - TaiKhoan (Vertical straight)
     add_edge(root1, 'c_VaiTro', 'c_TaiKhoan', s_mult='1', t_mult='0..*', label='',
              exit_x=0.5, exit_y=1.0, entry_x=0.5, entry_y=0.0)
@@ -229,9 +230,9 @@ def build_drawio():
     add_edge(root1, 'c_LoaiPhong', 'c_PhongChieu', s_mult='1', t_mult='0..*', label='',
              exit_x=1.0, exit_y=0.49618, entry_x=0.0, entry_y=0.36932)
 
-    # 5. PhongChieu - Ghe (Aggregation: hollow diamond at PhongChieu)
+    # 5. PhongChieu - Ghe (Aggregation: hollow diamond at PhongChieu, no arrow at Ghe)
     add_edge(root1, 'c_PhongChieu', 'c_Ghe', s_mult='1', t_mult='1..*', label='',
-             start_arrow='diamondThin', start_fill='0', start_size='16',
+             start_arrow='diamondThin', start_fill='0', start_size='16', end_arrow='none',
              exit_x=1.0, exit_y=0.45455, entry_x=0.0, entry_y=0.51282)
 
     # 6. LoaiGhe - Ghe (Horizontal straight)
@@ -250,9 +251,9 @@ def build_drawio():
     add_edge(root1, 'c_LoaiThoiDiem', 'c_SuatChieu', s_mult='1', t_mult='0..*', label='',
              exit_x=0.5, exit_y=1.0, entry_x=0.4375, entry_y=0.0, points=[(890, 300), (990, 300)])
 
-    # 10. SuatChieu - GheSuatChieu (Composition: solid black diamond at SuatChieu)
+    # 10. SuatChieu - GheSuatChieu (Composition: solid black diamond at SuatChieu, no arrow at GheSuatChieu)
     add_edge(root1, 'c_SuatChieu', 'c_GheSuatChieu', s_mult='1', t_mult='1..*', label='',
-             start_arrow='diamondThin', start_fill='1', start_size='16',
+             start_arrow='diamondThin', start_fill='1', start_size='16', end_arrow='none',
              exit_x=1.0, exit_y=0.49724, entry_x=0.0, entry_y=0.49724)
 
     # 11. PhongChieu - SuatChieu (Routed via corridor at y=400)
@@ -279,14 +280,14 @@ def build_drawio():
     add_edge(root1, 'c_BangGiaVe', 'c_GheSuatChieu', s_mult='0..1', t_mult='0..*', label='',
              exit_x=0.0, exit_y=0.5, entry_x=1.0, entry_y=0.32044)
 
-    # 17. GiaoDich - ThanhToan (Composition: solid black diamond at GiaoDich)
+    # 17. GiaoDich - ThanhToan (Composition: solid black diamond at GiaoDich, no arrow at ThanhToan)
     add_edge(root1, 'c_GiaoDich', 'c_ThanhToan', s_mult='1', t_mult='0..1', label='',
-             start_arrow='diamondThin', start_fill='1', start_size='16',
+             start_arrow='diamondThin', start_fill='1', start_size='16', end_arrow='none',
              exit_x=0.0, exit_y=0.40331, entry_x=1.0, entry_y=0.5)
 
-    # 18. GiaoDich - Ve (Composition: solid black diamond at GiaoDich)
+    # 18. GiaoDich - Ve (Composition: solid black diamond at GiaoDich, no arrow at Ve)
     add_edge(root1, 'c_GiaoDich', 'c_Ve', s_mult='1', t_mult='1..*', label='',
-             start_arrow='diamondThin', start_fill='1', start_size='16',
+             start_arrow='diamondThin', start_fill='1', start_size='16', end_arrow='none',
              exit_x=1.0, exit_y=0.49724, entry_x=0.0, entry_y=0.38136)
 
     # 19. GheSuatChieu - Ve (Vertical routed via corridor y=750)

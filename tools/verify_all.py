@@ -196,24 +196,33 @@ def verify_diagram():
     for e in edges:
         assert e.attrib.get("value", "") == "", f"Edge {e.attrib.get('id')} has non-empty label: {e.attrib.get('value')}"
 
-    # Check composition & aggregation
+    # Check composition, aggregation, and directed association (user arrow style)
     edge_map = {(e.attrib.get("source"), e.attrib.get("target")): e for e in edges}
-    # Aggregation: PhongChieu ◇--- Ghe
+    # Aggregation: PhongChieu ◇--- Ghe (hollow diamond at source, no arrow at target)
     assert ('c_PhongChieu', 'c_Ghe') in edge_map
     e_agg = edge_map[('c_PhongChieu', 'c_Ghe')].attrib.get("style", "")
-    assert "startArrow=diamondThin" in e_agg and "startFill=0" in e_agg, "PhongChieu-Ghe must be aggregation (hollow diamond)"
-    # Composition: SuatChieu ◆--- GheSuatChieu
+    assert "startArrow=diamondThin" in e_agg and "startFill=0" in e_agg and "endArrow=none" in e_agg, "PhongChieu-Ghe must be aggregation (hollow diamond, no end arrow)"
+    # Composition: SuatChieu ◆--- GheSuatChieu (solid diamond at source, no arrow at target)
     assert ('c_SuatChieu', 'c_GheSuatChieu') in edge_map
     e_comp1 = edge_map[('c_SuatChieu', 'c_GheSuatChieu')].attrib.get("style", "")
-    assert "startArrow=diamondThin" in e_comp1 and "startFill=1" in e_comp1, "SuatChieu-GheSuatChieu must be composition (solid diamond)"
+    assert "startArrow=diamondThin" in e_comp1 and "startFill=1" in e_comp1 and "endArrow=none" in e_comp1, "SuatChieu-GheSuatChieu must be composition (solid diamond, no end arrow)"
     # Composition: GiaoDich ◆--- ThanhToan
     assert ('c_GiaoDich', 'c_ThanhToan') in edge_map
     e_comp2 = edge_map[('c_GiaoDich', 'c_ThanhToan')].attrib.get("style", "")
-    assert "startArrow=diamondThin" in e_comp2 and "startFill=1" in e_comp2, "GiaoDich-ThanhToan must be composition (solid diamond)"
+    assert "startArrow=diamondThin" in e_comp2 and "startFill=1" in e_comp2 and "endArrow=none" in e_comp2, "GiaoDich-ThanhToan must be composition (solid diamond, no end arrow)"
     # Composition: GiaoDich ◆--- Ve
     assert ('c_GiaoDich', 'c_Ve') in edge_map
     e_comp3 = edge_map[('c_GiaoDich', 'c_Ve')].attrib.get("style", "")
-    assert "startArrow=diamondThin" in e_comp3 and "startFill=1" in e_comp3, "GiaoDich-Ve must be composition (solid diamond)"
+    assert "startArrow=diamondThin" in e_comp3 and "startFill=1" in e_comp3 and "endArrow=none" in e_comp3, "GiaoDich-Ve must be composition (solid diamond, no end arrow)"
+
+    # Association: All other 17 edges must have directed open arrow head (endArrow=open)
+    special_edges = {('c_PhongChieu', 'c_Ghe'), ('c_SuatChieu', 'c_GheSuatChieu'), ('c_GiaoDich', 'c_ThanhToan'), ('c_GiaoDich', 'c_Ve')}
+    for (src, tgt), e in edge_map.items():
+        if (src, tgt) not in special_edges:
+            style = e.attrib.get("style", "")
+            assert "startArrow=none" in style, f"Association {src}->{tgt} must have startArrow=none"
+            assert "endArrow=open" in style, f"Association {src}->{tgt} must have endArrow=open"
+            assert "endFill=0" in style, f"Association {src}->{tgt} must have endFill=0"
 
     # Verify source and target multiplicities on all 21 edges
     expected_multiplicities = {
