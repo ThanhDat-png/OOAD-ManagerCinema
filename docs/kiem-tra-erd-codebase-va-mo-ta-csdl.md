@@ -7,7 +7,7 @@ Tài liệu này ghi nhận kết quả kiểm tra danh sách 17 lớp nghiệp 
 ### 1.1. Đánh giá tính hợp lệ
 Danh sách 17 lớp nghiệp vụ đề xuất là hoàn toàn hợp lệ. Cả 17 lớp đều đại diện cho các thực thể thông tin cần thiết để vận hành đầy đủ 9 ca sử dụng của hệ thống quản lý rạp chiếu phim và được lưu trữ bền vững trong cơ sở dữ liệu.
 
-Theo đúng yêu cầu học thuật của đồ án môn học, trong Sơ đồ lớp (Class Diagram), sinh viên chỉ cần xây dựng các lớp dữ liệu / lớp thực thể (Data Classes / Entity Classes) tương ứng với các thực thể được lưu trữ trong cơ sở dữ liệu quan hệ, không cần xây dựng các lớp xử lý nghiệp vụ (Controller / BUS) hay các lớp giao diện (Boundary / GUI). Tên gọi tiếng Việt không dấu thống nhất với các mô hình phân tích và cơ sở dữ liệu. Mô hình Sơ đồ lớp trong tệp `docs/SoDoLop_RapChieuPhim.drawio` được tinh giản về duy nhất một trang chuẩn (`SoDoLop`) thể hiện trực quan 17 thực thể dữ liệu này.
+Theo quy định của đồ án môn học, trong Sơ đồ lớp, sinh viên chỉ cần xây dựng các lớp thực thể dữ liệu tương ứng với các thực thể được lưu trữ trong cơ sở dữ liệu quan hệ, không cần xây dựng các lớp điều khiển Controller hay các lớp giao diện Boundary. Tên gọi tiếng Việt không dấu thống nhất với các mô hình phân tích và cơ sở dữ liệu. Sơ đồ lớp trong tệp `docs/SoDoLop_RapChieuPhim.drawio` gồm duy nhất một trang mang tên SoDoLop thể hiện 17 thực thể dữ liệu này.
 
 ### 1.2. Những điểm giữ lại
 - Giữ nguyên toàn bộ 17 lớp đối tượng: TaiKhoan, VaiTro, NhanVien, Phim, TheLoai, SuatChieu, PhongChieu, LoaiPhong, Ghe, LoaiGhe, GheSuatChieu, LoaiThoiDiem, BangGiaVe, GiaoDich, ThanhToan, Ve, SanPham.

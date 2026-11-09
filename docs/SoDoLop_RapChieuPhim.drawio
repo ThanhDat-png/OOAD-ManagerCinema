@@ -209,7 +209,7 @@
         <mxCell id="c_Ve_methods" value="+ kiemTraHopLe(): boolean&#10;+ danhDauSuDung(): void" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;spacingRight=8;spacingTop=4;spacingBottom=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=0;fontSize=11;fontColor=#000000;" vertex="1" parent="c_Ve">
           <mxGeometry y="191" width="300" height="45" as="geometry" />
         </mxCell>
-        <mxCell id="edge_1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;strokeWidth=1;strokeColor=#000000;dashed=0;startArrow=none;endArrow=none;startFill=0;endFill=0;startSize=14;endSize=14;" edge="1" parent="1" source="c_VaiTro" target="c_TaiKhoan">
+        <mxCell id="edge_1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;strokeWidth=1;strokeColor=#000000;dashed=0;startArrow=none;endArrow=none;startFill=0;endFill=0;startSize=14;endSize=14;exitX=0.5;exitY=1.0;exitDx=0;exitDy=0;entryX=0.5;entryY=0.0;entryDx=0;entryDy=0;" edge="1" parent="1" source="c_VaiTro" target="c_TaiKhoan">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="edge_1_s" value="1" style="edgeLabel;html=0;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontColor=#000000;" vertex="1" connectable="0" parent="edge_1">
@@ -218,7 +218,7 @@
         <mxCell id="edge_1_t" value="0..*" style="edgeLabel;html=0;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontColor=#000000;" vertex="1" connectable="0" parent="edge_1">
           <mxGeometry x="0.8" relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="edge_2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;strokeWidth=1;strokeColor=#000000;dashed=0;startArrow=none;endArrow=none;startFill=0;endFill=0;startSize=14;endSize=14;" edge="1" parent="1" source="c_NhanVien" target="c_TaiKhoan">
+        <mxCell id="edge_2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;strokeWidth=1;strokeColor=#000000;dashed=0;startArrow=none;endArrow=none;startFill=0;endFill=0;startSize=14;endSize=14;exitX=0.0;exitY=0.30973;exitDx=0;exitDy=0;entryX=1.0;entryY=0.39773;entryDx=0;entryDy=0;" edge="1" parent="1" source="c_NhanVien" target="c_TaiKhoan">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="edge_2_s" value="1" style="edgeLabel;html=0;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontColor=#000000;" vertex="1" connectable="0" parent="edge_2">
@@ -227,7 +227,7 @@
         <mxCell id="edge_2_t" value="0..1" style="edgeLabel;html=0;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontColor=#000000;" vertex="1" connectable="0" parent="edge_2">
           <mxGeometry x="0.8" relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="edge_3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;strokeWidth=1;strokeColor=#000000;dashed=0;startArrow=none;endArrow=none;startFill=0;endFill=0;startSize=14;endSize=14;" edge="1" parent="1" source="c_TheLoai" target="c_Phim">
+        <mxCell id="edge_3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;strokeWidth=1;strokeColor=#000000;dashed=0;startArrow=none;endArrow=none;startFill=0;endFill=0;startSize=14;endSize=14;exitX=1.0;exitY=0.4955;exitDx=0;exitDy=0;entryX=0.0;entryY=0.20295;entryDx=0;entryDy=0;" edge="1" parent="1" source="c_TheLoai" target="c_Phim">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="edge_3_s" value="1..*" style="edgeLabel;html=0;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontColor=#000000;" vertex="1" connectable="0" parent="edge_3">
@@ -236,7 +236,7 @@
         <mxCell id="edge_3_t" value="1..*" style="edgeLabel;html=0;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontColor=#000000;" vertex="1" connectable="0" parent="edge_3">
           <mxGeometry x="0.8" relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="edge_4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;strokeWidth=1;strokeColor=#000000;dashed=0;startArrow=none;endArrow=none;startFill=0;endFill=0;startSize=14;endSize=14;" edge="1" parent="1" source="c_LoaiPhong" target="c_PhongChieu">
+        <mxCell id="edge_4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;strokeWidth=1;strokeColor=#000000;dashed=0;startArrow=none;endArrow=none;startFill=0;endFill=0;startSize=14;endSize=14;exitX=1.0;exitY=0.49618;exitDx=0;exitDy=0;entryX=0.0;entryY=0.36932;entryDx=0;entryDy=0;" edge="1" parent="1" source="c_LoaiPhong" target="c_PhongChieu">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="edge_4_s" value="1" style="edgeLabel;html=0;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontColor=#000000;" vertex="1" connectable="0" parent="edge_4">
@@ -245,7 +245,7 @@
         <mxCell id="edge_4_t" value="0..*" style="edgeLabel;html=0;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontColor=#000000;" vertex="1" connectable="0" parent="edge_4">
           <mxGeometry x="0.8" relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="edge_5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;strokeWidth=1;strokeColor=#000000;dashed=0;startArrow=diamondThin;endArrow=none;startFill=0;endFill=0;startSize=16;endSize=14;" edge="1" parent="1" source="c_PhongChieu" target="c_Ghe">
+        <mxCell id="edge_5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;strokeWidth=1;strokeColor=#000000;dashed=0;startArrow=diamondThin;endArrow=none;startFill=0;endFill=0;startSize=16;endSize=14;exitX=1.0;exitY=0.45455;exitDx=0;exitDy=0;entryX=0.0;entryY=0.51282;entryDx=0;entryDy=0;" edge="1" parent="1" source="c_PhongChieu" target="c_Ghe">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="edge_5_s" value="1" style="edgeLabel;html=0;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontColor=#000000;" vertex="1" connectable="0" parent="edge_5">
@@ -254,7 +254,7 @@
         <mxCell id="edge_5_t" value="1..*" style="edgeLabel;html=0;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontColor=#000000;" vertex="1" connectable="0" parent="edge_5">
           <mxGeometry x="0.8" relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="edge_6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;strokeWidth=1;strokeColor=#000000;dashed=0;startArrow=none;endArrow=none;startFill=0;endFill=0;startSize=14;endSize=14;" edge="1" parent="1" source="c_LoaiGhe" target="c_Ghe">
+        <mxCell id="edge_6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;strokeWidth=1;strokeColor=#000000;dashed=0;startArrow=none;endArrow=none;startFill=0;endFill=0;startSize=14;endSize=14;exitX=0.0;exitY=0.4955;exitDx=0;exitDy=0;entryX=1.0;entryY=0.35256;entryDx=0;entryDy=0;" edge="1" parent="1" source="c_LoaiGhe" target="c_Ghe">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="edge_6_s" value="1" style="edgeLabel;html=0;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontColor=#000000;" vertex="1" connectable="0" parent="edge_6">
@@ -263,7 +263,7 @@
         <mxCell id="edge_6_t" value="0..*" style="edgeLabel;html=0;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontColor=#000000;" vertex="1" connectable="0" parent="edge_6">
           <mxGeometry x="0.8" relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="edge_7" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;strokeWidth=1;strokeColor=#000000;dashed=0;startArrow=none;endArrow=none;startFill=0;endFill=0;startSize=14;endSize=14;" edge="1" parent="1" source="c_NhanVien" target="c_GiaoDich">
+        <mxCell id="edge_7" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;strokeWidth=1;strokeColor=#000000;dashed=0;startArrow=none;endArrow=none;startFill=0;endFill=0;startSize=14;endSize=14;exitX=0.51429;exitY=1.0;exitDx=0;exitDy=0;entryX=0.2069;entryY=0.0;entryDx=0;entryDy=0;" edge="1" parent="1" source="c_NhanVien" target="c_GiaoDich">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="600" y="940" />
@@ -277,7 +277,7 @@
         <mxCell id="edge_7_t" value="0..*" style="edgeLabel;html=0;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontColor=#000000;" vertex="1" connectable="0" parent="edge_7">
           <mxGeometry x="0.8" relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="edge_8" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;strokeWidth=1;strokeColor=#000000;dashed=0;startArrow=none;endArrow=none;startFill=0;endFill=0;startSize=14;endSize=14;" edge="1" parent="1" source="c_Phim" target="c_SuatChieu">
+        <mxCell id="edge_8" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;strokeWidth=1;strokeColor=#000000;dashed=0;startArrow=none;endArrow=none;startFill=0;endFill=0;startSize=14;endSize=14;exitX=0.5;exitY=1.0;exitDx=0;exitDy=0;entryX=0.25;entryY=0.0;entryDx=0;entryDy=0;" edge="1" parent="1" source="c_Phim" target="c_SuatChieu">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="540" y="420" />
@@ -291,7 +291,7 @@
         <mxCell id="edge_8_t" value="0..*" style="edgeLabel;html=0;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontColor=#000000;" vertex="1" connectable="0" parent="edge_8">
           <mxGeometry x="0.8" relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="edge_9" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;strokeWidth=1;strokeColor=#000000;dashed=0;startArrow=none;endArrow=none;startFill=0;endFill=0;startSize=14;endSize=14;" edge="1" parent="1" source="c_LoaiThoiDiem" target="c_SuatChieu">
+        <mxCell id="edge_9" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;strokeWidth=1;strokeColor=#000000;dashed=0;startArrow=none;endArrow=none;startFill=0;endFill=0;startSize=14;endSize=14;exitX=0.5;exitY=1.0;exitDx=0;exitDy=0;entryX=0.4375;entryY=0.0;entryDx=0;entryDy=0;" edge="1" parent="1" source="c_LoaiThoiDiem" target="c_SuatChieu">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="890" y="300" />
@@ -305,7 +305,7 @@
         <mxCell id="edge_9_t" value="0..*" style="edgeLabel;html=0;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontColor=#000000;" vertex="1" connectable="0" parent="edge_9">
           <mxGeometry x="0.8" relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="edge_10" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;strokeWidth=1;strokeColor=#000000;dashed=0;startArrow=diamondThin;endArrow=none;startFill=1;endFill=0;startSize=16;endSize=14;" edge="1" parent="1" source="c_SuatChieu" target="c_GheSuatChieu">
+        <mxCell id="edge_10" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;strokeWidth=1;strokeColor=#000000;dashed=0;startArrow=diamondThin;endArrow=none;startFill=1;endFill=0;startSize=16;endSize=14;exitX=1.0;exitY=0.49724;exitDx=0;exitDy=0;entryX=0.0;entryY=0.49724;entryDx=0;entryDy=0;" edge="1" parent="1" source="c_SuatChieu" target="c_GheSuatChieu">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="edge_10_s" value="1" style="edgeLabel;html=0;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontColor=#000000;" vertex="1" connectable="0" parent="edge_10">
@@ -314,7 +314,7 @@
         <mxCell id="edge_10_t" value="1..*" style="edgeLabel;html=0;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontColor=#000000;" vertex="1" connectable="0" parent="edge_10">
           <mxGeometry x="0.8" relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="edge_11" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;strokeWidth=1;strokeColor=#000000;dashed=0;startArrow=none;endArrow=none;startFill=0;endFill=0;startSize=14;endSize=14;" edge="1" parent="1" source="c_PhongChieu" target="c_SuatChieu">
+        <mxCell id="edge_11" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;strokeWidth=1;strokeColor=#000000;dashed=0;startArrow=none;endArrow=none;startFill=0;endFill=0;startSize=14;endSize=14;exitX=0.48;exitY=1.0;exitDx=0;exitDy=0;entryX=0.6875;entryY=0.0;entryDx=0;entryDy=0;" edge="1" parent="1" source="c_PhongChieu" target="c_SuatChieu">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="1500" y="400" />
@@ -328,7 +328,7 @@
         <mxCell id="edge_11_t" value="0..*" style="edgeLabel;html=0;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontColor=#000000;" vertex="1" connectable="0" parent="edge_11">
           <mxGeometry x="0.8" relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="edge_12" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;strokeWidth=1;strokeColor=#000000;dashed=0;startArrow=none;endArrow=none;startFill=0;endFill=0;startSize=14;endSize=14;" edge="1" parent="1" source="c_Ghe" target="c_GheSuatChieu">
+        <mxCell id="edge_12" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;strokeWidth=1;strokeColor=#000000;dashed=0;startArrow=none;endArrow=none;startFill=0;endFill=0;startSize=14;endSize=14;exitX=0.47826;exitY=1.0;exitDx=0;exitDy=0;entryX=0.5;entryY=0.0;entryDx=0;entryDy=0;" edge="1" parent="1" source="c_Ghe" target="c_GheSuatChieu">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="1820" y="380" />
@@ -342,7 +342,7 @@
         <mxCell id="edge_12_t" value="0..*" style="edgeLabel;html=0;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontColor=#000000;" vertex="1" connectable="0" parent="edge_12">
           <mxGeometry x="0.8" relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="edge_13" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;strokeWidth=1;strokeColor=#000000;dashed=0;startArrow=none;endArrow=none;startFill=0;endFill=0;startSize=14;endSize=14;" edge="1" parent="1" source="c_LoaiPhong" target="c_BangGiaVe">
+        <mxCell id="edge_13" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;strokeWidth=1;strokeColor=#000000;dashed=0;startArrow=none;endArrow=none;startFill=0;endFill=0;startSize=14;endSize=14;exitX=0.5;exitY=1.0;exitDx=0;exitDy=0;entryX=0.24138;entryY=0.0;entryDx=0;entryDy=0;" edge="1" parent="1" source="c_LoaiPhong" target="c_BangGiaVe">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="1190" y="360" />
@@ -356,7 +356,7 @@
         <mxCell id="edge_13_t" value="0..*" style="edgeLabel;html=0;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontColor=#000000;" vertex="1" connectable="0" parent="edge_13">
           <mxGeometry x="0.8" relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="edge_14" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;strokeWidth=1;strokeColor=#000000;dashed=0;startArrow=none;endArrow=none;startFill=0;endFill=0;startSize=14;endSize=14;" edge="1" parent="1" source="c_LoaiGhe" target="c_BangGiaVe">
+        <mxCell id="edge_14" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;strokeWidth=1;strokeColor=#000000;dashed=0;startArrow=none;endArrow=none;startFill=0;endFill=0;startSize=14;endSize=14;exitX=0.47619;exitY=1.0;exitDx=0;exitDy=0;entryX=0.75862;entryY=0.0;entryDx=0;entryDy=0;" edge="1" parent="1" source="c_LoaiGhe" target="c_BangGiaVe">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="2120" y="350" />
@@ -370,7 +370,7 @@
         <mxCell id="edge_14_t" value="0..*" style="edgeLabel;html=0;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontColor=#000000;" vertex="1" connectable="0" parent="edge_14">
           <mxGeometry x="0.8" relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="edge_15" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;strokeWidth=1;strokeColor=#000000;dashed=0;startArrow=none;endArrow=none;startFill=0;endFill=0;startSize=14;endSize=14;" edge="1" parent="1" source="c_LoaiThoiDiem" target="c_BangGiaVe">
+        <mxCell id="edge_15" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;strokeWidth=1;strokeColor=#000000;dashed=0;startArrow=none;endArrow=none;startFill=0;endFill=0;startSize=14;endSize=14;exitX=0.77273;exitY=1.0;exitDx=0;exitDy=0;entryX=0.48276;entryY=0.0;entryDx=0;entryDy=0;" edge="1" parent="1" source="c_LoaiThoiDiem" target="c_BangGiaVe">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="950" y="320" />
@@ -384,7 +384,7 @@
         <mxCell id="edge_15_t" value="0..*" style="edgeLabel;html=0;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontColor=#000000;" vertex="1" connectable="0" parent="edge_15">
           <mxGeometry x="0.8" relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="edge_16" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;strokeWidth=1;strokeColor=#000000;dashed=0;startArrow=none;endArrow=none;startFill=0;endFill=0;startSize=14;endSize=14;" edge="1" parent="1" source="c_BangGiaVe" target="c_GheSuatChieu">
+        <mxCell id="edge_16" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;strokeWidth=1;strokeColor=#000000;dashed=0;startArrow=none;endArrow=none;startFill=0;endFill=0;startSize=14;endSize=14;exitX=0.0;exitY=0.5;exitDx=0;exitDy=0;entryX=1.0;entryY=0.32044;entryDx=0;entryDy=0;" edge="1" parent="1" source="c_BangGiaVe" target="c_GheSuatChieu">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="edge_16_s" value="0..1" style="edgeLabel;html=0;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontColor=#000000;" vertex="1" connectable="0" parent="edge_16">
@@ -393,7 +393,7 @@
         <mxCell id="edge_16_t" value="0..*" style="edgeLabel;html=0;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontColor=#000000;" vertex="1" connectable="0" parent="edge_16">
           <mxGeometry x="0.8" relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="edge_17" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;strokeWidth=1;strokeColor=#000000;dashed=0;startArrow=diamondThin;endArrow=none;startFill=1;endFill=0;startSize=16;endSize=14;" edge="1" parent="1" source="c_GiaoDich" target="c_ThanhToan">
+        <mxCell id="edge_17" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;strokeWidth=1;strokeColor=#000000;dashed=0;startArrow=diamondThin;endArrow=none;startFill=1;endFill=0;startSize=16;endSize=14;exitX=0.0;exitY=0.40331;exitDx=0;exitDy=0;entryX=1.0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="c_GiaoDich" target="c_ThanhToan">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="edge_17_s" value="1" style="edgeLabel;html=0;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontColor=#000000;" vertex="1" connectable="0" parent="edge_17">
@@ -402,7 +402,7 @@
         <mxCell id="edge_17_t" value="0..1" style="edgeLabel;html=0;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontColor=#000000;" vertex="1" connectable="0" parent="edge_17">
           <mxGeometry x="0.8" relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="edge_18" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;strokeWidth=1;strokeColor=#000000;dashed=0;startArrow=diamondThin;endArrow=none;startFill=1;endFill=0;startSize=16;endSize=14;" edge="1" parent="1" source="c_GiaoDich" target="c_Ve">
+        <mxCell id="edge_18" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;strokeWidth=1;strokeColor=#000000;dashed=0;startArrow=diamondThin;endArrow=none;startFill=1;endFill=0;startSize=16;endSize=14;exitX=1.0;exitY=0.49724;exitDx=0;exitDy=0;entryX=0.0;entryY=0.38136;entryDx=0;entryDy=0;" edge="1" parent="1" source="c_GiaoDich" target="c_Ve">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="edge_18_s" value="1" style="edgeLabel;html=0;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontColor=#000000;" vertex="1" connectable="0" parent="edge_18">
@@ -411,7 +411,7 @@
         <mxCell id="edge_18_t" value="1..*" style="edgeLabel;html=0;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontColor=#000000;" vertex="1" connectable="0" parent="edge_18">
           <mxGeometry x="0.8" relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="edge_19" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;strokeWidth=1;strokeColor=#000000;dashed=0;startArrow=none;endArrow=none;startFill=0;endFill=0;startSize=14;endSize=14;" edge="1" parent="1" source="c_GheSuatChieu" target="c_Ve">
+        <mxCell id="edge_19" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;strokeWidth=1;strokeColor=#000000;dashed=0;startArrow=none;endArrow=none;startFill=0;endFill=0;startSize=14;endSize=14;exitX=0.26667;exitY=1.0;exitDx=0;exitDy=0;entryX=0.33333;entryY=0.0;entryDx=0;entryDy=0;" edge="1" parent="1" source="c_GheSuatChieu" target="c_Ve">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="1350" y="750" />
@@ -425,7 +425,7 @@
         <mxCell id="edge_19_t" value="0..1" style="edgeLabel;html=0;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontColor=#000000;" vertex="1" connectable="0" parent="edge_19">
           <mxGeometry x="0.8" relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="edge_20" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;strokeWidth=1;strokeColor=#000000;dashed=0;startArrow=none;endArrow=none;startFill=0;endFill=0;startSize=14;endSize=14;" edge="1" parent="1" source="c_GiaoDich" target="c_GheSuatChieu">
+        <mxCell id="edge_20" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;strokeWidth=1;strokeColor=#000000;dashed=0;startArrow=none;endArrow=none;startFill=0;endFill=0;startSize=14;endSize=14;exitX=0.62069;exitY=0.0;exitDx=0;exitDy=0;entryX=0.6;entryY=1.0;entryDx=0;entryDy=0;" edge="1" parent="1" source="c_GiaoDich" target="c_GheSuatChieu">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="950" y="800" />
@@ -439,7 +439,7 @@
         <mxCell id="edge_20_t" value="0..*" style="edgeLabel;html=0;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontColor=#000000;" vertex="1" connectable="0" parent="edge_20">
           <mxGeometry x="0.8" relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="edge_21" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;strokeWidth=1;strokeColor=#000000;dashed=0;startArrow=none;endArrow=none;startFill=0;endFill=0;startSize=14;endSize=14;" edge="1" parent="1" source="c_BangGiaVe" target="c_Ve">
+        <mxCell id="edge_21" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;strokeWidth=1;strokeColor=#000000;dashed=0;startArrow=none;endArrow=none;startFill=0;endFill=0;startSize=14;endSize=14;exitX=0.48276;exitY=1.0;exitDx=0;exitDy=0;entryX=0.66667;entryY=0.0;entryDx=0;entryDy=0;" edge="1" parent="1" source="c_BangGiaVe" target="c_Ve">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="1810" y="880" />

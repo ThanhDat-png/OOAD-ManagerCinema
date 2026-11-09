@@ -3,55 +3,45 @@ import sys
 import re
 sys.stdout.reconfigure(encoding='utf-8')
 
+def parse_style(style_str):
+    props = {}
+    for part in style_str.split(';'):
+        if '=' in part:
+            k, v = part.split('=', 1)
+            props[k.strip()] = v.strip()
+    return props
+
 def get_full_path(edge, boxes):
     src = boxes[edge['src']]
     tgt = boxes[edge['tgt']]
     pts = list(edge['points'])
-    if not pts:
-        s_cx = src['x'] + src['w']/2
-        s_cy = src['y'] + src['h']/2
-        t_cx = tgt['x'] + tgt['w']/2
-        t_cy = tgt['y'] + tgt['h']/2
-        if abs(s_cx - t_cx) < 1:
-            if s_cy < t_cy:
-                p_start = (s_cx, src['y'] + src['h'])
-                p_end = (t_cx, tgt['y'])
-            else:
-                p_start = (s_cx, src['y'])
-                p_end = (t_cx, tgt['y'] + tgt['h'])
-        else:
-            if s_cx < t_cx:
-                p_start = (src['x'] + src['w'], s_cy)
-                p_end = (tgt['x'], t_cy)
-            else:
-                p_start = (src['x'], s_cy)
-                p_end = (tgt['x'] + tgt['w'], t_cy)
-        return [p_start, p_end]
+    style = parse_style(edge.get('style', ''))
+
+    if 'exitX' in style and 'exitY' in style:
+        ex = float(style['exitX'])
+        ey = float(style['exitY'])
+        p_start = (round(src['x'] + ex * src['w'], 2), round(src['y'] + ey * src['h'], 2))
     else:
-        p1 = pts[0]
         s_cx = src['x'] + src['w']/2
         s_cy = src['y'] + src['h']/2
-        if p1[1] > src['y'] + src['h']:
-            p_start = (p1[0] if src['x'] <= p1[0] <= src['x'] + src['w'] else (src['x'] + src['w'] if p1[0] > src['x'] else src['x']), src['y'] + src['h'] if src['x'] <= p1[0] <= src['x'] + src['w'] else s_cy)
-        elif p1[0] > src['x'] + src['w']:
-            p_start = (src['x'] + src['w'], p1[1] if src['y'] <= p1[1] <= src['y'] + src['h'] else s_cy)
-        elif p1[0] < src['x']:
-            p_start = (src['x'], p1[1] if src['y'] <= p1[1] <= src['y'] + src['h'] else s_cy)
-        else:
-            p_start = (s_cx, src['y'])
+        p_start = (s_cx, s_cy)
 
-        pn = pts[-1]
+    if 'entryX' in style and 'entryY' in style:
+        enx = float(style['entryX'])
+        eny = float(style['entryY'])
+        p_end = (round(tgt['x'] + enx * tgt['w'], 2), round(tgt['y'] + eny * tgt['h'], 2))
+    else:
         t_cx = tgt['x'] + tgt['w']/2
         t_cy = tgt['y'] + tgt['h']/2
-        if pn[1] < tgt['y']:
-            p_end = (pn[0] if tgt['x'] <= pn[0] <= tgt['x'] + tgt['w'] else (tgt['x'] + tgt['w'] if pn[0] > tgt['x'] else tgt['x']), tgt['y'] if tgt['x'] <= pn[0] <= tgt['x'] + tgt['w'] else t_cy)
-        elif pn[0] < tgt['x']:
-            p_end = (tgt['x'], pn[1] if tgt['y'] <= pn[1] <= tgt['y'] + tgt['h'] else t_cy)
-        elif pn[0] > tgt['x'] + tgt['w']:
-            p_end = (tgt['x'] + tgt['w'], pn[1] if tgt['y'] <= pn[1] <= tgt['y'] + tgt['h'] else t_cy)
-        else:
-            p_end = (t_cx, tgt['y'] + tgt['h'])
+        p_end = (t_cx, t_cy)
 
+    if not pts:
+        if abs(p_start[0] - p_end[0]) < 1e-2 or abs(p_start[1] - p_end[1]) < 1e-2:
+            return [p_start, p_end]
+        else:
+            mid_x = round((p_start[0] + p_end[0]) / 2, 2)
+            return [p_start, (mid_x, p_start[1]), (mid_x, p_end[1]), p_end]
+    else:
         return [p_start] + pts + [p_end]
 
 def line_intersects_box(p1, p2, box, tolerance=1e-5):
@@ -104,20 +94,25 @@ def check_collisions(diag_name):
             if arr is not None:
                 for pt in arr.findall('mxPoint'):
                     pts.append((float(pt.attrib.get('x')), float(pt.attrib.get('y'))))
-            edges.append({'id': cid, 'src': src, 'tgt': tgt, 'points': pts})
+            edges.append({'id': cid, 'src': src, 'tgt': tgt, 'points': pts, 'style': cell.attrib.get('style', '')})
 
     collisions = []
+    non_ortho = []
     for edge in edges:
         full_pts = get_full_path(edge, boxes)
         for i in range(len(full_pts) - 1):
             p1 = full_pts[i]
             p2 = full_pts[i+1]
+            dx = abs(p1[0] - p2[0])
+            dy = abs(p1[1] - p2[1])
+            if dx > 0.5 and dy > 0.5:
+                non_ortho.append((edge['id'], p1, p2))
             for bid, box in boxes.items():
                 if bid == edge['src'] or bid == edge['tgt']:
                     continue
                 if line_intersects_box(p1, p2, box):
                     collisions.append((edge['id'], edge['src'], edge['tgt'], bid))
-    return collisions
+    return collisions, non_ortho
 
 def verify_diagram():
     print("=== 1. VERIFYING DIAGRAM ===")
@@ -148,10 +143,42 @@ def verify_diagram():
         assert "rounded=0" in c_style, f"{cid} must have rounded=0 (sharp corners)"
         assert "html=0" in c_style, f"{cid} must have html=0"
 
+        # Check startSize accommodating multi-line headers
+        m = re.search(r'startSize=(\d+)', c_style)
+        assert m, f"startSize missing in {cid}"
+        start_size = int(m.group(1))
+        hdr_lines = len(cls_cell.attrib.get("value", "").split("\n"))
+        if hdr_lines == 1:
+            assert start_size >= 28, f"{cid} startSize {start_size} < 28 for single-line header"
+        else:
+            assert start_size >= 40, f"{cid} startSize {start_size} < 40 for multi-line header"
+
         # Check child compartments: attrs, sep, methods
         assert f"{cid}_attrs" in cells, f"{cid} missing attributes compartment"
         assert f"{cid}_sep" in cells, f"{cid} missing separator line"
         assert f"{cid}_methods" in cells, f"{cid} missing methods compartment"
+
+        # Check attrs compartment styling and height clearance
+        attrs_cell = cells[f"{cid}_attrs"]
+        a_style = attrs_cell.attrib.get("style", "")
+        assert "align=left" in a_style, f"{cid}_attrs must have align=left"
+        assert "spacingLeft=8" in a_style, f"{cid}_attrs must have spacingLeft=8"
+        assert "html=0" in a_style, f"{cid}_attrs must have html=0"
+        a_geom = attrs_cell.find("mxGeometry")
+        a_h = float(a_geom.attrib.get("height", 0))
+        a_lines = len([x for x in attrs_cell.attrib.get("value", "").split("\n") if x.strip()])
+        assert a_h >= a_lines * 15, f"{cid}_attrs height {a_h} is insufficient for {a_lines} lines"
+
+        # Check methods compartment styling and height clearance
+        meth_cell = cells[f"{cid}_methods"]
+        m_style = meth_cell.attrib.get("style", "")
+        assert "align=left" in m_style, f"{cid}_methods must have align=left"
+        assert "spacingLeft=8" in m_style, f"{cid}_methods must have spacingLeft=8"
+        assert "html=0" in m_style, f"{cid}_methods must have html=0"
+        m_geom = meth_cell.find("mxGeometry")
+        m_h = float(m_geom.attrib.get("height", 0))
+        m_lines = len([x for x in meth_cell.attrib.get("value", "").split("\n") if x.strip()])
+        assert m_h >= m_lines * 15, f"{cid}_methods height {m_h} is insufficient for {m_lines} lines"
 
         # Check generous bounding box dimensions so no text overflows
         geom = cls_cell.find("mxGeometry")
@@ -187,11 +214,45 @@ def verify_diagram():
     assert ('c_GiaoDich', 'c_Ve') in edge_map
     e_comp3 = edge_map[('c_GiaoDich', 'c_Ve')].attrib.get("style", "")
     assert "startArrow=diamondThin" in e_comp3 and "startFill=1" in e_comp3, "GiaoDich-Ve must be composition (solid diamond)"
-    print("  ✓ Single page standard 3-compartment UML classes, dimensions, empty edge labels, and relationships verified")
 
-    c = check_collisions('SoDoLop')
-    assert len(c) == 0, f"Page SoDoLop has {len(c)} collisions: {c}"
-    print("  ✓ Geometry check: 0 box-edge intersections on SoDoLop (21 edges)")
+    # Verify source and target multiplicities on all 21 edges
+    expected_multiplicities = {
+        ('c_VaiTro', 'c_TaiKhoan'): ('1', '0..*'),
+        ('c_NhanVien', 'c_TaiKhoan'): ('1', '0..1'),
+        ('c_TheLoai', 'c_Phim'): ('1..*', '1..*'),
+        ('c_LoaiPhong', 'c_PhongChieu'): ('1', '0..*'),
+        ('c_PhongChieu', 'c_Ghe'): ('1', '1..*'),
+        ('c_LoaiGhe', 'c_Ghe'): ('1', '0..*'),
+        ('c_NhanVien', 'c_GiaoDich'): ('1', '0..*'),
+        ('c_Phim', 'c_SuatChieu'): ('1', '0..*'),
+        ('c_LoaiThoiDiem', 'c_SuatChieu'): ('1', '0..*'),
+        ('c_SuatChieu', 'c_GheSuatChieu'): ('1', '1..*'),
+        ('c_PhongChieu', 'c_SuatChieu'): ('1', '0..*'),
+        ('c_Ghe', 'c_GheSuatChieu'): ('1', '0..*'),
+        ('c_LoaiPhong', 'c_BangGiaVe'): ('1', '0..*'),
+        ('c_LoaiGhe', 'c_BangGiaVe'): ('1', '0..*'),
+        ('c_LoaiThoiDiem', 'c_BangGiaVe'): ('1', '0..*'),
+        ('c_BangGiaVe', 'c_GheSuatChieu'): ('0..1', '0..*'),
+        ('c_GiaoDich', 'c_ThanhToan'): ('1', '0..1'),
+        ('c_GiaoDich', 'c_Ve'): ('1', '1..*'),
+        ('c_GheSuatChieu', 'c_Ve'): ('1', '0..1'),
+        ('c_GiaoDich', 'c_GheSuatChieu'): ('0..1', '0..*'),
+        ('c_BangGiaVe', 'c_Ve'): ('1', '0..*'),
+    }
+    for (src, tgt), (s_exp, t_exp) in expected_multiplicities.items():
+        assert (src, tgt) in edge_map, f"Edge from {src} to {tgt} missing"
+        e = edge_map[(src, tgt)]
+        eid = e.attrib.get("id")
+        s_lbl = cells.get(f"{eid}_s")
+        t_lbl = cells.get(f"{eid}_t")
+        assert s_lbl is not None and s_lbl.attrib.get("value") == s_exp, f"Edge {eid} source mult {s_lbl.attrib.get('value') if s_lbl else None} != {s_exp}"
+        assert t_lbl is not None and t_lbl.attrib.get("value") == t_exp, f"Edge {eid} target mult {t_lbl.attrib.get('value') if t_lbl else None} != {t_exp}"
+    print("  ✓ Single page standard 3-compartment UML classes, dimensions, empty edge labels, multiplicities, and relationships verified")
+
+    collisions, non_ortho = check_collisions('SoDoLop')
+    assert len(non_ortho) == 0, f"Page SoDoLop has non-orthogonal segments: {non_ortho}"
+    assert len(collisions) == 0, f"Page SoDoLop has {len(collisions)} collisions: {collisions}"
+    print("  ✓ Geometry check: 0 box-edge intersections and 100% strictly orthogonal segments on SoDoLop (21 edges)")
 
     with open("docs/SoDoLop_RapChieuPhim.drawio", encoding="utf-8") as f:
         content = f.read()

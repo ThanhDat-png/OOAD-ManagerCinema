@@ -1,6 +1,6 @@
-# Danh sách và đặc tả lớp nghiệp vụ (Data / Entity Classes)
+# Danh sách và đặc tả các lớp thực thể dữ liệu
 
-Theo yêu cầu chuẩn mực của đồ án môn học Phân tích và Thiết kế Hướng đối tượng, trong Sơ đồ lớp (Class Diagram), sinh viên chỉ cần xây dựng các lớp dữ liệu / lớp thực thể (Data Classes / Entity Classes) tương ứng với các thực thể được lưu trữ trong cơ sở dữ liệu quan hệ. Sinh viên không cần xây dựng các lớp xử lý nghiệp vụ (Controller / BUS) hoặc các lớp giao diện (Boundary / GUI) trên sơ đồ lớp.
+Theo quy định của đồ án môn học Phân tích và Thiết kế Hướng đối tượng, trong Sơ đồ lớp, sinh viên chỉ cần xây dựng các lớp thực thể dữ liệu tương ứng với các thực thể được lưu trữ trong cơ sở dữ liệu quan hệ, không cần xây dựng các lớp xử lý điều khiển Controller hay các lớp giao diện Boundary.
 
 Sơ đồ lớp của hệ thống quản lý rạp chiếu phim tập trung duy nhất vào 17 lớp thực thể dữ liệu được trích xuất từ 9 ca sử dụng và các sơ đồ tuần tự trong tài liệu đặc tả, tương ứng với các bảng thực thể được lưu trữ trong cơ sở dữ liệu. Dưới đây là bảng phân loại lớp, bảng đặc tả chi tiết thuộc tính và phương thức nghiệp vụ nội tại của thực thể, cùng bảng các mối quan hệ cấu trúc giữa 17 lớp thực thể này.
 

@@ -162,11 +162,23 @@ def build_drawio():
 
     # Edge helper for Class Diagram
     edge_cnt1 = 0
-    def add_edge(root, source, target, s_mult='', t_mult='', label='', start_arrow='none', end_arrow='none', start_fill='0', end_fill='0', start_size='14', end_size='14', dashed='0', points=None):
+    def add_edge(root, source, target, s_mult='', t_mult='', label='', start_arrow='none', end_arrow='none', start_fill='0', end_fill='0', start_size='14', end_size='14', dashed='0', points=None, exit_x=None, exit_y=None, entry_x=None, entry_y=None):
         nonlocal edge_cnt1
         edge_cnt1 += 1
         eid = f'edge_{edge_cnt1}'
-        style = f"edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;strokeWidth=1;strokeColor=#000000;dashed={dashed};startArrow={start_arrow};endArrow={end_arrow};startFill={start_fill};endFill={end_fill};startSize={start_size};endSize={end_size};"
+        style_parts = [
+            "edgeStyle=orthogonalEdgeStyle", "rounded=0", "orthogonalLoop=1", "jettySize=auto",
+            "html=0", "strokeWidth=1", "strokeColor=#000000", f"dashed={dashed}",
+            f"startArrow={start_arrow}", f"endArrow={end_arrow}",
+            f"startFill={start_fill}", f"endFill={end_fill}",
+            f"startSize={start_size}", f"endSize={end_size}"
+        ]
+        if exit_x is not None and exit_y is not None:
+            style_parts.extend([f"exitX={exit_x}", f"exitY={exit_y}", "exitDx=0", "exitDy=0"])
+        if entry_x is not None and entry_y is not None:
+            style_parts.extend([f"entryX={entry_x}", f"entryY={entry_y}", "entryDx=0", "entryDy=0"])
+        style = ";".join(style_parts) + ";"
+
         edge_cell = ET.SubElement(root, 'mxCell', {
             'id': eid,
             'value': label,
@@ -202,67 +214,92 @@ def build_drawio():
 
     # 21 Structural Relationships (Orthogonal, Pure Black & White UML, 0 Collisions)
     # 1. VaiTro - TaiKhoan (Vertical straight)
-    add_edge(root1, 'c_VaiTro', 'c_TaiKhoan', s_mult='1', t_mult='0..*', label='')
+    add_edge(root1, 'c_VaiTro', 'c_TaiKhoan', s_mult='1', t_mult='0..*', label='',
+             exit_x=0.5, exit_y=1.0, entry_x=0.5, entry_y=0.0)
 
     # 2. NhanVien - TaiKhoan (Horizontal straight)
-    add_edge(root1, 'c_NhanVien', 'c_TaiKhoan', s_mult='1', t_mult='0..1', label='')
+    add_edge(root1, 'c_NhanVien', 'c_TaiKhoan', s_mult='1', t_mult='0..1', label='',
+             exit_x=0.0, exit_y=0.30973, entry_x=1.0, entry_y=0.39773)
 
     # 3. TheLoai - Phim (Horizontal straight)
-    add_edge(root1, 'c_TheLoai', 'c_Phim', s_mult='1..*', t_mult='1..*', label='')
+    add_edge(root1, 'c_TheLoai', 'c_Phim', s_mult='1..*', t_mult='1..*', label='',
+             exit_x=1.0, exit_y=0.4955, entry_x=0.0, entry_y=0.20295)
 
     # 4. LoaiPhong - PhongChieu (Horizontal straight)
-    add_edge(root1, 'c_LoaiPhong', 'c_PhongChieu', s_mult='1', t_mult='0..*', label='')
+    add_edge(root1, 'c_LoaiPhong', 'c_PhongChieu', s_mult='1', t_mult='0..*', label='',
+             exit_x=1.0, exit_y=0.49618, entry_x=0.0, entry_y=0.36932)
 
     # 5. PhongChieu - Ghe (Aggregation: hollow diamond at PhongChieu)
-    add_edge(root1, 'c_PhongChieu', 'c_Ghe', s_mult='1', t_mult='1..*', label='', start_arrow='diamondThin', start_fill='0', start_size='16')
+    add_edge(root1, 'c_PhongChieu', 'c_Ghe', s_mult='1', t_mult='1..*', label='',
+             start_arrow='diamondThin', start_fill='0', start_size='16',
+             exit_x=1.0, exit_y=0.45455, entry_x=0.0, entry_y=0.51282)
 
     # 6. LoaiGhe - Ghe (Horizontal straight)
-    add_edge(root1, 'c_LoaiGhe', 'c_Ghe', s_mult='1', t_mult='0..*', label='')
+    add_edge(root1, 'c_LoaiGhe', 'c_Ghe', s_mult='1', t_mult='0..*', label='',
+             exit_x=0.0, exit_y=0.4955, entry_x=1.0, entry_y=0.35256)
 
     # 7. NhanVien - GiaoDich (Drops to open corridor y=940 and turns right to GiaoDich)
-    add_edge(root1, 'c_NhanVien', 'c_GiaoDich', s_mult='1', t_mult='0..*', label='', points=[(600, 940), (830, 940)])
+    add_edge(root1, 'c_NhanVien', 'c_GiaoDich', s_mult='1', t_mult='0..*', label='',
+             exit_x=0.51429, exit_y=1.0, entry_x=0.2069, entry_y=0.0, points=[(600, 940), (830, 940)])
 
     # 8. Phim - SuatChieu (Drops to open corridor y=420 and turns right to SuatChieu)
-    add_edge(root1, 'c_Phim', 'c_SuatChieu', s_mult='1', t_mult='0..*', label='', points=[(540, 420), (930, 420)])
+    add_edge(root1, 'c_Phim', 'c_SuatChieu', s_mult='1', t_mult='0..*', label='',
+             exit_x=0.5, exit_y=1.0, entry_x=0.25, entry_y=0.0, points=[(540, 420), (930, 420)])
 
     # 9. LoaiThoiDiem - SuatChieu (Drops down from LoaiThoiDiem to SuatChieu)
-    add_edge(root1, 'c_LoaiThoiDiem', 'c_SuatChieu', s_mult='1', t_mult='0..*', label='', points=[(890, 300), (990, 300)])
+    add_edge(root1, 'c_LoaiThoiDiem', 'c_SuatChieu', s_mult='1', t_mult='0..*', label='',
+             exit_x=0.5, exit_y=1.0, entry_x=0.4375, entry_y=0.0, points=[(890, 300), (990, 300)])
 
     # 10. SuatChieu - GheSuatChieu (Composition: solid black diamond at SuatChieu)
-    add_edge(root1, 'c_SuatChieu', 'c_GheSuatChieu', s_mult='1', t_mult='1..*', label='', start_arrow='diamondThin', start_fill='1', start_size='16')
+    add_edge(root1, 'c_SuatChieu', 'c_GheSuatChieu', s_mult='1', t_mult='1..*', label='',
+             start_arrow='diamondThin', start_fill='1', start_size='16',
+             exit_x=1.0, exit_y=0.49724, entry_x=0.0, entry_y=0.49724)
 
     # 11. PhongChieu - SuatChieu (Routed via corridor at y=400)
-    add_edge(root1, 'c_PhongChieu', 'c_SuatChieu', s_mult='1', t_mult='0..*', label='', points=[(1500, 400), (1070, 400)])
+    add_edge(root1, 'c_PhongChieu', 'c_SuatChieu', s_mult='1', t_mult='0..*', label='',
+             exit_x=0.48, exit_y=1.0, entry_x=0.6875, entry_y=0.0, points=[(1500, 400), (1070, 400)])
 
     # 12. Ghe - GheSuatChieu (Routed via corridor at y=380)
-    add_edge(root1, 'c_Ghe', 'c_GheSuatChieu', s_mult='1', t_mult='0..*', label='', points=[(1820, 380), (1420, 380)])
+    add_edge(root1, 'c_Ghe', 'c_GheSuatChieu', s_mult='1', t_mult='0..*', label='',
+             exit_x=0.47826, exit_y=1.0, entry_x=0.5, entry_y=0.0, points=[(1820, 380), (1420, 380)])
 
     # 13. LoaiPhong - BangGiaVe (Routed via corridor at y=360)
-    add_edge(root1, 'c_LoaiPhong', 'c_BangGiaVe', s_mult='1', t_mult='0..*', label='', points=[(1190, 360), (1740, 360)])
+    add_edge(root1, 'c_LoaiPhong', 'c_BangGiaVe', s_mult='1', t_mult='0..*', label='',
+             exit_x=0.5, exit_y=1.0, entry_x=0.24138, entry_y=0.0, points=[(1190, 360), (1740, 360)])
 
     # 14. LoaiGhe - BangGiaVe (Routed via corridor at y=350)
-    add_edge(root1, 'c_LoaiGhe', 'c_BangGiaVe', s_mult='1', t_mult='0..*', label='', points=[(2120, 350), (1890, 350)])
+    add_edge(root1, 'c_LoaiGhe', 'c_BangGiaVe', s_mult='1', t_mult='0..*', label='',
+             exit_x=0.47619, exit_y=1.0, entry_x=0.75862, entry_y=0.0, points=[(2120, 350), (1890, 350)])
 
     # 15. LoaiThoiDiem - BangGiaVe (Routed via corridor at y=320)
-    add_edge(root1, 'c_LoaiThoiDiem', 'c_BangGiaVe', s_mult='1', t_mult='0..*', label='', points=[(950, 320), (1810, 320)])
+    add_edge(root1, 'c_LoaiThoiDiem', 'c_BangGiaVe', s_mult='1', t_mult='0..*', label='',
+             exit_x=0.77273, exit_y=1.0, entry_x=0.48276, entry_y=0.0, points=[(950, 320), (1810, 320)])
 
     # 16. BangGiaVe - GheSuatChieu (Horizontal straight)
-    add_edge(root1, 'c_BangGiaVe', 'c_GheSuatChieu', s_mult='0..1', t_mult='0..*', label='')
+    add_edge(root1, 'c_BangGiaVe', 'c_GheSuatChieu', s_mult='0..1', t_mult='0..*', label='',
+             exit_x=0.0, exit_y=0.5, entry_x=1.0, entry_y=0.32044)
 
     # 17. GiaoDich - ThanhToan (Composition: solid black diamond at GiaoDich)
-    add_edge(root1, 'c_GiaoDich', 'c_ThanhToan', s_mult='1', t_mult='0..1', label='', start_arrow='diamondThin', start_fill='1', start_size='16')
+    add_edge(root1, 'c_GiaoDich', 'c_ThanhToan', s_mult='1', t_mult='0..1', label='',
+             start_arrow='diamondThin', start_fill='1', start_size='16',
+             exit_x=0.0, exit_y=0.40331, entry_x=1.0, entry_y=0.5)
 
     # 18. GiaoDich - Ve (Composition: solid black diamond at GiaoDich)
-    add_edge(root1, 'c_GiaoDich', 'c_Ve', s_mult='1', t_mult='1..*', label='', start_arrow='diamondThin', start_fill='1', start_size='16')
+    add_edge(root1, 'c_GiaoDich', 'c_Ve', s_mult='1', t_mult='1..*', label='',
+             start_arrow='diamondThin', start_fill='1', start_size='16',
+             exit_x=1.0, exit_y=0.49724, entry_x=0.0, entry_y=0.38136)
 
     # 19. GheSuatChieu - Ve (Vertical routed via corridor y=750)
-    add_edge(root1, 'c_GheSuatChieu', 'c_Ve', s_mult='1', t_mult='0..1', label='', points=[(1350, 750), (1300, 750)])
+    add_edge(root1, 'c_GheSuatChieu', 'c_Ve', s_mult='1', t_mult='0..1', label='',
+             exit_x=0.26667, exit_y=1.0, entry_x=0.33333, entry_y=0.0, points=[(1350, 750), (1300, 750)])
 
     # 20. GiaoDich - GheSuatChieu (Routed via corridor y=800)
-    add_edge(root1, 'c_GiaoDich', 'c_GheSuatChieu', s_mult='0..1', t_mult='0..*', label='', points=[(950, 800), (1450, 800)])
+    add_edge(root1, 'c_GiaoDich', 'c_GheSuatChieu', s_mult='0..1', t_mult='0..*', label='',
+             exit_x=0.62069, exit_y=0.0, entry_x=0.6, entry_y=1.0, points=[(950, 800), (1450, 800)])
 
     # 21. BangGiaVe - Ve (Routed via corridor y=880)
-    add_edge(root1, 'c_BangGiaVe', 'c_Ve', s_mult='1', t_mult='0..*', label='', points=[(1810, 880), (1400, 880)])
+    add_edge(root1, 'c_BangGiaVe', 'c_Ve', s_mult='1', t_mult='0..*', label='',
+             exit_x=0.48276, exit_y=1.0, entry_x=0.66667, entry_y=0.0, points=[(1810, 880), (1400, 880)])
 
     tree = ET.ElementTree(mxfile)
     ET.indent(tree, space='  ', level=0)
