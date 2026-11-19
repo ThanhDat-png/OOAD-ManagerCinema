@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" th:fragment="shell(content)">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#10111b">
+<title th:text="${sectionTitle + ' · Cinema Workspace'}">Cinema Workspace</title><link rel="icon" href="/web/favicon.png">
+<link rel="stylesheet" href="/web/cinema.css"><link th:if="${session.role == 'ADMIN' or #strings.startsWith(currentPath,'/catalog') or currentPath == '/profile'}" rel="stylesheet" href="/web/admin.css"><link th:if="${#strings.startsWith(currentPath,'/staff')}" rel="stylesheet" href="/web/staff.css"><script src="/web/cinema.js"></script>
+</head><body class="workspace"><a class="skip-link" href="#workspace-main">Đến nội dung</a>
+<header class="app-top"><a th:replace="~{ui :: brand}"></a><button class="icon-button menu-toggle" type="button" aria-label="Mở điều hướng" aria-expanded="false" aria-controls="side"><i class="ico menu"></i></button>
+<span class="top-location" th:text="${sectionTitle}"></span><span class="top-spacer"></span><button th:replace="~{ui :: theme}"></button><span class="user-chip"><i class="ico user" aria-hidden="true"></i><span th:text="${session.name}"></span></span></header>
+<aside id="side" class="app-side"><div class="sidebar-role"><span class="status-dot"></span><span th:text="${roleLabel}"></span></div><nav aria-label="Chức năng">
+<a th:each="item : ${navigation}" th:href="${item.path}" th:classappend="${item.path == currentPath ? 'current' : ''}" th:attr="aria-current=${item.path == currentPath ? 'page' : null}"><i aria-hidden="true" class="ico" th:classappend="${item.icon}"></i><span th:text="${item.label}"></span></a>
+</nav><form class="logout" method="post" th:action="@{/logout}"><button type="submit"><i class="ico logout-icon"></i>Đăng xuất</button></form></aside>
+<div class="sidebar-scrim" hidden></div><div id="workspace-main" class="app-content" tabindex="-1"><main th:replace="${content}"></main></div>
+</body></html>

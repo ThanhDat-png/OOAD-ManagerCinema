@@ -3,6 +3,7 @@
 /config/database.properties
 /config/local-tools.json
 /data/posters/
+/data/*.sqlite*
 /config/calendar.properties
 /config/admission.properties
 /config/sales.properties

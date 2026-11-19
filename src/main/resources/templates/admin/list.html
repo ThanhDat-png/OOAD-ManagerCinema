@@ -1,0 +1,26 @@
+<!doctype html><html lang="vi" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: shell(~{::main})}"><body>
+<main class="admin-page" id="main-content">
+<header class="page-head admin-heading"><div><h1 th:text="${page.title}">Danh mục</h1></div>
+<a th:if="${page.create != null}" class="btn primary" th:href="@{/admin/form/{op}(op=${page.create})}"><span aria-hidden="true">＋</span> <span th:text="${page.createLabel}"></span></a></header>
+<p class="notice" role="status" th:if="${adminSuccess}" th:text="${adminSuccess}"></p>
+<p class="notice" role="alert" th:if="${adminError}" th:text="${adminError}"></p>
+<nav class="admin-days" th:if="${dates != null}" aria-label="Chọn ngày chiếu">
+<a th:each="day : ${dates}" th:href="@{/admin/showtimes(date=${day.value},room=${params['room']})}" th:classappend="${day.value == params['date']} ? ' active'" th:attr="aria-current=${day.value == params['date'] ? 'date' : null}"><span th:text="${day.label}"></span><strong th:text="${day.value.substring(8)}"></strong></a></nav>
+<form class="admin-filters" method="get" th:action="${page.url}" th:if="${!page.filters.isEmpty()}">
+<label class="field" th:each="f : ${page.filters}"><span th:text="${f.label}"></span>
+<select th:if="${f.kind == 'select'}" th:name="${f.key}"><option value="">Tất cả</option><option th:each="o : ${f.options}" th:value="${o.value}" th:text="${o.label}" th:selected="${o.value == params[f.key]}"></option></select>
+<input th:unless="${f.kind == 'select'}" th:type="${f.kind}" th:name="${f.key}" th:value="${params[f.key]}" th:placeholder="${f.kind == 'search' ? 'Nhập từ khóa…' : null}"></label>
+<button class="btn secondary" type="submit">Lọc</button><a class="quiet-link" th:href="${page.url + (dates != null ? '?date=' : '')}">Xóa bộ lọc</a></form>
+<section class="admin-results" th:classappend="${kind == 'films' ? 'film-results' : 'panel'}">
+<h2 class="result-head"><span th:text="${kind == 'films' ? 'Thư viện phim' : (dates != null ? 'Danh sách suất chiếu' : 'Danh sách')}"></span><span class="count" th:text="${rows.size()}"></span></h2>
+<p class="admin-empty" th:if="${rows.isEmpty()}" th:text="${emptyMessage ?: 'Không tìm thấy dữ liệu phù hợp.'}"></p>
+<div class="film-grid" th:if="${kind == 'films'}"><a class="film-card" th:each="row : ${rows}" th:href="@{/catalog/films/detail(id=${row.MaPhim})}">
+<div class="film-image"><img th:if="${!#strings.isEmpty(row.Poster)}" th:src="@{/catalog/films/poster(id=${row.MaPhim})}" alt=""><span class="poster-placeholder" th:if="${#strings.isEmpty(row.Poster)}" th:text="${row.TenPhim}"></span><span class="film-tag" th:text="${row.DinhDangChieu}"></span></div>
+<div class="film-caption"><small th:text="${row.TrangThai}"></small><h3 th:text="${row.TenPhim}"></h3><span th:text="|${row.ThoiLuong} phút · ${row.TheLoai ?: 'Chưa phân loại'}|"></span></div></a></div>
+<div class="table-wrap" th:if="${kind != 'films' && !rows.isEmpty()}"><table><thead><tr><th th:each="c : ${page.columns}" scope="col" th:text="${c.label}"></th><th scope="col"><span class="visually-hidden">Chi tiết</span></th></tr></thead><tbody>
+<tr th:each="row : ${rows}"><td th:each="c,i : ${page.columns}">
+<strong th:if="${i.first && dates == null}" th:text="${row[c.key]}"></strong>
+<div class="show-film" th:if="${i.first && dates != null}"><img th:if="${!#strings.isEmpty(row.Poster)}" th:src="@{/catalog/films/poster(id=${row.MaPhim})}" alt=""><div><strong th:text="${row.TenPhim}"></strong><small th:text="|${row.DinhDangChieu} · ${row.ThoiLuong} phút|"></small></div></div>
+<span th:unless="${i.first}" th:classappend="${c.key == 'TrangThai' || c.key == 'TinhTrangKinhDoanh' ? 'admin-state' : ''}" th:attr="data-state=${row[c.key]}" th:text="${(c.key == 'GiaBan' || c.key == 'GiaVe') ? #numbers.formatInteger(row[c.key],1,'POINT') : row[c.key]}"></span></td>
+<td class="action-cell"><a class="quiet-link" th:href="@{|${page.url}/detail|(id=${row[key]})}" th:attr="aria-label=|Xem chi tiết ${row[page.columns[0].key]}|">Chi tiết <span aria-hidden="true">›</span></a></td></tr></tbody></table></div>
+</section></main></body></html>

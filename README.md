@@ -1,6 +1,10 @@
 # OOAD-ManagerCinema
 Object-Oriented Analysis and Design (OOAD) course project developed using Java, focusing on UML modeling, object-oriented principles, software architecture, and system implementation.
 
+## Website Cinema Workspace
+
+Chạy `./scripts/Run-Web.ps1` rồi mở [Cinema Workspace](http://localhost:8080). Xem [hướng dẫn web, tài khoản thử nghiệm và triển khai Render/Turso](docs/WEB.md) và [45 ca nghiệm thu theo báo cáo lần 4](docs/WEB_USE_CASES.md).
+
 ## Chạy đồ án với JDK 17 và Maven (PowerShell)
 
 Cài mới/chuyển máy theo [hướng dẫn cài đặt](docs/CAI_DAT.md): tạo database mới, nhập SQL 001–010, tạo tài khoản JDBC và cấu hình riêng, rồi chạy:

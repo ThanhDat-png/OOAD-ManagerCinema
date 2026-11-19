@@ -1,0 +1,25 @@
+projects:
+  - name: Cinema Workspace
+    environments:
+      - name: Production
+        services:
+          - type: web
+            name: cinema-workspace
+            runtime: docker
+            branch: codex/cinema-web
+            region: singapore
+            plan: free
+            healthCheckPath: /health
+            envVars:
+              - key: TURSO_DATABASE_URL
+                sync: false
+              - key: TURSO_AUTH_TOKEN
+                sync: false
+              - key: CINEMA_DEMO_DATA
+                value: "true"
+              - key: CINEMA_ADMIN_PASSWORD
+                generateValue: true
+              - key: CINEMA_STAFF_PASSWORD
+                generateValue: true
+              - key: CINEMA_SECURE_COOKIES
+                value: "true"

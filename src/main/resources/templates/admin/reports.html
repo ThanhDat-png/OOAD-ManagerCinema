@@ -1,0 +1,15 @@
+<!doctype html><html lang="vi" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: shell(~{::main})}"><body>
+<main class="admin-page" id="main-content"><script defer src="/web/admin.js"></script>
+<header class="page-head admin-heading"><h1>Báo cáo và thống kê</h1></header>
+<nav class="report-tabs" aria-label="Loại báo cáo"><a th:each="t : ${tabs}" th:text="${t.label}" th:href="@{/admin/reports(tab=${t.value})}" th:classappend="${tab == t.value ? 'active' : ''}" th:attr="aria-current=${tab == t.value ? 'page' : null}"></a></nav>
+<form method="get" action="/admin/reports" class="admin-filters report-filters"><input type="hidden" name="tab" th:value="${tab}"><input type="hidden" name="run" value="1">
+<label class="field" th:if="${tab == 'time'}">Kỳ thống kê<select name="mode" id="report-period"><option value="day" th:selected="${mode=='day'}">Ngày</option><option value="month" th:selected="${mode=='month'}">Tháng</option><option value="year" th:selected="${mode=='year'}">Năm</option><option value="range" th:selected="${mode=='range'}">Khoảng ngày</option></select></label>
+<label class="field" th:each="f : ${fields}" th:attr="data-period=${tab == 'time' ? ((f.key == 'from' || f.key == 'to') ? 'range' : f.key) : null}">
+<span th:text="${f.label}"></span><select th:if="${f.kind == 'select'}" th:name="${f.key}"><option value="">Tất cả</option><option th:each="o : ${f.options}" th:value="${o.value}" th:text="${o.label}" th:selected="${o.value == params[f.key]}"></option></select>
+<input th:unless="${f.kind == 'select'}" th:name="${f.key}" th:type="${f.kind}" th:value="${params[f.key]}"></label>
+<button class="btn primary" type="submit">Thống kê</button></form>
+<p class="admin-error" role="alert" th:if="${error}" th:text="${error}"></p>
+<section class="panel admin-results" th:if="${rows != null}"><header class="result-head"><h2>Kết quả thống kê</h2><small th:if="${range}" th:text="${range}"></small></header>
+<p class="admin-empty" th:if="${rows.isEmpty()}" th:text="${tab == 'stock' ? 'Không có sản phẩm phù hợp' : 'Không tìm thấy dữ liệu phù hợp.'}"></p>
+<div th:if="${!rows.isEmpty()}" class="table-wrap"><table><thead><tr><th scope="col" th:each="c : ${columns}" th:text="${c.label}"></th></tr></thead><tbody><tr th:each="r : ${rows}"><td th:each="c : ${columns}" th:text="${c.key == 'Revenue' ? #numbers.formatInteger(r[c.key],1,'POINT') : r[c.key]}"></td></tr></tbody></table></div>
+</section></main></body></html>

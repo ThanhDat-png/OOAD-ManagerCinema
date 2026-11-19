@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#10111b">
+<title>Đăng nhập · Cinema Workspace</title><link rel="icon" href="/web/favicon.png"><link rel="stylesheet" href="/web/cinema.css"><script src="/web/cinema.js"></script>
+</head><body class="login-body">
+<header class="login-header"><a th:replace="~{ui :: brand}"></a><button th:replace="~{ui :: theme}"></button></header>
+<main class="login-card">
+<div class="cinema-photo"><img src="/web/auditorium.jpg" alt="Những hàng ghế trong khán phòng rạp chiếu phim"><div class="photo-title"><span>Hệ thống quản lý</span><strong>Rạp chiếu phim<span class="title-dot">.</span></strong></div></div>
+<section class="login-panel"><div class="login-inner">
+<div class="sign-icon" aria-hidden="true"><i class="ico ticket"></i></div>
+<h1>Đăng nhập</h1><p class="login-sub">Sử dụng tài khoản được cấp để vào không gian làm việc.</p>
+<form method="post" th:action="@{/login}" class="login-form">
+<div class="notice error" role="alert" th:if="${loginError}" th:text="${loginError}"></div>
+<label for="username">Tên đăng nhập</label><div class="login-input"><i class="ico person"></i><input id="username" name="username" autocomplete="username" placeholder="Nhập tên đăng nhập" required></div>
+<label for="password">Mật khẩu</label><div class="login-input"><i class="ico lock"></i><input id="password" type="password" name="password" autocomplete="current-password" placeholder="Nhập mật khẩu" required><button type="button" class="peek" aria-controls="password" aria-label="Hiện mật khẩu" aria-pressed="false"><i class="ico eye"></i></button></div>
+<button class="btn primary login-submit" type="submit">Đăng nhập<i class="ico arrow" aria-hidden="true"></i></button>
+</form></div></section></main>
+</body></html>

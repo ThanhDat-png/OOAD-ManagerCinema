@@ -1,0 +1,201 @@
+CREATE TABLE VAITRO (
+    MaVaiTro INTEGER PRIMARY KEY,
+    TenVaiTro TEXT NOT NULL UNIQUE
+);
+
+CREATE TABLE NHANVIEN (
+    MaNV TEXT PRIMARY KEY NOT NULL,
+    HoTen TEXT NOT NULL,
+    NgaySinh TEXT,
+    SoDienThoai TEXT,
+    Email TEXT,
+    DiaChi TEXT,
+    ChucVu TEXT
+);
+
+CREATE TABLE TAIKHOAN (
+    MaTK INTEGER PRIMARY KEY,
+    MaVaiTro INTEGER NOT NULL REFERENCES VAITRO,
+    MaNV TEXT UNIQUE REFERENCES NHANVIEN,
+    TenDangNhap TEXT NOT NULL COLLATE NOCASE UNIQUE,
+    MatKhauHash TEXT NOT NULL,
+    TrangThai TEXT NOT NULL DEFAULT 'Đang hoạt động'
+);
+
+CREATE TABLE THELOAI (
+    MaTheLoai INTEGER PRIMARY KEY,
+    TenTheLoai TEXT NOT NULL UNIQUE
+);
+
+CREATE TABLE PHIM (
+    MaPhim TEXT PRIMARY KEY NOT NULL,
+    TenPhim TEXT NOT NULL,
+    ThoiLuong INTEGER NOT NULL CHECK (ThoiLuong > 0),
+    DaoDien TEXT NOT NULL,
+    NgayKhoiChieu TEXT NOT NULL,
+    GioiHanTuoi INTEGER NOT NULL CHECK (GioiHanTuoi >= 0),
+    Poster TEXT NOT NULL,
+    TrangThai TEXT NOT NULL,
+    DinhDangChieu TEXT NOT NULL
+);
+
+CREATE TABLE PHIM_THELOAI (
+    MaPhim TEXT NOT NULL REFERENCES PHIM,
+    MaTheLoai INTEGER NOT NULL REFERENCES THELOAI,
+    PRIMARY KEY (MaPhim, MaTheLoai)
+);
+
+CREATE TABLE LOAIPHONG (
+    MaLoaiPhong INTEGER PRIMARY KEY,
+    TenLoaiPhong TEXT NOT NULL UNIQUE,
+    DinhDangChieu TEXT NOT NULL
+);
+
+CREATE TABLE PHONGCHIEU (
+    MaPhong TEXT PRIMARY KEY NOT NULL,
+    MaLoaiPhong INTEGER NOT NULL REFERENCES LOAIPHONG,
+    TenPhong TEXT NOT NULL UNIQUE,
+    ThoiGianDonPhong INTEGER NOT NULL CHECK (ThoiGianDonPhong >= 0),
+    TrangThai TEXT NOT NULL
+);
+
+CREATE TABLE LOAITHOIDIEM (
+    MaLoaiThoiDiem INTEGER PRIMARY KEY,
+    TenLoaiThoiDiem TEXT NOT NULL UNIQUE
+);
+
+CREATE TABLE SUATCHIEU (
+    MaSuat INTEGER PRIMARY KEY AUTOINCREMENT,
+    MaPhim TEXT NOT NULL REFERENCES PHIM,
+    MaPhong TEXT NOT NULL REFERENCES PHONGCHIEU,
+    MaLoaiThoiDiem INTEGER NOT NULL REFERENCES LOAITHOIDIEM,
+    ThoiGianBatDau TEXT NOT NULL,
+    ThoiGianTraPhong TEXT NOT NULL CHECK (ThoiGianTraPhong > ThoiGianBatDau),
+    TrangThai TEXT NOT NULL
+);
+
+CREATE TABLE LOAIGHE (
+    MaLoaiGhe INTEGER PRIMARY KEY,
+    TenLoaiGhe TEXT NOT NULL UNIQUE
+);
+
+CREATE TABLE GHE (
+    MaGhe INTEGER PRIMARY KEY AUTOINCREMENT,
+    MaPhong TEXT NOT NULL REFERENCES PHONGCHIEU,
+    MaLoaiGhe INTEGER NOT NULL REFERENCES LOAIGHE,
+    HangGhe TEXT NOT NULL,
+    SoGhe INTEGER NOT NULL CHECK (SoGhe > 0),
+    TrangThai TEXT NOT NULL,
+    UNIQUE (MaPhong, HangGhe, SoGhe)
+);
+
+CREATE TABLE BANGGIAVE (
+    MaGia INTEGER PRIMARY KEY AUTOINCREMENT,
+    MaLoaiGhe INTEGER NOT NULL REFERENCES LOAIGHE,
+    MaLoaiThoiDiem INTEGER NOT NULL REFERENCES LOAITHOIDIEM,
+    MaLoaiPhong INTEGER NOT NULL REFERENCES LOAIPHONG,
+    GiaVe INTEGER NOT NULL CHECK (GiaVe > 0),
+    UNIQUE (MaLoaiGhe, MaLoaiThoiDiem, MaLoaiPhong)
+);
+
+CREATE TABLE GIAODICH (
+    MaGiaoDich TEXT PRIMARY KEY NOT NULL,
+    MaNV TEXT NOT NULL REFERENCES NHANVIEN,
+    ThoiGianTao TEXT NOT NULL,
+    TongTien INTEGER NOT NULL CHECK (TongTien >= 0),
+    TrangThai TEXT NOT NULL
+);
+
+CREATE TABLE THANHTOAN (
+    MaThanhToan INTEGER PRIMARY KEY AUTOINCREMENT,
+    MaGiaoDich TEXT NOT NULL UNIQUE REFERENCES GIAODICH,
+    PhuongThuc TEXT NOT NULL,
+    SoTien INTEGER NOT NULL CHECK (SoTien > 0),
+    ThoiGianThanhToan TEXT NOT NULL
+);
+
+CREATE TABLE GHE_SUATCHIEU (
+    MaSuat INTEGER NOT NULL REFERENCES SUATCHIEU,
+    MaGhe INTEGER NOT NULL REFERENCES GHE,
+    MaGiaoDich TEXT REFERENCES GIAODICH,
+    TrangThai TEXT NOT NULL,
+    ThoiGianHetHanGiu TEXT,
+    MaGia INTEGER REFERENCES BANGGIAVE,
+    GiaVeChot INTEGER CHECK (GiaVeChot > 0),
+    PRIMARY KEY (MaSuat, MaGhe),
+    UNIQUE (MaSuat, MaGhe, MaGiaoDich),
+    CHECK (TrangThai NOT IN ('Đang giữ','Đã bán') OR MaGiaoDich IS NOT NULL)
+);
+
+CREATE TABLE VE (
+    MaVe TEXT PRIMARY KEY NOT NULL,
+    MaGiaoDich TEXT NOT NULL REFERENCES GIAODICH,
+    MaSuat INTEGER NOT NULL,
+    MaGhe INTEGER NOT NULL,
+    MaGia INTEGER NOT NULL REFERENCES BANGGIAVE,
+    MaQR TEXT NOT NULL UNIQUE,
+    GiaVe INTEGER NOT NULL CHECK (GiaVe > 0),
+    TrangThai TEXT NOT NULL,
+    ThoiGianPhatHanh TEXT NOT NULL,
+    HangGheLucPhatHanh TEXT NOT NULL,
+    SoGheLucPhatHanh INTEGER NOT NULL,
+    TenLoaiGheLucPhatHanh TEXT NOT NULL,
+    UNIQUE (MaSuat, MaGhe),
+    FOREIGN KEY (MaSuat, MaGhe, MaGiaoDich) REFERENCES GHE_SUATCHIEU(MaSuat, MaGhe, MaGiaoDich)
+);
+
+CREATE TABLE SANPHAM (
+    MaSP TEXT PRIMARY KEY NOT NULL,
+    TenSP TEXT NOT NULL,
+    MoTa TEXT,
+    DonViTinh TEXT NOT NULL,
+    GiaBan INTEGER NOT NULL CHECK (GiaBan > 0),
+    SoLuongTon INTEGER NOT NULL CHECK (SoLuongTon >= 0),
+    TinhTrangKinhDoanh TEXT NOT NULL
+);
+
+CREATE TABLE WEB_POSTER (
+    Id TEXT PRIMARY KEY NOT NULL,
+    Mime TEXT NOT NULL,
+    Data BLOB NOT NULL
+);
+
+CREATE INDEX suat_room_time ON SUATCHIEU (MaPhong, ThoiGianBatDau);
+
+CREATE INDEX seat_order ON GHE_SUATCHIEU (MaGiaoDich);
+
+CREATE INDEX ticket_order ON VE (MaGiaoDich);
+
+CREATE INDEX payment_date ON THANHTOAN (ThoiGianThanhToan);
+
+CREATE TRIGGER seat_room_insert BEFORE INSERT ON GHE_SUATCHIEU
+WHEN NOT EXISTS (SELECT 1 FROM GHE g JOIN SUATCHIEU s ON s.MaPhong = g.MaPhong
+                 WHERE g.MaGhe = NEW.MaGhe AND s.MaSuat = NEW.MaSuat)
+BEGIN SELECT RAISE(ABORT, 'Ghế không thuộc phòng của suất chiếu'); END;
+
+CREATE TRIGGER seat_room_update BEFORE UPDATE OF MaSuat, MaGhe ON GHE_SUATCHIEU
+WHEN NOT EXISTS (SELECT 1 FROM GHE g JOIN SUATCHIEU s ON s.MaPhong = g.MaPhong
+                 WHERE g.MaGhe = NEW.MaGhe AND s.MaSuat = NEW.MaSuat)
+BEGIN SELECT RAISE(ABORT, 'Ghế không thuộc phòng của suất chiếu'); END;
+
+CREATE TRIGGER schedule_active_film_insert BEFORE INSERT ON SUATCHIEU
+WHEN (SELECT TrangThai FROM PHIM WHERE MaPhim = NEW.MaPhim) = 'Ngừng chiếu'
+BEGIN SELECT RAISE(ABORT, 'Phim đã ngừng chiếu'); END;
+
+CREATE TRIGGER schedule_active_film_update BEFORE UPDATE ON SUATCHIEU
+WHEN NEW.TrangThai <> 'Đã hủy' AND (SELECT TrangThai FROM PHIM WHERE MaPhim = NEW.MaPhim) = 'Ngừng chiếu'
+BEGIN SELECT RAISE(ABORT, 'Phim đã ngừng chiếu'); END;
+
+CREATE TRIGGER immutable_ticket_seat BEFORE UPDATE OF HangGheLucPhatHanh, SoGheLucPhatHanh, TenLoaiGheLucPhatHanh ON VE
+WHEN NEW.HangGheLucPhatHanh <> OLD.HangGheLucPhatHanh OR NEW.SoGheLucPhatHanh <> OLD.SoGheLucPhatHanh OR NEW.TenLoaiGheLucPhatHanh <> OLD.TenLoaiGheLucPhatHanh
+BEGIN SELECT RAISE(ABORT, 'Không thể thay đổi thông tin ghế của vé đã phát hành'); END;
+
+INSERT INTO VAITRO VALUES (1,'Admin'),(2,'Nhân viên');
+
+INSERT INTO LOAITHOIDIEM VALUES (1,'Ngày thường'),(2,'Cuối tuần'),(3,'Ngày lễ');
+
+INSERT INTO LOAIPHONG VALUES (1,'Phòng 2D','2D'),(2,'Phòng 3D','3D');
+
+INSERT INTO LOAIGHE VALUES (1,'Ghế thường'),(2,'Ghế VIP'),(3,'Ghế đôi');
+
+INSERT INTO THELOAI VALUES (1,'Hành động'),(2,'Hài'),(3,'Tâm lý'),(4,'Hoạt hình'),(5,'Tình cảm');

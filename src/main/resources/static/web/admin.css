@@ -1,0 +1,43 @@
+.admin-page{display:grid;gap:22px;min-width:0;max-width:1520px;margin:0 auto}
+.admin-page .admin-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0}
+.admin-heading h1{margin:0;font-size:clamp(1.6rem,2.75vw,2.4rem);letter-spacing:-.045em;line-height:1.15}
+.admin-heading .btn span[aria-hidden]{font-size:1.25rem;line-height:1}
+.admin-days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}
+.admin-days a{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:2px;min-height:82px;border:1px solid var(--line);border-radius:12px;background:var(--sur);color:var(--muted);padding:10px 16px;text-decoration:none;line-height:1.2}
+.admin-days a:hover,.admin-days a:focus-visible{border-color:var(--iris)}
+.admin-days a.active{background:var(--tint);border-color:var(--iris);color:var(--iris)}
+.admin-days a span{font-size:.8rem}.admin-days a strong{font-size:1.4rem;font-weight:650;font-variant-numeric:tabular-nums;color:var(--text)}.admin-days a.active strong{color:var(--iris)}
+.admin-filters,.admin-actions,.report-tabs{display:flex;align-items:end;flex-wrap:wrap;gap:12px}
+.admin-filters .field{min-width:144px;max-width:100%}.admin-filters .field:has(input[type=search]){flex:1;max-width:360px}.admin-filters .quiet-link{align-self:end;margin-bottom:10px}
+.admin-page .field{display:grid;gap:7px;color:var(--muted);font-size:.85rem;font-weight:600}
+.admin-page input:not([type=checkbox]),.admin-page select,.admin-page textarea{box-sizing:border-box;width:100%;min-width:0;min-height:42px;padding:8px 11px;background:var(--sur);border:1px solid var(--line);border-radius:8px;color:var(--text);font:inherit}
+.admin-page textarea{min-height:90px}
+.admin-page .quiet-link,.seat-links a{color:var(--iris);font-weight:600;font-size:.875rem;text-decoration:none}.admin-page .quiet-link:hover,.seat-links a:hover{text-decoration:underline}
+.admin-page .panel{min-width:0;background:var(--sur);border:1px solid var(--line);border-radius:16px}
+.admin-results{overflow:hidden;padding:0!important}.result-head{display:flex;align-items:center;gap:10px;margin:0;padding:20px 22px;color:var(--text);font-size:1.02rem;font-weight:650}
+.result-head h2,.room-map h2{font-size:1.05rem;margin:0}.result-head small{color:var(--muted);font-weight:400}
+.count{display:inline-grid;place-items:center;min-width:24px;height:24px;border-radius:8px;color:var(--iris);background:var(--tint);font-size:12px;padding:0 5px}
+.admin-page .table-wrap{max-width:100%;overflow-x:auto}.admin-page table{width:100%;border-collapse:collapse}
+.admin-page th,.admin-page td{text-align:left;padding:13px 16px;white-space:nowrap;border:0;border-bottom:1px solid var(--line);font-size:.9rem}
+.admin-page th{background:var(--alt);color:var(--muted);font-weight:550;font-size:.8rem}
+.admin-page td:first-child,.admin-page th:first-child{padding-left:22px}.admin-page tbody tr:last-child td{border-bottom:0}
+.admin-page tbody tr:hover{background:var(--alt)}.admin-page .action-cell{text-align:right}
+.show-film{display:flex;align-items:center;gap:12px}.show-film img{width:36px;height:48px;object-fit:cover;border-radius:5px}.show-film div{display:grid;gap:1px}.show-film small{color:var(--muted);font-size:.75rem}
+.admin-state{display:inline-flex;align-items:center;gap:7px;color:var(--good);font-size:.8rem}.admin-state::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.admin-state[data-state="Đã hủy"],.admin-state[data-state="Bảo trì"],.admin-state[data-state^="Ngừng"]{color:var(--bad)}
+.admin-empty{padding:20px;margin:0;color:var(--muted)}.film-results .result-head{padding-left:0}
+.film-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,190px),1fr));gap:22px}.film-card{color:var(--text);text-decoration:none;background:var(--sur);border:1px solid var(--line);border-radius:14px;overflow:hidden}.film-card:hover{border-color:var(--iris)}
+.film-image{position:relative;aspect-ratio:2/3;background:var(--alt);display:grid;place-items:center}.film-image img,.detail-poster img{width:100%;height:100%;object-fit:cover}.poster-placeholder{color:var(--muted);font-weight:600;text-align:center;padding:24px}.film-tag{position:absolute;bottom:10px;left:10px;color:white;background:#141420d9;padding:3px 7px;border-radius:4px;font-size:12px}
+.film-caption{display:grid;gap:4px;padding:15px}.film-caption small{color:var(--iris)}.film-caption h3{margin:0;font-size:1.05rem}.film-caption>span{font-size:.83rem;color:var(--muted)}
+.detail-panel{padding:22px;display:flex;gap:24px;align-items:flex-start}.detail-main{min-width:0;flex:1}.detail-poster{width:min(200px,28%);aspect-ratio:2/3;overflow:hidden;border-radius:10px}
+.detail-data{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,175px),1fr));gap:18px;margin:0}.detail-data dt{color:var(--muted);font-size:.82rem}.detail-data dd{margin:3px 0 0;font-weight:600;overflow-wrap:anywhere}
+.admin-actions{margin-top:22px;border-top:1px solid var(--line);padding-top:18px}
+.admin-form{padding:24px;max-width:830px}.admin-form .notice{margin:0 0 15px}.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,255px),1fr));gap:18px}
+.choice-grid{display:flex;gap:8px;flex-wrap:wrap}.choice-grid label{display:flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:7px;padding:8px;min-height:40px}
+.upload-preview{max-width:160px;max-height:220px;object-fit:contain}.admin-error{color:var(--bad);border-left:3px solid currentColor;padding:10px 16px;margin:0 0 18px}.back-link{justify-self:start}
+.room-map{padding:22px}.seat-scroll{overflow-x:auto;margin-top:20px;padding-bottom:15px}.seat-board{min-width:max-content;padding:0 8px}
+.cinema-screen{border-top:3px solid var(--line);border-radius:50% 50% 0 0;max-width:75%;margin:0 auto 22px;padding-top:8px;color:var(--muted);text-align:center;font-size:.8rem}.seat-row{display:flex;gap:6px;margin:7px 0;align-items:start}.seat-row-label{width:22px;align-self:center;color:var(--muted);font-size:.8rem}
+.seat-unit{border:1px solid var(--line);border-radius:9px 9px 5px 5px;background:var(--alt);color:var(--text);width:57px;min-height:49px;display:flex;align-items:center;justify-content:center;flex-direction:column;line-height:1.3}.seat-unit small{font-size:.6rem;color:var(--muted)}.seat-unit[data-state="Bảo trì"]{border-style:dashed;color:var(--bad)}.seat-edit summary{cursor:pointer}.seat-links{display:grid;gap:4px;margin:6px 0}
+.report-tabs{align-items:stretch;border-bottom:1px solid var(--line);gap:0}.report-tabs a{padding:10px 14px;color:var(--muted);text-decoration:none;border-bottom:2px solid transparent}.report-tabs a.active{border-color:var(--iris);color:var(--iris)}
+.admin-page [hidden]{display:none!important}.visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+@media(max-width:680px){.admin-page{gap:15px}.admin-heading{flex-wrap:wrap}.admin-days{gap:4px}.admin-days a{min-height:62px;padding:5px 2px;align-items:center;text-align:center}.admin-days a span{font-size:.62rem}.admin-days a strong{font-size:1.1rem}.admin-filters{column-gap:8px}.admin-filters .field{flex:1 1 135px}.admin-page .btn{min-height:42px}.form-grid{grid-template-columns:1fr}.detail-panel{flex-direction:column}.detail-poster{width:100px}.film-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.film-caption{padding:10px}.admin-form,.detail-panel,.room-map{padding:15px}.admin-page th,.admin-page td{padding:10px}.report-tabs a{padding:8px;font-size:.8rem}}

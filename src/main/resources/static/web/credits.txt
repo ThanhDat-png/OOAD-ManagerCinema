@@ -1,0 +1,4 @@
+Auditorium photograph: Kilyan Sockalingum, Unsplash.
+https://unsplash.com/photos/rows-of-red-theater-seats-nW1n9eNHOsc
+Interface icons: Bootstrap Icons, MIT. See icons-LICENSE.txt.
+Demo film illustrations are original artwork created for this coursework implementation.

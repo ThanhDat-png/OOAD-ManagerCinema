@@ -1,0 +1,9 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: shell(~{::main})}"><body>
+
+<main class="counter"><header class="counter-title"><div><h1>Kiểm tra giao dịch</h1><p>Tra cứu theo mã giao dịch, mã vé hoặc khoảng thời gian.</p></div></header>
+<p class="st-error" role="alert" th:if="${staffError}" th:text="${staffError}"></p>
+<section class="st-panel"><h2>Tra cứu giao dịch</h2><form class="st-filters" action="/staff/transactions"><input type="hidden" name="search" value="true"><label>Mã giao dịch hoặc mã vé<input name="code" th:value="${code}" placeholder="Nhập mã" type="search"></label><label>Từ ngày<input type="date" name="from" th:value="${from}"></label><label>Đến ngày<input type="date" name="to" th:value="${to}"></label><button class="st-btn">Tìm kiếm</button></form></section>
+<section class="st-panel" th:if="${results!=null}"><h2>Kết quả tra cứu</h2><p class="st-empty" th:if="${results.isEmpty()}">Không tìm thấy giao dịch phù hợp</p><div class="st-table-wrap"><table th:unless="${results.isEmpty()}"><thead><tr><th>Mã giao dịch</th><th>Thời gian</th><th>Nhân viên</th><th>Tổng tiền</th><th>Trạng thái</th></tr></thead>
+<tbody><tr th:each="r : ${results}"><td><a class="st-link" th:href="@{/staff/transactions/{id}(id=${r.MaGiaoDich})}" th:text="${r.MaGiaoDich}"></a></td><td th:text="${r.ThoiGianTao}"></td><td th:text="${r.HoTen}"></td><td th:text="${#numbers.formatInteger(r.TongTien,1,'POINT')+' ₫'}"></td><td th:text="${r.TrangThai}"></td></tr></tbody></table></div></section></main>
+</body></html>

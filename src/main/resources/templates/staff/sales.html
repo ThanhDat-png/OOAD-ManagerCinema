@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: shell(~{::main})}"><body>
+
+<main class="counter" th:with="state=${order == null ? '' : order.TrangThai}">
+<header class="counter-title"><div><h1>Bán vé tại quầy</h1><p>Chọn suất chiếu và ghế ngồi để lập giao dịch.</p></div><a class="st-link" href="/staff/transactions">Kiểm tra giao dịch <span aria-hidden="true">↗</span></a></header>
+<p class="st-error" role="alert" th:if="${staffError}" th:text="${staffError}"></p>
+<p class="st-ok" role="status" th:if="${staffNotice}" th:text="${staffNotice}"></p>
+<ol class="sale-steps" aria-label="Các bước bán vé"><li th:classappend="${slot==null ? 'step-current' : 'step-done'}">Suất chiếu</li><li th:classappend="${slot!=null and (order==null or (state=='Chờ thanh toán' and order.TongTien==0)) ? 'step-current' : ''}">Chọn ghế</li><li th:classappend="${state=='Chờ thanh toán' and order.TongTien>0 ? 'step-current' : ''}">Tính tiền</li><li th:classappend="${state=='Đang thanh toán' ? 'step-current' : ''}">Thanh toán</li><li th:classappend="${state=='Đã thanh toán' ? 'step-current' : ''}">Phát hành vé</li></ol>
+<section class="st-panel" th:if="${slot==null and (order==null or state=='Hết hạn' or state=='Đã hủy')}">
+<h2>Tìm suất chiếu</h2>
+<form class="st-filters" action="/staff/sales"><label>Tên phim<input type="search" name="film" placeholder="Nhập tên phim" th:value="${film}"></label><label>Ngày chiếu<input type="date" name="day" th:value="${day}"></label><label>Giờ chiếu<input type="time" name="time" th:value="${time}"></label><button class="st-btn">Tìm kiếm</button></form>
+<p class="st-empty" th:if="${byDate.isEmpty()}">Không tìm thấy suất chiếu phù hợp</p>
+<details class="st-day" th:each="entry,stat : ${byDate}" th:attr="open=${stat.first ? 'open' : null}"><summary th:text="${entry.key}"></summary><div class="st-show-list">
+<article th:each="movie : ${entry.value}" class="st-show"><time th:text="${#strings.substring(movie.ThoiGianBatDau,11,16)}"></time><div><h3 th:text="${movie.TenPhim}"></h3><p th:text="${movie.TenPhong+' · '+movie.DinhDangChieu+' · '+movie.ThoiLuong+' phút'}"></p></div><a class="st-link" th:href="@{/staff/sales(show=${movie.MaSuat})}">Chọn suất <span aria-hidden="true">→</span></a></article></div></details>
+</section>
+<div th:class="${slot!=null ? 'st-sale-grid' : ''}" th:if="${slot!=null or state=='Chờ thanh toán' or state=='Đang thanh toán'}">
+<section class="st-panel auditorium" th:if="${slot!=null}"><div class="st-between"><div><p class="st-meta" th:text="${slot.TenPhong+' · '+slot.Lich}"></p><h2 th:text="${slot.TenPhim}"></h2></div><a class="st-link" th:if="${order==null}" href="/staff/sales">Đổi suất chiếu</a><form method="post" th:if="${state=='Chờ thanh toán'}" th:action="@{/staff/sales/cancel}"><input type="hidden" name="id" th:value="${cartId}"><button class="st-quiet">Hủy giữ ghế và đổi suất</button></form></div>
+<div class="screen-line"><span>Màn hình</span></div>
+<form method="post" th:action="@{/staff/sales/hold}"><input type="hidden" name="id" th:value="${cartId}"><input type="hidden" name="show" th:value="${slot.MaSuat}">
+<div class="seat-scroll" tabindex="0" aria-label="Sơ đồ ghế"><div class="seat-layout">
+<div class="seat-row" th:each="line : ${groups}"><b th:text="${line.key}"></b><label class="seat" th:each="seat : ${line.value}" th:with="held=${seat.TrangThai=='Đang giữ'}, sold=${seat.TrangThai=='Đã bán'}, mine=${held and cartId.equals(seat.MaGiaoDich)}, ready=${seat.TinhTrang=='Sẵn sàng sử dụng'}, blocked=${!ready or (seat.TrangThai!='Trống' and !mine)}" th:classappend="${sold ? 'sold' : (!ready ? 'maintenance' : (mine ? 'mine' : (held ? 'held' : '')))}">
+<input type="checkbox" name="seats" th:value="${seat.MaGhe}" th:checked="${mine}" th:disabled="${blocked or (order!=null and state!='Chờ thanh toán')}" th:attr="aria-label=${seat.Cho+' · '+seat.TenLoaiGhe+' · '+(ready ? seat.TrangThai : seat.TinhTrang)}"><span th:text="${seat.SoGhe}"></span></label></div></div></div>
+<ul class="seat-key"><li>Trống</li><li class="mine">Đang chọn</li><li class="held">Đang giữ ở giao dịch khác</li><li class="sold">Đã bán</li><li class="maintenance">Không khả dụng</li></ul>
+<p class="st-empty" th:if="${soldOut and heldSeats.isEmpty()}">Suất chiếu đã hết chỗ</p>
+<button class="st-btn" th:if="${order==null or state=='Chờ thanh toán'}">Giữ ghế đã chọn</button>
+</form></section>
+<aside class="st-panel st-cart"><h2>Giao dịch hiện tại</h2><p class="st-meta" th:text="${cartId}"></p>
+<p class="st-empty" th:if="${order==null}">Chọn ghế trên sơ đồ rồi nhấn “Giữ ghế đã chọn”.</p>
+<th:block th:if="${order!=null}"><p class="st-status" th:text="${state}"></p><ul class="st-lines"><li th:each="seat : ${heldSeats}"><div><b th:text="${'Ghế '+seat.Cho}"></b><small th:text="${seat.TenLoaiGhe}"></small></div><span th:if="${seat.GiaVeChot!=null}" th:text="${#numbers.formatInteger(seat.GiaVeChot,1,'POINT')+' ₫'}"></span></li></ul>
+<p class="st-meta" th:if="${state=='Chờ thanh toán' and !heldSeats.isEmpty()}" th:text="${'Giữ ghế đến '+#strings.substring(heldSeats[0].ThoiGianHetHanGiu,11,19)}"></p>
+<div class="st-total" th:if="${order.TongTien>0}"><span>Tổng tiền</span><b th:text="${#numbers.formatInteger(order.TongTien,1,'POINT')+' ₫'}"></b></div>
+<form method="post" th:if="${state=='Chờ thanh toán' and order.TongTien==0}" th:action="@{/staff/sales/quote}"><input type="hidden" name="id" th:value="${cartId}"><button class="st-btn">Tính tiền</button></form>
+<form method="post" th:if="${state=='Chờ thanh toán' and order.TongTien>0}" th:action="@{/staff/sales/payment}"><input type="hidden" name="id" th:value="${cartId}"><button class="st-btn">Thanh toán</button></form>
+<form class="st-stack" method="post" th:if="${state=='Đang thanh toán'}" th:action="@{/staff/sales/complete}"><input type="hidden" name="id" th:value="${cartId}"><label>Phương thức thanh toán<select required name="method"><option value="">Chọn phương thức</option><option>Tiền mặt</option><option>Chuyển khoản</option><option>Thẻ</option></select></label><label class="st-check"><input type="checkbox" required name="confirmed" value="true">Đã xác nhận nhận đủ tiền tại quầy</label><button class="st-btn">Hoàn tất giao dịch</button></form>
+<form class="st-stack" method="post" th:if="${state=='Chờ thanh toán' or state=='Đang thanh toán'}" th:action="@{/staff/sales/cancel}"><input type="hidden" name="id" th:value="${cartId}"><label class="st-check" th:if="${state=='Đang thanh toán'}"><input type="checkbox" name="confirmed" required value="true">Xác nhận chưa nhận tiền</label><button class="st-quiet">Hủy giao dịch</button></form>
+<a class="st-link" th:href="@{/staff/transactions/{id}(id=${cartId})}">Kiểm tra trạng thái giao dịch →</a>
+</th:block></aside></div>
+<form class="st-panel" method="post" th:if="${state=='Hết hạn' or state=='Đã hủy' or state=='Đã thanh toán'}" th:action="@{/staff/sales/new}"><p th:text="${'Giao dịch '+cartId+' · '+state}"></p><input type="hidden" name="id" th:value="${cartId}"><button class="st-btn">Giao dịch mới</button></form>
+</main>
+</body></html>

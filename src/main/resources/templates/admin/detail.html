@@ -1,0 +1,14 @@
+<!doctype html><html lang="vi" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: shell(~{::main})}"><body>
+<main class="admin-page" id="main-content">
+<a class="quiet-link back-link" th:if="${back}" th:href="${back}">‹ Danh sách</a>
+<header class="page-head admin-heading"><h1 th:text="${title}"></h1></header>
+<p class="notice" role="status" th:if="${adminSuccess}" th:text="${adminSuccess}"></p>
+<section class="panel detail-panel"><div th:if="${film == true && !#strings.isEmpty(item.Poster)}" class="detail-poster"><img th:src="@{/catalog/films/poster(id=${item.MaPhim})}" alt="Poster phim"></div>
+<div class="detail-main"><dl class="detail-data"><div th:each="c : ${columns}"><dt th:text="${c.label}"></dt><dd th:text="${item[c.key] ?: '—'}"></dd></div></dl>
+<nav class="admin-actions" th:unless="${actions.isEmpty()}" aria-label="Thao tác"><a class="btn secondary" th:each="a : ${actions}" th:href="${a.url}" th:text="${a.label}"></a></nav></div></section>
+<section class="panel room-map" th:if="${seatRows != null}"><h2>Sơ đồ ghế</h2><p class="admin-empty" th:if="${seatRows.isEmpty()}">Phòng chưa có ghế.</p>
+<div class="seat-scroll" th:unless="${seatRows.isEmpty()}"><div class="seat-board"><div class="cinema-screen">Màn hình</div>
+<div class="seat-row" th:each="entry : ${seatRows}"><strong class="seat-row-label" th:text="${entry.key}"></strong>
+<th:block th:each="seat : ${entry.value}"><div th:if="${!manageSeats}" class="seat-unit" th:attr="data-state=${seat.TrangThai}" th:title="|${seat.TenLoaiGhe} · ${seat.TrangThai}|"><b th:text="|${seat.HangGhe}${seat.SoGhe}|"></b><small th:text="${seat.TrangThai == 'Bảo trì' ? 'Bảo trì' : seat.TenLoaiGhe}"></small></div>
+<details th:if="${manageSeats}" class="seat-edit"><summary class="seat-unit" th:attr="data-state=${seat.TrangThai}" th:title="|${seat.TenLoaiGhe} · ${seat.TrangThai}|"><b th:text="|${seat.HangGhe}${seat.SoGhe}|"></b><small th:text="${seat.TrangThai == 'Bảo trì' ? 'Bảo trì' : seat.TenLoaiGhe}"></small></summary>
+<div class="seat-links"><a th:href="@{/admin/form/seat-edit(id=${seat.MaGhe})}">Sửa ghế</a><a th:href="@{/admin/form/seat-type(id=${seat.MaGhe})}">Phân loại</a></div></details></th:block></div></div></div></section></main></body></html>

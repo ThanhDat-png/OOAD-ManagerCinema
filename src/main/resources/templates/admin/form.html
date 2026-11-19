@@ -1,0 +1,18 @@
+<!doctype html><html lang="vi" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: shell(~{::main})}"><body>
+<main class="admin-page" id="main-content"><script defer src="/web/admin.js"></script>
+<a class="quiet-link back-link" th:href="${back}">‹ Quay lại</a>
+<header class="page-head admin-heading"><h1 th:text="${form.title}"></h1></header>
+<form class="panel admin-form" method="post" enctype="multipart/form-data" th:action="@{/admin/form/{op}(op=${op})}">
+<input type="hidden" name="id" th:value="${id}">
+<p class="notice" th:if="${!id.isEmpty()}" th:text="|Mã: ${id}|"></p>
+<p th:if="${values['TenLoaiThoiDiem'] != null}" th:text="|${values['TenLoaiGhe']} · ${values['TenLoaiPhong']} · ${values['TenLoaiThoiDiem']}|"></p>
+<p class="notice" th:if="${form.warning}" th:text="${form.warning}"></p>
+<p class="admin-error" role="alert" th:if="${error}" th:text="${error}"></p>
+<div class="form-grid" th:unless="${blocked}"><div class="field" th:each="f : ${form.fields}"><label th:for="${f.key}" th:text="${f.label}"></label>
+<select th:if="${f.kind == 'select'}" th:id="${f.key}" th:name="${f.key}" th:required="${f.required}"><option value="">Chọn…</option><option th:each="o : ${f.options}" th:value="${o.value}" th:text="${o.label}" th:selected="${o.value == #strings.toString(values[f.key])}"></option></select>
+<div class="choice-grid" th:if="${f.kind == 'multi'}" role="group" th:attr="aria-label=${f.label}"><label th:each="o : ${f.options}"><input type="checkbox" th:name="${f.key}" th:value="${o.value}" th:checked="${selected.contains(o.value)}"><span th:text="${o.label}"></span></label></div>
+<textarea th:if="${f.kind == 'textarea'}" th:id="${f.key}" th:name="${f.key}" th:required="${f.required}" th:text="${values[f.key]}"></textarea>
+<th:block th:if="${f.kind == 'file'}"><input type="file" th:id="${f.key}" th:name="${f.key}" accept="image/png,image/jpeg" th:required="${f.required}"><img hidden class="upload-preview" alt="Xem trước poster đã chọn"></th:block>
+<input th:if="${f.kind != 'select' && f.kind != 'file' && f.kind != 'multi' && f.kind != 'textarea'}" th:type="${f.kind}" th:id="${f.key}" th:name="${f.key}" th:value="${values[f.key]}" th:required="${f.required}" th:min="${f.kind == 'number' ? 0 : null}">
+</div></div>
+<div class="admin-actions"><button th:unless="${blocked}" class="btn primary" type="submit" th:text="${form.fields.isEmpty() ? 'Xác nhận' : 'Lưu thay đổi'}"></button><a class="btn secondary" th:href="${back}">Hủy</a></div></form></main></body></html>
