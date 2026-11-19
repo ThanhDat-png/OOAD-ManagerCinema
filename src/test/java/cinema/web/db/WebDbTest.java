@@ -27,7 +27,7 @@ final class WebDbTest {
         assertEquals(3, db.query("SELECT MaPhim FROM PHIM JOIN WEB_POSTER ON WEB_POSTER.Id=PHIM.Poster WHERE length(Data)>0").size());
         byte[] poster = {0, (byte) 250, 6};
         db.update("INSERT INTO WEB_POSTER VALUES (?,?,?)","p","image/png",poster);
-        assertArrayEquals(poster,(byte[])db.query("SELECT Data FROM WEB_POSTER").get(0).get("Data"));
+        assertArrayEquals(poster,(byte[])db.query("SELECT Data FROM WEB_POSTER WHERE Id=?", "p").get(0).get("Data"));
         db.update("UPDATE NHANVIEN SET HoTen=? WHERE MaNV=?", "O'Brien", "NV001");
         WebDb restarted = new WebDb(env);
         assertEquals("O'Brien", restarted.query("SELECT HoTen FROM NHANVIEN WHERE MaNV='NV001'").get(0).get("HoTen"));

@@ -1,6 +1,7 @@
 package cinema.web.db;
 
 import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.Connection;
@@ -21,8 +22,13 @@ final class LocalStore implements WebDb.Store {
         Path file = path.toAbsolutePath().normalize();
         try {
             Files.createDirectories(file.getParent());
+            try {
+                Files.createFile(file);
+            } catch (FileAlreadyExistsException ignored) {
+                // SQLite opens the same initialized path when startup races another instance.
+            }
         } catch (IOException e) {
-            throw new IllegalStateException("Cannot create SQLite directory", e);
+            throw new IllegalStateException("Cannot create SQLite database path", e);
         }
         jdbcUrl = "jdbc:sqlite:" + file;
     }

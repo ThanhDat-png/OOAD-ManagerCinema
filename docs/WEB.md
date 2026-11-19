@@ -39,3 +39,7 @@ Khi diễn tập với dữ liệu cục bộ, dùng `backup --sqlite data/cinem
 ## Kiểm thử
 
 [Ma trận 45 use case](WEB_USE_CASES.md) lấy thứ tự và luồng thay thế từ Google Doc lần 4. `mvn test` chạy kiểm thử web và các bài kiểm thử Java của dự án. Các bài tích hợp MySQL của ứng dụng Swing cần cấu hình cơ sở dữ liệu riêng theo tài liệu cũ. Bản web có kiểm thử SQLite, mô phỏng giao thức HTTP của Turso, xác thực/phân quyền, chỉnh sửa dữ liệu, tranh chấp giữ ghế, thanh toán, phát hành và soát vé. Bài kiểm thử giao thức mô phỏng không thay thế cho kiểm tra trên cơ sở dữ liệu Turso thật.
+
+Để chạy lại hành trình trình duyệt trên Windows, dùng Python có gói `playwright`, cài Microsoft Edge, chạy `mvn package`, sau đó chạy `python tools/browser_acceptance.py`. Công cụ khởi động JAR ở một cổng trống, tạo cơ sở dữ liệu thử riêng, rồi ghi ảnh chụp và vé PDF vào `target/web-qa`.
+
+Ngày 19/11/2026, Maven ghi nhận 67 bài đạt, gồm cả 18 bài web. Bộ 113 bài tích hợp MySQL cũ được bỏ qua ở cấu hình mặc định. Sau khi khởi động, đo năm yêu cầu HTTP liên tiếp cho mỗi trang bằng tài khoản Admin trên localhost với SQLite. Trung vị là 54 ms cho thư viện phim, 46 ms cho phòng chiếu và 42 ms cho nhân viên. Thời gian lớn nhất trong 15 lần đo là 277 ms. Phép đo bao gồm thời gian nhận toàn bộ HTML trên máy cục bộ.

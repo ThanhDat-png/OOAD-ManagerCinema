@@ -36,10 +36,11 @@
       if (event.key !== "Tab") return;
       const items = [toggle, ...links];
       const index = items.indexOf(document.activeElement);
-      if (index === -1 || (event.shiftKey ? index === 0 : index === items.length - 1)) {
-        event.preventDefault();
-        items[event.shiftKey ? items.length - 1 : 0].focus();
-      }
+      const next = index < 0
+        ? (event.shiftKey ? items.length - 1 : 0)
+        : (index + (event.shiftKey ? -1 : 1) + items.length) % items.length;
+      event.preventDefault();
+      items[next].focus();
     });
   });
 })();
