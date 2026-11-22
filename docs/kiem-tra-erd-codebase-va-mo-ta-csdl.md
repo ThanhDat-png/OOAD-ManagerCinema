@@ -81,7 +81,7 @@ Lưu trữ thông tin tài khoản đăng nhập của nhân viên và liên k�
 | 3 | MaNV | VARCHAR(10) | Khóa ngoại | Duy nhất, tham chiếu NHANVIEN | Nhân viên sở hữu tài khoản, mỗi người có tối đa một tài khoản |
 | 4 | TenDangNhap | VARCHAR(50) | Khóa duy nhất | Không rỗng, duy nhất | Tên đăng nhập vào hệ thống |
 | 5 | MatKhauHash | VARCHAR(255) | | Không rỗng | Chuỗi mật khẩu đã được băm an toàn |
-| 6 | TrangThai | NVARCHAR(20) | | Mặc định Đang hoạt động | Trạng thái gồm Đang hoạt động hoặc Ngưng hoạt động |
+| 6 | TrangThai | NVARCHAR(20) | | Mặc định Đang hoạt động | Trạng thái gồm Đang hoạt động hoặc Ngưng hoạt động (dữ liệu mẫu từ chối đăng nhập gồm Bị khóa, Ngừng hoạt động) |
 
 ### 3.4. Bảng THELOAI
 Lưu danh mục thể loại phim dùng để phân loại và hỗ trợ tìm kiếm.
@@ -173,7 +173,7 @@ Lưu thông tin lịch chiếu của các phim tại từng phòng theo khung gi
 | 4 | MaLoaiThoiDiem | INT | Khóa ngoại | Tham chiếu LOAITHOIDIEM | Loại thời điểm để xác định giá |
 | 5 | ThoiGianBatDau | DATETIME | | Không rỗng | Thời điểm bắt đầu phát phim |
 | 6 | ThoiGianTraPhong | DATETIME | | Lớn hơn ThoiGianBatDau | Thời điểm kết thúc chiếu cộng thời gian dọn phòng |
-| 7 | TrangThai | NVARCHAR(20) | | Không rỗng | Trạng thái suất gồm Sắp chiếu, Đang chiếu, Đã chiếu hoặc Đã hủy |
+| 7 | TrangThai | NVARCHAR(20) | | Không rỗng | Trạng thái suất (CSDL và code lưu Sắp chiếu hoặc Đã hủy; các trạng thái Đang chiếu, Đã chiếu xác định theo thời gian chiếu) |
 
 ### 3.13. Bảng BANGGIAVE
 Lưu định mức giá vé áp dụng cho từng tổ hợp ba tiêu chuẩn.
@@ -191,10 +191,10 @@ Lưu các giao dịch bán vé do nhân viên thực hiện tại quầy.
 
 | STT | Tên thuộc tính | Kiểu dữ liệu | Khóa | Ràng buộc | Mô tả |
 | --- | --- | --- | --- | --- | --- |
-| 1 | MaGiaoDich | VARCHAR(20) | Khóa chính | Không rỗng | Mã giao dịch gồm tiền tố GD và chuỗi thời gian |
+| 1 | MaGiaoDich | VARCHAR(20) | Khóa chính | Không rỗng | Mã giao dịch gồm tiền tố G kèm 19 ký tự UUID rút gọn |
 | 2 | MaNV | VARCHAR(10) | Khóa ngoại | Tham chiếu NHANVIEN, không xóa cha | Nhân viên thực hiện giao dịch |
 | 3 | ThoiGianTao | DATETIME | | Không rỗng | Thời điểm bắt đầu giao dịch |
-| 4 | TongTien | DECIMAL(12,0) | | Không âm | Tổng số tiền cần thanh toán |
+| 4 | TongTien | DECIMAL(12,0) | | Không rỗng | Tổng số tiền cần thanh toán tính từ giá vé đã chốt |
 | 5 | TrangThai | NVARCHAR(40) | | Không rỗng | Trạng thái gồm Chờ thanh toán, Đang thanh toán, Đã thanh toán, Đã hủy hoặc Hết hạn |
 
 ### 3.15. Bảng THANHTOAN

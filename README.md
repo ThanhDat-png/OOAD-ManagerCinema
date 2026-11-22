@@ -3,23 +3,23 @@ Object-Oriented Analysis and Design (OOAD) course project developed using Java, 
 
 ## Chạy đồ án với JDK 17 và Maven (PowerShell)
 
-Cài mới/chuyển máy theo [hướng dẫn cài đặt](docs/CAI_DAT.md): tạo database mới, nhập SQL 001–010, tạo tài khoản JDBC và cấu hình riêng, rồi chạy:
+Cài mới/chuyển máy theo [hướng dẫn cài đặt](docs/CAI_DAT.md): tạo database mới bằng tệp gộp [S2_Nhom08_DB.sql](Database/S2_Nhom08_DB.sql) (hoặc chạy `scripts/Import-Database.ps1` cho các tệp `001`–`011`), tạo tài khoản JDBC và cấu hình riêng, rồi chạy:
 
 ~~~powershell
 mvn compile exec:java
 ~~~
 
-Run-Desktop.ps1 dùng Maven trong PATH nếu chưa có cấu hình công cụ cục bộ. Local-MySql.ps1 chỉ dành cho MySQL ZIP riêng; máy dùng dịch vụ MySQL không cần script này. Dự án dùng JDBC và ZXing qua Maven nên cần nạp các dependency khi chạy.
+Run-Desktop.ps1 dùng Maven trong PATH nếu chưa có cấu hình công cụ cục bộ. Local-MySql.ps1 chỉ dành cho MySQL ZIP riêng; máy dùng dịch vụ MySQL không cần script này. Dự án dùng JDBC, FlatLaf và ZXing qua Maven nên cần nạp các dependency khi chạy.
 
-Đã triển khai UC01–UC09. Đã kiểm tra cài mới theo CAI_DAT.md. Các việc còn lại là tổng rà soát và dựng class diagram theo code. Cuối mỗi phiên ghi nhận kết quả và kế hoạch; chỉ commit hoặc push khi chủ đồ án quyết định. Xem [danh mục đối chiếu](docs/doi-chieu.md).
+Hệ thống đã hoàn thiện đầy đủ **UC01–UC09**, sơ đồ lớp ([SoDoLop_RapChieuPhim.drawio](docs/SoDoLop_RapChieuPhim.drawio)), báo cáo ([S2_Nhom08_Lan4.docx](docs/S2_Nhom08_Lan4.docx)) và bộ dữ liệu demo chuẩn ([011_demo_chuan.sql](Database/011_demo_chuan.sql)). Xem [danh mục đối chiếu](docs/doi-chieu.md).
 
 ## Tổ chức theo mẫu đồ án
 
 Mở pom.xml trong IDE dưới dạng dự án Maven với JDK 17, chạy cinema.Main để mở cửa sổ Swing. Biên dịch bằng mvn compile để nạp đủ dependency.
 
-Trong cinema, view hiển thị dữ liệu, controller điều phối các UC01–UC09, model mô tả đối tượng, dao thực hiện truy vấn và db quản lý kết nối JDBC. Các lớp cụ thể được bổ sung cùng nghiệp vụ tương ứng.
+Trong cinema, view hiển thị dữ liệu, controller điều phối các UC01–UC09, model mô tả đối tượng, dao thực hiện truy vấn và db quản lý kết nối JDBC.
 
-Database/001–010 tạo schema và danh mục demo MySQL 8. Có thể dùng scripts/Import-Database.ps1 để nhập đúng thứ tự vào database chưa tồn tại, theo CAI_DAT.md. Không nhập lại lên database đang dùng.
+`Database/S2_Nhom08_DB.sql` là bản gộp chuẩn hóa từ `Database/001`–`011` (18 bảng, 6 trigger, 22 khóa ngoại kèm dữ liệu demo cho UC01–UC09) để nhập nhanh bằng một tệp duy nhất. Có thể dùng `scripts/Import-Database.ps1` để nhập đúng thứ tự vào database chưa tồn tại theo [CAI_DAT.md](docs/CAI_DAT.md). Không nhập lại lên database đang dùng.
 
 ## UC01 đăng nhập
 
@@ -52,10 +52,6 @@ Xem [đối chiếu và hướng dẫn UC07](docs/UC07.md). Khoảng vào phòng
 ## UC08 quản lý bán vé
 
 Xem [đối chiếu và hướng dẫn UC08](docs/UC08.md). Thời hạn giữ ghế đã thống nhất là 5 phút, cấu hình config/sales.properties. Có chọn/giữ ghế, chốt giá, xác nhận thanh toán tại quầy, phát hành vé QR, xem trước/in lại và kiểm tra giao dịch. Khi chưa rõ kết quả, kiểm tra mã giao dịch trước khi thực hiện lại.
-
-## Tiến độ và phiên tiếp theo
-
-Xem [bàn giao cuối phiên](docs/PHIEN_TIEP_THEO.md) để tiếp tục UC09 và tổng rà soát đồ án.
 
 ## UC09 báo cáo và thống kê
 

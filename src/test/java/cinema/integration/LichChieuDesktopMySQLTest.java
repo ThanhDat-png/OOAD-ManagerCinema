@@ -78,7 +78,7 @@ class LichChieuDesktopMySQLTest {
             fields.get(0).setText(date.toString()); click(dialog("Tạo suất chiếu"),"Lưu");
         });
         await(() -> message()!=null); SwingUtilities.invokeAndWait(() -> message().dispose());
-        await(() -> components(schedule).stream().anyMatch(c -> c instanceof JTable t && t.getRowCount()>0));
+        await(() -> button(schedule,"Tạo suất chiếu").isEnabled() && components(schedule).stream().anyMatch(c -> c instanceof JTable t && hasFilmRow(t,"Phim thử "+key)));
         int[] id=new int[1];
         SwingUtilities.invokeAndWait(() -> {
             JTable table=components(schedule).stream().filter(c -> c instanceof JTable).map(c -> (JTable)c).findFirst().orElseThrow();
@@ -113,6 +113,9 @@ class LichChieuDesktopMySQLTest {
         assertEquals("Đã hủy",new SuatChieuDAO().find(id[0]).trangThai());
     }
 
+    private static boolean hasFilmRow(JTable table,String title) {
+        for(int i=0;i<table.getRowCount();i++) if(title.equals(table.getValueAt(i,1))) return true; return false;
+    }
     private static void execute(Connection c,String sql,Object... args) throws SQLException {
         try(PreparedStatement ps=c.prepareStatement(sql)) { for(int i=0;i<args.length;i++) ps.setObject(i+1,args[i]); ps.executeUpdate(); }
     }
