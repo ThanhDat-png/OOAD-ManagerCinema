@@ -27,7 +27,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/Import-Database.ps1 
 
 Script từ chối database đã tồn tại, không có tùy chọn ghi đè/xóa và không tự chạy lại migration. Nếu nhập bị lỗi, kiểm tra lỗi và dùng database thử có tên mới hoặc xử lý riêng database nhập dở; không nhập lại lên database đang dùng. Không chạy riêng `001`–`011` lần nữa sau khi script thành công.
 
-Kết quả đầy đủ: **18 bảng, 6 trigger, 22 khóa ngoại**. Đã có sẵn tài khoản Admin/Nhân viên (`admin_demo`, `staff_demo`, `locked_demo`, `inactive_demo`), 3 phòng chiếu (`DEMO01`, `PHONG01`, `PHONG02`, tổng 26 ghế), 4 phim mẫu, đầy đủ 18 mức giá vé, 4 suất chiếu (gồm suất sắp chiếu trong ±15 phút tại `DEMO01` với vé `VE_DEMO_001` / `QR-DEMO-001` cho UC07, suất tương lai cho UC08, và dữ liệu lịch sử cho UC09) cùng 5 sản phẩm F&B.
+Kết quả đầy đủ: **18 bảng, 6 trigger, 22 khóa ngoại**. Đã có sẵn tài khoản Admin/Nhân viên (`admin_demo`, `staff_demo`, `bao_demo`, `locked_demo`, `inactive_demo`), 4 phòng chiếu (`DEMO01`, `PHONG01`, `PHONG02`, `PHONG03` bảo trì, tổng 38 ghế), 5 phim mẫu kèm ảnh poster trong `data/posters/`, đầy đủ 18 mức giá vé, 7 suất chiếu (gồm suất trong cửa sổ ±15 phút tại `DEMO01` với vé `VE_DEMO_001` / `QR-DEMO-001` cho UC07, các suất tương lai cho UC08, và dữ liệu lịch sử 3 giao dịch/7 vé cho UC09) cùng 5 sản phẩm F&B.
 
 ## 3. Tạo tài khoản kết nối ứng dụng
 

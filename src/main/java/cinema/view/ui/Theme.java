@@ -10,7 +10,7 @@ import javax.swing.plaf.FontUIResource;
 public class Theme {
     private static boolean installed;
     protected Theme(){}
-    public static boolean dark=true;
+    public static boolean dark=false;
     public static final int XS=4,SM=8,MD=12,LG=16,XL=24,XXL=32,CONTROL=40,ROW=44,RADIUS=16;
     public static final String FAMILY="Segoe UI",NUMBERS="Consolas";
     private static Color c(String value){return Color.decode(value);}
