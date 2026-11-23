@@ -77,11 +77,12 @@ public final class LichChieuPanel extends JPanel {
             for(PhongChieu item:rooms) roomFilter.addItem(item.tenPhong());
             for(int i=0;i<rooms.size();i++) if(rooms.get(i).maPhong().equals(room)) roomFilter.setSelectedIndex(i+1);
             model.setRowCount(0);
+            LocalDateTime now=LocalDateTime.now(ZoneId.of("Asia/Bangkok"));
             for(SuatChieu show:data.shows()) {
                 String film=films.stream().filter(p -> p.maPhim().equals(show.maPhim())).map(Phim::tenPhim).findFirst().orElse(show.maPhim());
                 String roomName=rooms.stream().filter(p -> p.maPhong().equals(show.maPhong())).map(PhongChieu::tenPhong).findFirst().orElse(show.maPhong());
                 String period=data.periods().stream().filter(p -> p.maLoaiThoiDiem()==show.maLoaiThoiDiem()).map(LoaiThoiDiem::tenLoaiThoiDiem).findFirst().orElse("");
-                model.addRow(new Object[]{show.maSuat(),film,roomName,show.thoiGianBatDau(),show.thoiGianTraPhong(),period,show.trangThai()});
+                model.addRow(new Object[]{show.maSuat(),film,roomName,show.thoiGianBatDau(),show.thoiGianTraPhong(),period,LichChieuBUS.statusOf(show,now)});
             }
             message.setText(data.shows().isEmpty()?"Không tìm thấy suất chiếu phù hợp":"Số suất chiếu: "+data.shows().size());
         });

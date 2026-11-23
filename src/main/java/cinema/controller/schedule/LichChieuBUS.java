@@ -33,6 +33,14 @@ public final class LichChieuBUS {
     public List<SuatChieu> list(LocalDate date,String room) throws SQLException {
         requireAdmin(); return dao.list(date,room);
     }
+
+    /** Derives real-time display status without mutating persisted schedule rows or requiring background jobs. */
+    public static String statusOf(SuatChieu show,LocalDateTime now) {
+        if("Đã hủy".equals(show.trangThai())) return "Đã hủy";
+        if(!now.isBefore(show.thoiGianTraPhong())) return "Đã kết thúc";
+        if(!now.isBefore(show.thoiGianBatDau())) return "Đang chiếu";
+        return show.trangThai();
+    }
     public SuatChieu editable(int id) throws SQLException { requireAdmin(); return dao.editable(id); }
     public SuatChieu detail(int id) throws SQLException { requireAdmin(); return dao.find(id); }
     public List<Phim> films() throws SQLException { requireAdmin(); return new PhimDAO().search("",null,null); }
