@@ -82,6 +82,7 @@ public final class WebDb {
     private void initialize(Environment env, boolean demo, boolean remote) {
         update("CREATE TABLE IF NOT EXISTS WEB_MIGRATION (Name TEXT NOT NULL PRIMARY KEY)");
         apply("001-schema", tx -> tx.batch(statements("001-schema")));
+        apply("002-customer-selection", tx -> tx.batch(statements("002-customer-selection")));
         if (!demo || alreadyApplied("demo-v1")) return;
         String admin = env.getProperty("CINEMA_ADMIN_PASSWORD", remote ? "" : "Cinema@123");
         String staff = env.getProperty("CINEMA_STAFF_PASSWORD", remote ? "" : "Cinema@123");

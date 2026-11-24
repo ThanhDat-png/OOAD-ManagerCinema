@@ -35,7 +35,7 @@ public class Admissions {
         return db.query("""
             SELECT s.MaSuat,r.MaPhong,p.TenPhim,r.TenPhong,strftime('%H:%M',s.ThoiGianBatDau) AS Gio
             FROM SUATCHIEU s JOIN PHONGCHIEU r ON r.MaPhong=s.MaPhong JOIN PHIM p ON p.MaPhim=s.MaPhim
-            WHERE date(s.ThoiGianBatDau)=? ORDER BY s.ThoiGianBatDau,r.TenPhong
+            WHERE date(s.ThoiGianBatDau)=? AND s.TrangThai<>'Đã hủy' ORDER BY s.ThoiGianBatDau,r.TenPhong
             """,day);
     }
     public Map<String,Object> lookup(String code) {

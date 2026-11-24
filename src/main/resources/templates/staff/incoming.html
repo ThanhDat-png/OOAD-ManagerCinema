@@ -1,0 +1,16 @@
+<div xmlns:th="http://www.thymeleaf.org" th:fragment="requests" data-incoming-list
+     th:attr="data-request-count=${incomingSelections.size()}">
+    <p class="st-empty" th:if="${incomingSelections.isEmpty()}">Chưa có yêu cầu chọn ghế đang chờ.</p>
+    <ul class="incoming-list" th:unless="${incomingSelections.isEmpty()}" aria-label="Yêu cầu đang chờ tại quầy">
+        <li th:each="selection : ${incomingSelections}">
+            <div><strong th:text="${selection.TenPhim}"></strong>
+                <span th:text="|${selection.Lich} · ${selection.TenPhong} · Ghế ${selection.Seats}|"></span>
+                <code th:text="${selection.Reference}"></code>
+            </div>
+            <form method="post" th:action="@{/staff/sales/customer-selection}">
+                <input type="hidden" name="reference" th:value="${selection.Reference}">
+                <button class="st-btn" type="submit">Nhận yêu cầu</button>
+            </form>
+        </li>
+    </ul>
+</div>

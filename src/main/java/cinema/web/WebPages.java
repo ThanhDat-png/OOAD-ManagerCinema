@@ -14,7 +14,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 class WebPages {
     @GetMapping("/")
     String home(HttpSession session) {
-        return "ADMIN".equals(session.getAttribute("role")) ? "redirect:/admin/showtimes" : "redirect:/staff/sales";
+        Object role = session.getAttribute("role");
+        if ("ADMIN".equals(role)) return "redirect:/admin/showtimes";
+        if ("STAFF".equals(role)) return "redirect:/staff/sales";
+        return "redirect:/cinema";
     }
 
     @GetMapping("/login")

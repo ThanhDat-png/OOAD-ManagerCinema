@@ -69,6 +69,8 @@ class AdminWrites {
             case "film-name"->tx.update("UPDATE PHIM SET TenPhim=? WHERE MaPhim=?",required(p,"TenPhim",200),id);
             case "film-poster"->tx.update("UPDATE PHIM SET Poster=? WHERE MaPhim=?",poster.id(),id);
             case "film-stop"->{
+                var current=one(tx.query("SELECT TrangThai FROM PHIM WHERE MaPhim=?",id));
+                check(!"Ngừng chiếu".equals(current.get("TrangThai")),"Phim đã ở trạng thái ngừng chiếu.");
                 check(tx.query("SELECT 1 FROM SUATCHIEU WHERE MaPhim=? AND TrangThai<>'Đã hủy' AND ThoiGianTraPhong>? LIMIT 1",id,now()).isEmpty(),"Phim vẫn còn suất chiếu chưa kết thúc.");
                 tx.update("UPDATE PHIM SET TrangThai='Ngừng chiếu' WHERE MaPhim=?",id);
             }

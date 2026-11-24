@@ -3,7 +3,11 @@ package cinema.web.admin;
 import cinema.web.db.WebDb.Tx;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.*;
 import java.time.*;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 import static cinema.web.admin.AdminUi.*;
 import static cinema.web.admin.AdminWrites.reference;
@@ -13,8 +17,21 @@ class ScheduleEdits {
     private final Set<LocalDate> holidays;
     ScheduleEdits(Environment env){
         Set<LocalDate> days=new HashSet<>();
-        for(String date:env.getProperty("CINEMA_HOLIDAYS","").split(","))if(!date.isBlank())days.add(LocalDate.parse(date.trim()));
+        addHolidays(days,env.getProperty("CINEMA_HOLIDAYS",""));
+        Path file=Path.of("config","calendar.properties");
+        if(Files.exists(file)){
+            var config=new Properties();
+            try(var reader=Files.newBufferedReader(file,StandardCharsets.UTF_8)){
+                config.load(reader);
+                addHolidays(days,config.getProperty("holidays",""));
+            }catch(IOException|DateTimeParseException e){
+                throw new IllegalArgumentException("Cấu hình ngày lễ không hợp lệ. Dùng yyyy-MM-dd, phân tách bằng dấu phẩy",e);
+            }
+        }
         holidays=Set.copyOf(days);
+    }
+    private static void addHolidays(Set<LocalDate> days,String raw){
+        for(String date:raw.split(","))if(!date.isBlank())days.add(LocalDate.parse(date.trim()));
     }
     void editable(Tx tx,String id){
         var s=one(tx.query("SELECT * FROM SUATCHIEU WHERE MaSuat=?",id));
@@ -31,6 +48,7 @@ class ScheduleEdits {
             Object cart=hold.get("MaGiaoDich");
             check(tx.query("SELECT 1 FROM THANHTOAN WHERE MaGiaoDich=?",cart).isEmpty(),"Giao dịch đang xử lý thanh toán.");
             tx.update("UPDATE GIAODICH SET TrangThai='Đã hủy' WHERE MaGiaoDich=? AND TrangThai='Chờ thanh toán'",cart);
+            tx.update("UPDATE WEB_CUSTOMER_SELECTION SET MaGiaoDich=NULL WHERE MaGiaoDich=?",cart);
             tx.update("""
                     UPDATE GHE_SUATCHIEU SET TrangThai=CASE WHEN EXISTS (SELECT 1 FROM GHE g WHERE g.MaGhe=GHE_SUATCHIEU.MaGhe AND g.TrangThai='Sẵn sàng sử dụng') THEN 'Trống' ELSE 'Không khả dụng' END,
                     MaGiaoDich=NULL,ThoiGianHetHanGiu=NULL,MaGia=NULL,GiaVeChot=NULL WHERE MaGiaoDich=? AND TrangThai='Đang giữ'
@@ -78,10 +96,22 @@ class ScheduleEdits {
         if(replaceSeats)tx.update("INSERT INTO GHE_SUATCHIEU (MaSuat,MaGhe,TrangThai) SELECT ?,MaGhe,CASE WHEN TrangThai='Sẵn sàng sử dụng' THEN 'Trống' ELSE 'Không khả dụng' END FROM GHE WHERE MaPhong=?",id,room);
         return id;
     }
+    private static boolean hasUnresolvedRoomSales(Tx tx,String roomId){
+        return !tx.query("""
+                SELECT 1 FROM GHE_SUATCHIEU h JOIN SUATCHIEU s ON s.MaSuat=h.MaSuat
+                LEFT JOIN GIAODICH g ON g.MaGiaoDich=h.MaGiaoDich
+                LEFT JOIN THANHTOAN t ON t.MaGiaoDich=h.MaGiaoDich
+                WHERE s.MaPhong=? AND s.TrangThai<>'Đã hủy'
+                AND (g.TrangThai='Đang thanh toán'
+                     OR ((g.TrangThai='Đã thanh toán' OR t.MaThanhToan IS NOT NULL)
+                         AND NOT EXISTS (SELECT 1 FROM VE v WHERE v.MaSuat=h.MaSuat AND v.MaGhe=h.MaGhe)))
+                LIMIT 1
+                """,roomId).isEmpty();
+    }
     String room(Tx tx,String op,String id,Map<String,String> p){
         boolean create=op.equals("room-new");
         var old=create?Map.<String,Object>of():one(tx.query("SELECT * FROM PHONGCHIEU WHERE MaPhong=?",id));
-        boolean live=!create&&!tx.query("SELECT 1 FROM SUATCHIEU WHERE MaPhong=? AND TrangThai<>'Đã hủy' AND ThoiGianTraPhong>? LIMIT 1",id,now()).isEmpty();
+        boolean live=!create&&(!tx.query("SELECT 1 FROM SUATCHIEU WHERE MaPhong=? AND TrangThai<>'Đã hủy' AND ThoiGianTraPhong>? LIMIT 1",id,now()).isEmpty()||hasUnresolvedRoomSales(tx,id));
         if(op.equals("room-state")){
             String state=member(p,"TrangThai",roomStates);
             if(!state.equals(old.get("TrangThai"))){
@@ -103,7 +133,8 @@ class ScheduleEdits {
     private static final String AFFECTED="""
             FROM GHE_SUATCHIEU h JOIN SUATCHIEU s ON s.MaSuat=h.MaSuat
             LEFT JOIN GIAODICH g ON g.MaGiaoDich=h.MaGiaoDich
-            WHERE s.MaPhong=? AND s.TrangThai<>'Đã hủy' AND s.ThoiGianTraPhong>?
+            LEFT JOIN THANHTOAN t ON t.MaGiaoDich=h.MaGiaoDich
+            WHERE s.MaPhong=? AND s.TrangThai<>'Đã hủy'
             """;
     String seat(Tx tx,String op,String id,Map<String,String> p){
         boolean create=op.equals("seat-new"),classify=op.equals("seat-type");
@@ -118,14 +149,22 @@ class ScheduleEdits {
         boolean structural=create||!row.equals(old.get("HangGhe"))||!String.valueOf(number).equals(old.get("SoGhe").toString())||!String.valueOf(type).equals(old.get("MaLoaiGhe").toString());
         if(!create&&!structural&&state.equals(old.get("TrangThai")))return room;
         String now=now();
-        check(tx.query("SELECT 1 "+AFFECTED+" AND (?=1 OR h.MaGhe=?) AND (h.TrangThai='Đã bán' OR g.TrangThai IN ('Đang thanh toán','Đã thanh toán') OR EXISTS (SELECT 1 FROM VE v WHERE v.MaSuat=s.MaSuat AND v.MaGhe=h.MaGhe) OR EXISTS (SELECT 1 FROM THANHTOAN t WHERE t.MaGiaoDich=h.MaGiaoDich)) LIMIT 1",room,now,structural?1:0,id).isEmpty(),"Sơ đồ ghế có vé bán hoặc giao dịch thanh toán liên quan, không thể thay đổi.");
+        check(tx.query("SELECT 1\n"+AFFECTED+"""
+                 AND (?=1 OR h.MaGhe=?)
+                 AND ((s.ThoiGianTraPhong>? AND (h.TrangThai='Đã bán' OR g.TrangThai IN ('Đang thanh toán','Đã thanh toán')
+                       OR EXISTS (SELECT 1 FROM VE v WHERE v.MaSuat=s.MaSuat AND v.MaGhe=h.MaGhe) OR t.MaThanhToan IS NOT NULL))
+                      OR g.TrangThai='Đang thanh toán'
+                      OR ((g.TrangThai='Đã thanh toán' OR t.MaThanhToan IS NOT NULL)
+                          AND NOT EXISTS (SELECT 1 FROM VE v WHERE v.MaSuat=s.MaSuat AND v.MaGhe=h.MaGhe)))
+                 LIMIT 1
+                """,room,structural?1:0,id,now).isEmpty(),"Sơ đồ ghế có vé bán hoặc giao dịch thanh toán liên quan, không thể thay đổi.");
         String saleState=state.equals(seatStates[0])?"Trống":"Không khả dụng";
         if(create){
             tx.update("INSERT INTO GHE (MaPhong,HangGhe,SoGhe,MaLoaiGhe,TrangThai) VALUES (?,?,?,?,?)",room,row,number,type,state);
             Object seat=one(tx.query("SELECT last_insert_rowid() id")).get("id");
             tx.update("INSERT INTO GHE_SUATCHIEU (MaSuat,MaGhe,TrangThai) SELECT MaSuat,?,? FROM SUATCHIEU WHERE MaPhong=? AND TrangThai<>'Đã hủy' AND ThoiGianTraPhong>?",seat,saleState,room,now);return room;
         }
-        release(tx,tx.query("SELECT DISTINCT h.MaGiaoDich "+AFFECTED+" AND h.MaGhe=? AND h.TrangThai='Đang giữ'",room,now,id));
+        release(tx,tx.query("SELECT DISTINCT h.MaGiaoDich "+AFFECTED+" AND s.ThoiGianTraPhong>? AND h.MaGhe=? AND h.TrangThai='Đang giữ'",room,now,id));
         tx.update("UPDATE GHE SET HangGhe=?,SoGhe=?,MaLoaiGhe=?,TrangThai=? WHERE MaGhe=?",row,number,type,state,id);
         tx.update("UPDATE GHE_SUATCHIEU SET TrangThai=?,MaGia=NULL,GiaVeChot=NULL WHERE MaGhe=? AND MaGiaoDich IS NULL AND TrangThai<>'Đã bán' AND MaSuat IN (SELECT MaSuat FROM SUATCHIEU WHERE MaPhong=? AND TrangThai<>'Đã hủy' AND ThoiGianTraPhong>?)",saleState,id,room,now);return room;
     }

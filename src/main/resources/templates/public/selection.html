@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" th:replace="~{public/layout :: site('Mã đặt vé', ~{::main})}">
+<main id="main" tabindex="-1" class="shell page selection-page">
+    <a class="back-link" href="/cinema#phim"><span aria-hidden="true">←</span> Phim tại rạp</a>
+    <header class="booking-heading">
+        <h1 th:text="${paid == true ? 'Đã thanh toán tại quầy' : (claimed == true ? 'Quầy đã nhận mã đặt vé' : (showChanged == true ? 'Lịch chiếu đã thay đổi' : 'Mã đặt vé'))}">Mã đặt vé</h1>
+        <p class="metadata" th:if="${show}"><strong th:text="${show.TenPhim}"></strong><span th:text="${show.Lich}"></span><span th:text="${show.TenPhong}"></span></p>
+    </header>
+    <p class="empty error-notice" role="alert" th:if="${error}" th:text="${error}"></p>
+    <p class="empty error-notice" role="alert" th:if="${showChanged == true}">Lịch chiếu của suất này đã thay đổi hoặc tạm ngừng. Vui lòng chọn suất chiếu khác.</p>
+    <section class="selection-ticket" aria-labelledby="reference-title" th:if="${show}">
+        <div class="ticket-reference">
+            <h2 id="reference-title" th:text="${paid == true ? 'Giao dịch đã hoàn tất' : 'Xuất trình mã tại quầy'}">Xuất trình mã tại quầy</h2>
+            <p th:if="${paid}">Giao dịch đã hoàn tất thanh toán. Vui lòng nhận vé tại quầy.</p>
+            <p th:if="${!paid and claimed}">Nhân viên đã tiếp nhận mã. Vui lòng hoàn tất giao dịch tại quầy.</p>
+            <p th:if="${!paid and !claimed and !showChanged}">Ghế có thể thay đổi trước khi nhân viên xác nhận tại quầy. Bạn thanh toán và nhận vé tại quầy.</p>
+            <p th:if="${!paid and !claimed and showChanged}">Mã đặt vé không còn áp dụng cho lịch chiếu mới.</p>
+            <code data-reference th:text="${reference}"></code>
+            <button class="button" type="button" data-copy-reference hidden>Sao chép mã</button>
+            <p class="copy-status" role="status" data-copy-status></p>
+        </div>
+        <dl class="ticket-details">
+            <div>
+                <dt>Ghế</dt>
+                <dd><span th:each="seat, item : ${seats}" th:text="${seat.Cho + (item.last ? '' : ', ')}"></span></dd>
+            </div>
+            <div>
+                <dt>Tạm tính</dt>
+                <dd th:text="${#numbers.formatInteger(total,1,'POINT') + ' ₫'}"></dd>
+            </div>
+            <div th:unless="${claimed or showChanged}">
+                <dt>Mã có hiệu lực đến</dt>
+                <dd th:text="${expiresAt}"></dd>
+            </div>
+        </dl>
+    </section>
+    <script src="/web/public.js" defer></script>
+</main>
+</html>

@@ -4,6 +4,10 @@ Website dùng Java 17, Spring MVC, Thymeleaf và phân quyền bằng Spring Sec
 
 ## Chạy thử
 
+Khách mở `/cinema` để duyệt phim, xem giờ chiếu, chọn ghế và nhận mã mang đến quầy. Giá hiển thị là giá tạm tính. Mã có hiệu lực tối đa 30 phút và hết hạn khi suất chiếu bắt đầu. Ghế vẫn có thể được người khác mua trước khi quầy tiếp nhận.
+
+Để diễn thử với hai vai trò, mở giao diện khách trong một cửa sổ và đăng nhập `staff_demo` tại `/login` ở cửa sổ khác. Sau khi khách gửi lựa chọn, mở lại **Quầy bán vé**, mở **Nhận mã chọn ghế của khách**, rồi nhận yêu cầu từ danh sách hoặc nhập mã. Hệ thống kiểm tra lại ghế, giữ ghế đang trống và tính giá hiện hành. Nhân viên hoàn tất thanh toán tại quầy để phát hành vé QR và kiểm tra vé khi vào rạp.
+
 Từ thư mục dự án trên Windows, chạy `./scripts/Run-Web.ps1`. Mở [localhost:8080](http://localhost:8080). Có thể chọn cổng với `./scripts/Run-Web.ps1 -Port 8081`. Trên máy có Maven, lệnh tương đương là `mvn spring-boot:run`. Để đóng gói, chạy `mvn package` rồi `java -jar target/manager-cinema-1.0-SNAPSHOT.jar`.
 
 Ở lần chạy cục bộ đầu tiên, chương trình khởi tạo `data/cinema-web.sqlite`, tài khoản demo, ba phim có poster, hai phòng, bảng giá, tồn kho và lịch chiếu trong 14 ngày tính từ hôm khởi tạo. Khi hết lịch demo, Admin có thể lập suất mới cho ngày trình diễn.

@@ -75,6 +75,7 @@ public class CounterSales {
             (SELECT h.MaGiaoDich FROM GHE_SUATCHIEU h JOIN SUATCHIEU s ON s.MaSuat=h.MaSuat
              WHERE h.TrangThai='Đang giữ' AND (h.ThoiGianHetHanGiu<=? OR s.ThoiGianBatDau<=?))
             """,now(),now());
+        tx.update("UPDATE WEB_CUSTOMER_SELECTION SET MaGiaoDich=NULL WHERE MaGiaoDich IN (SELECT MaGiaoDich FROM GIAODICH WHERE TrangThai IN ('Hết hạn','Đã hủy'))");
         tx.update(CLEAR+" MaGiaoDich IN (SELECT MaGiaoDich FROM GIAODICH WHERE TrangThai='Hết hạn')");
     }
     private static Map<String,Object> owned(WebDb.Tx tx,String order,String employee) {
@@ -89,30 +90,126 @@ public class CounterSales {
     }
     public void hold(String order,String employee,int show,List<Integer> selection) {
         require(selection!=null&&!selection.isEmpty(),"Vui lòng chọn ghế còn trống");
-        var unique=new LinkedHashSet<>(selection);
         db.write(tx->{
             expire(tx);
-            sellable(tx,show);
-            var old=tx.query("SELECT * FROM GIAODICH WHERE MaGiaoDich=?",order);
-            if(old.isEmpty()) tx.update("INSERT INTO GIAODICH(MaGiaoDich,MaNV,ThoiGianTao,TongTien,TrangThai) VALUES(?,?,?,0,?)",order,employee,now(),WAIT);
-            var cart=owned(tx,order,employee);
-            require(WAIT.equals(cart.get("TrangThai")),"Giao dịch không còn chờ thanh toán. Vui lòng kiểm tra giao dịch");
-            tx.update(CLEAR+" MaGiaoDich=?",order);
-            String end=LocalDateTime.now(CINEMA_ZONE).plusMinutes(holdMinutes()).format(SQL_TIME);
-            var placeholders=String.join(",",Collections.nCopies(unique.size(),"?"));
-            var parameters=new ArrayList<Object>(List.of(order,end,show,show));
-            parameters.addAll(unique);
-            int changed=tx.update("""
-                    UPDATE GHE_SUATCHIEU SET TrangThai='Đang giữ',MaGiaoDich=?,
-                    ThoiGianHetHanGiu=min(?,(SELECT ThoiGianBatDau FROM SUATCHIEU WHERE MaSuat=?))
-                    WHERE MaSuat=? AND TrangThai='Trống' AND EXISTS
-                    (SELECT 1 FROM GHE g JOIN SUATCHIEU s ON s.MaPhong=g.MaPhong
-                     WHERE g.MaGhe=GHE_SUATCHIEU.MaGhe AND s.MaSuat=GHE_SUATCHIEU.MaSuat AND g.TrangThai='Sẵn sàng sử dụng')
-                    AND MaGhe IN ("""+placeholders+")",parameters.toArray());
-            require(changed==unique.size(),"Ghế không thể chọn. Vui lòng cập nhật sơ đồ và chọn lại");
-            tx.update("UPDATE GIAODICH SET TongTien=0 WHERE MaGiaoDich=?",order);
+            hold(tx,order,employee,show,new LinkedHashSet<>(selection));
             return null;
         });
+    }
+    private static void hold(WebDb.Tx tx,String order,String employee,int show,Set<Integer> unique) {
+        sellable(tx,show);
+        var old=tx.query("SELECT * FROM GIAODICH WHERE MaGiaoDich=?",order);
+        if(old.isEmpty()) tx.update("INSERT INTO GIAODICH(MaGiaoDich,MaNV,ThoiGianTao,TongTien,TrangThai) VALUES(?,?,?,0,?)",order,employee,now(),WAIT);
+        var cart=owned(tx,order,employee);
+        require(WAIT.equals(cart.get("TrangThai")),"Giao dịch không còn chờ thanh toán. Vui lòng kiểm tra giao dịch");
+        var currentHeld=tx.query("""
+                SELECT h.MaSuat,h.MaGhe,h.TrangThai,g.TrangThai AS TinhTrang
+                FROM GHE_SUATCHIEU h JOIN GHE g ON g.MaGhe=h.MaGhe
+                WHERE h.MaGiaoDich=? ORDER BY h.MaGhe
+                """,order);
+        String end=LocalDateTime.now(CINEMA_ZONE).plusMinutes(holdMinutes()).format(SQL_TIME);
+        if(!currentHeld.isEmpty()) {
+            require(number(currentHeld.get(0),"MaSuat")==show,"Giao dịch đang giữ ghế ở suất chiếu khác. Vui lòng hủy giữ ghế trước khi đổi suất");
+            var heldIds=new LinkedHashSet<Integer>();
+            boolean valid=true;
+            for(var row:currentHeld) {
+                heldIds.add(number(row,"MaGhe"));
+                if(!"Đang giữ".equals(row.get("TrangThai"))||!"Sẵn sàng sử dụng".equals(row.get("TinhTrang"))) valid=false;
+            }
+            if(valid && heldIds.equals(unique)) {
+                tx.update("""
+                        UPDATE GHE_SUATCHIEU SET ThoiGianHetHanGiu=min(?,(SELECT ThoiGianBatDau FROM SUATCHIEU WHERE MaSuat=?))
+                        WHERE MaGiaoDich=? AND MaSuat=? AND TrangThai='Đang giữ'
+                        """,end,show,order,show);
+                return;
+            }
+        }
+        tx.update(CLEAR+" MaGiaoDich=?",order);
+        var placeholders=String.join(",",Collections.nCopies(unique.size(),"?"));
+        var parameters=new ArrayList<Object>(List.of(order,end,show,show));
+        parameters.addAll(unique);
+        int changed=tx.update("""
+                UPDATE GHE_SUATCHIEU SET TrangThai='Đang giữ',MaGiaoDich=?,
+                ThoiGianHetHanGiu=min(?,(SELECT ThoiGianBatDau FROM SUATCHIEU WHERE MaSuat=?))
+                WHERE MaSuat=? AND TrangThai='Trống' AND EXISTS
+                (SELECT 1 FROM GHE g JOIN SUATCHIEU s ON s.MaPhong=g.MaPhong
+                 WHERE g.MaGhe=GHE_SUATCHIEU.MaGhe AND s.MaSuat=GHE_SUATCHIEU.MaSuat AND g.TrangThai='Sẵn sàng sử dụng')
+                AND MaGhe IN ("""+placeholders+")",parameters.toArray());
+        require(changed==unique.size(),"Ghế không thể chọn. Vui lòng cập nhật sơ đồ và chọn lại");
+        tx.update("UPDATE GIAODICH SET TongTien=0 WHERE MaGiaoDich=?",order);
+    }
+    public record CustomerCart(String orderId,int show,boolean paid) {}
+
+    public List<Map<String,Object>> incomingCustomerSelections() {
+        return db.query("""
+                SELECT w.Reference,p.TenPhim,r.TenPhong,strftime('%d/%m · %H:%M',w.ShowStart) AS Lich,
+                       (SELECT group_concat(Cho,', ') FROM
+                        (SELECT Cho FROM WEB_CUSTOMER_SELECTION_SEAT WHERE Reference=w.Reference ORDER BY MaGhe)) AS Seats
+                FROM WEB_CUSTOMER_SELECTION w
+                JOIN SUATCHIEU s ON s.MaSuat=w.MaSuat AND s.MaPhim=w.MaPhim AND s.MaPhong=w.MaPhong
+                    AND s.ThoiGianBatDau=w.ShowStart
+                JOIN PHIM p ON p.MaPhim=s.MaPhim
+                JOIN PHONGCHIEU r ON r.MaPhong=s.MaPhong
+                WHERE (w.MaGiaoDich IS NULL
+                       OR EXISTS (SELECT 1 FROM GIAODICH gd WHERE gd.MaGiaoDich=w.MaGiaoDich
+                                  AND gd.TrangThai IN ('Hết hạn','Đã hủy'))
+                       OR (EXISTS (SELECT 1 FROM GIAODICH gd WHERE gd.MaGiaoDich=w.MaGiaoDich AND gd.TrangThai='Chờ thanh toán')
+                           AND NOT EXISTS (SELECT 1 FROM GHE_SUATCHIEU h WHERE h.MaGiaoDich=w.MaGiaoDich
+                                           AND (h.TrangThai<>'Đang giữ' OR h.ThoiGianHetHanGiu>?))))
+                AND w.ExpiresAt>? AND
+                """+SELLABLE+" ORDER BY w.rowid DESC LIMIT 15",now(),now(),now());
+    }
+
+    public CustomerCart claimCustomerSelection(String reference,String employee,String currentOrder) {
+        require(reference!=null && reference.strip().matches("(?i)[a-f0-9]{24}"),"Mã đặt vé không hợp lệ");
+        String code=reference.strip().toUpperCase(Locale.ROOT);
+        return db.write(tx->{
+            expire(tx);
+            var selection=first(tx.query("SELECT * FROM WEB_CUSTOMER_SELECTION WHERE Reference=?",code),
+                    "Mã đặt vé không tồn tại hoặc đã hết hạn");
+            int show=number(selection,"MaSuat");
+            String existing=(String)selection.get("MaGiaoDich");
+            if(existing!=null) {
+                var order=first(tx.query("SELECT * FROM GIAODICH WHERE MaGiaoDich=? AND MaNV=?",existing,employee),
+                        "Mã đặt vé đã được nhân viên khác tiếp nhận");
+                Object state=order.get("TrangThai");
+                require(Set.of(WAIT,PAYING,PAID).contains(state),"Giao dịch của mã đặt vé đã kết thúc");
+                if(!PAID.equals(state)) requireNoActiveOrder(tx,currentOrder,existing,employee);
+                return new CustomerCart(existing,show,PAID.equals(state));
+            }
+            require(selection.get("ExpiresAt").toString().compareTo(now())>0,"Mã đặt vé đã hết hạn");
+            var slot=first(tx.query(SHOW+" WHERE "+SELLABLE+" AND s.MaSuat=?",now(),show),
+                    "Suất chiếu không còn được phép bán vé");
+            require(Objects.equals(slot.get("MaPhim"),selection.get("MaPhim"))
+                    && Objects.equals(slot.get("MaPhong"),selection.get("MaPhong"))
+                    && Objects.equals(slot.get("ThoiGianBatDau"),selection.get("ShowStart")),
+                    "Lịch chiếu đã thay đổi. Vui lòng chọn suất chiếu lại");
+            requireNoActiveOrder(tx,currentOrder,null,employee);
+            var requested=tx.query("""
+                    SELECT MaGhe,Cho,TenLoaiGhe FROM WEB_CUSTOMER_SELECTION_SEAT
+                    WHERE Reference=? ORDER BY MaGhe
+                    """,code);
+            var selected=new LinkedHashSet<Integer>();
+            requested.forEach(seat->selected.add(number(seat,"MaGhe")));
+            require(!selected.isEmpty(),"Mã đặt vé không còn ghế hợp lệ");
+            String order=id("G");
+            hold(tx,order,employee,show,selected);
+            var current=tx.query("""
+                    SELECT g.MaGhe,g.HangGhe || g.SoGhe AS Cho,l.TenLoaiGhe
+                    FROM GHE_SUATCHIEU h JOIN GHE g ON g.MaGhe=h.MaGhe
+                    JOIN LOAIGHE l ON l.MaLoaiGhe=g.MaLoaiGhe
+                    WHERE h.MaGiaoDich=? ORDER BY g.MaGhe
+                    """,order);
+            require(requested.equals(current),"Thông tin ghế đã thay đổi. Vui lòng chọn ghế lại");
+            quote(tx,order,employee);
+            tx.update("UPDATE WEB_CUSTOMER_SELECTION SET MaGiaoDich=? WHERE Reference=?",order,code);
+            return new CustomerCart(order,show,false);
+        });
+    }
+    private static void requireNoActiveOrder(WebDb.Tx tx,String current,String incoming,String employee) {
+        if(current==null||Objects.equals(current,incoming)) return;
+        require(tx.query("SELECT 1 FROM GIAODICH WHERE MaGiaoDich=? AND MaNV=? AND TrangThai IN (?,?)",
+                current,employee,WAIT,PAYING).isEmpty(),"Vui lòng xử lý giao dịch đang mở tại quầy trước");
     }
     private static int holdMinutes() {
         var file=java.nio.file.Path.of("config","sales.properties");
@@ -137,27 +234,28 @@ public class CounterSales {
     }
     public void quote(String id,String employee) {
         db.write(tx->{
-            expire(tx);
-            var cart=owned(tx,id,employee);
-            require(WAIT.equals(cart.get("TrangThai")),"Giao dịch không còn chờ thanh toán");
-            long total=0;
-            var heldSeats=held(tx,id);
-            sellable(tx,number(heldSeats.get(0),"MaSuat"));
-            if(((Number)cart.get("TongTien")).longValue()>0) { quoted(cart,heldSeats); return null; }
-            for(var seat:heldSeats) {
-                require(seat.get("MucGia")!=null,"Chưa thiết lập giá vé cho lựa chọn này");
-                long amount=((Number)seat.get("GiaVe")).longValue();
-                total=Math.addExact(total,amount);
-            }
-            tx.update("""
-                UPDATE GHE_SUATCHIEU AS h SET MaGia=b.MaGia,GiaVeChot=b.GiaVe
-                FROM SUATCHIEU s JOIN PHONGCHIEU r ON r.MaPhong=s.MaPhong JOIN GHE g ON g.MaPhong=r.MaPhong
-                JOIN BANGGIAVE b ON b.MaLoaiGhe=g.MaLoaiGhe AND b.MaLoaiPhong=r.MaLoaiPhong AND b.MaLoaiThoiDiem=s.MaLoaiThoiDiem
-                WHERE h.MaGiaoDich=? AND h.MaSuat=s.MaSuat AND h.MaGhe=g.MaGhe
-                """,id);
-            tx.update("UPDATE GIAODICH SET TongTien=? WHERE MaGiaoDich=?",total,id);
-            return null;
+            expire(tx); quote(tx,id,employee); return null;
         });
+    }
+    private static void quote(WebDb.Tx tx,String id,String employee) {
+        var cart=owned(tx,id,employee);
+        require(WAIT.equals(cart.get("TrangThai")),"Giao dịch không còn chờ thanh toán");
+        long total=0;
+        var heldSeats=held(tx,id);
+        sellable(tx,number(heldSeats.get(0),"MaSuat"));
+        if(((Number)cart.get("TongTien")).longValue()>0) { quoted(cart,heldSeats); return; }
+        for(var seat:heldSeats) {
+            require(seat.get("MucGia")!=null,"Chưa thiết lập giá vé cho lựa chọn này");
+            long amount=((Number)seat.get("GiaVe")).longValue();
+            total=Math.addExact(total,amount);
+        }
+        tx.update("""
+            UPDATE GHE_SUATCHIEU AS h SET MaGia=b.MaGia,GiaVeChot=b.GiaVe
+            FROM SUATCHIEU s JOIN PHONGCHIEU r ON r.MaPhong=s.MaPhong JOIN GHE g ON g.MaPhong=r.MaPhong
+            JOIN BANGGIAVE b ON b.MaLoaiGhe=g.MaLoaiGhe AND b.MaLoaiPhong=r.MaLoaiPhong AND b.MaLoaiThoiDiem=s.MaLoaiThoiDiem
+            WHERE h.MaGiaoDich=? AND h.MaSuat=s.MaSuat AND h.MaGhe=g.MaGhe
+            """,id);
+        tx.update("UPDATE GIAODICH SET TongTien=? WHERE MaGiaoDich=?",total,id);
     }
     private static void quoted(Map<String,Object> cart,List<Map<String,Object>> seats) {
         long sum=0;
@@ -178,16 +276,27 @@ public class CounterSales {
         });
     }
     public void pay(String id,String employee,String method,boolean confirmed) {
+        pay(id,employee,method,null,confirmed);
+    }
+    public void pay(String id,String employee,String method,Long amount,boolean confirmed) {
         require(BanVeBUS.PHUONG_THUC.contains(method),"Vui lòng chọn phương thức thanh toán");
         require(confirmed,"Chỉ hoàn tất sau khi đã xác nhận nhận đủ tiền tại quầy");
         db.write(tx->{
             var cart=owned(tx,id,employee);
             if(PAID.equals(cart.get("TrangThai"))) {
+                if(amount!=null) {
+                    long expected=((Number)cart.get("TongTien")).longValue();
+                    require(amount>0&&amount==expected,"Số tiền xác nhận phải khớp tổng tiền giao dịch");
+                }
                 first(tx.query("SELECT MaThanhToan FROM THANHTOAN WHERE MaGiaoDich=? AND PhuongThuc=? AND SoTien=?",id,method,cart.get("TongTien")),"Giao dịch đã thanh toán. Vui lòng kiểm tra giao dịch");
                 return null;
             }
             require(PAYING.equals(cart.get("TrangThai")),"Vui lòng bắt đầu thanh toán trước khi nhận tiền");
             quoted(cart,held(tx,id));
+            if(amount!=null) {
+                long expected=((Number)cart.get("TongTien")).longValue();
+                require(amount>0&&amount==expected,"Số tiền xác nhận phải khớp tổng tiền giao dịch");
+            }
             tx.update("INSERT INTO THANHTOAN(MaGiaoDich,PhuongThuc,SoTien,ThoiGianThanhToan) VALUES (?,?,?,?)",id,method,cart.get("TongTien"),now());
             tx.update("UPDATE GHE_SUATCHIEU SET TrangThai='Đã bán',ThoiGianHetHanGiu=NULL WHERE MaGiaoDich=?",id);
             tx.update("UPDATE GIAODICH SET TrangThai=? WHERE MaGiaoDich=?",PAID,id);
@@ -201,6 +310,7 @@ public class CounterSales {
             require(WAIT.equals(state)||(PAYING.equals(state)&&noMoneyReceived),"Cần kiểm tra giao dịch và xác nhận chưa nhận tiền trước khi hủy");
             tx.update(CLEAR+" MaGiaoDich=?",id);
             tx.update("UPDATE GIAODICH SET TrangThai='Đã hủy' WHERE MaGiaoDich=?",id);
+            tx.update("UPDATE WEB_CUSTOMER_SELECTION SET MaGiaoDich=NULL WHERE MaGiaoDich=?",id);
             return null;
         });
     }
@@ -227,12 +337,9 @@ public class CounterSales {
         try {
             if(!from.isBlank()||!to.isBlank()) require(!LocalDate.parse(to).isBefore(LocalDate.parse(from)),"Khoảng thời gian không hợp lệ");
         } catch(java.time.format.DateTimeParseException ex) { throw new IllegalArgumentException("Khoảng thời gian không hợp lệ"); }
-        return db.write(tx->{
-            expire(tx);
-            return tx.query(ORDER+"""
+        return db.query(ORDER+"""
              WHERE (?='' OR gd.MaGiaoDich=? OR EXISTS (SELECT 1 FROM VE v WHERE v.MaGiaoDich=gd.MaGiaoDich AND v.MaVe=?))
              AND (?='' OR date(gd.ThoiGianTao) BETWEEN ? AND ?) ORDER BY gd.ThoiGianTao DESC
              """,code,code,code,from,from,to);
-        });
     }
 }

@@ -94,4 +94,25 @@ class CounterWorkflowTest {
         assertThrows(IllegalArgumentException.class,()->sales.search("","",""));
         assertThrows(IllegalArgumentException.class,()->sales.search("","2026-11-10","2026-11-01"));
     }
+    @Test void reholdPreservesQuoteAmountValidationAndReadOnlySearch() {
+        sales.hold("G4","NV002",show,List.of(seat));
+        sales.quote("G4","NV002");
+        long expected=((Number)sales.order("G4").get("TongTien")).longValue();
+        assertTrue(expected>0);
+        sales.hold("G4","NV002",show,List.of(seat));
+        assertEquals(expected,((Number)sales.order("G4").get("TongTien")).longValue());
+        var otherShows=sales.shows("","","").stream().map(s->CounterSales.number(s,"MaSuat")).filter(id->id!=show).toList();
+        if(!otherShows.isEmpty()) {
+            assertThrows(IllegalArgumentException.class,()->sales.hold("G4","NV002",otherShows.get(0),List.of(second)));
+        }
+        sales.startPayment("G4","NV002");
+        assertThrows(IllegalArgumentException.class,()->sales.pay("G4","NV002","Tiền mặt",1L,true));
+        sales.pay("G4","NV002","Tiền mặt",expected,true);
+
+        sales.hold("G5","NV003",show,List.of(second));
+        db.update("UPDATE GHE_SUATCHIEU SET ThoiGianHetHanGiu='2000-01-01 00:00:00' WHERE MaGiaoDich='G5'");
+        var found=sales.search("G5","","");
+        assertEquals(1,found.size());
+        assertEquals(CounterSales.WAIT,found.get(0).get("TrangThai"));
+    }
 }

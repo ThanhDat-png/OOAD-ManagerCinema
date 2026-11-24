@@ -46,8 +46,8 @@ public class AdminForms {
             case "show-new","show-film","show-room","show-date","show-time"->{
                 List<Field> fields=new ArrayList<>();
                 boolean create=op.equals("show-new");
-                if(create||op.equals("show-film"))fields.add(choice("MaPhim","Phim",catalog.films()));
-                if(create||op.equals("show-room"))fields.add(choice("MaPhong","Phòng chiếu",catalog.rooms()));
+                if(create||op.equals("show-film"))fields.add(choice("MaPhim","Phim",catalog.schedulableFilms()));
+                if(create||op.equals("show-room"))fields.add(choice("MaPhong","Phòng chiếu",catalog.activeRooms()));
                 if(create||op.equals("show-date"))fields.add(field("date","Ngày chiếu","date"));
                 if(create||op.equals("show-time"))fields.add(field("time","Giờ bắt đầu","time"));
                 String title=switch(op){case "show-film"->"Đổi phim";case "show-room"->"Đổi phòng";case "show-date"->"Đổi ngày chiếu";case "show-time"->"Đổi giờ chiếu";default->"Tạo suất chiếu";};
@@ -94,6 +94,29 @@ public class AdminForms {
             flash.addFlashAttribute("adminSuccess",switch(op){
                 case "employee-new"->"Thêm nhân viên thành công";
                 case "employee-edit"->"Cập nhật nhân viên thành công";
+                case "employee-delete"->"Xóa nhân viên thành công";
+                case "film-new"->"Thêm phim thành công";
+                case "film-name"->"Cập nhật tên phim thành công";
+                case "film-poster"->"Cập nhật poster thành công";
+                case "film-genres"->"Cập nhật thể loại thành công";
+                case "film-stop"->"Ngừng chiếu phim thành công";
+                case "show-new"->"Tạo suất chiếu thành công";
+                case "show-film"->"Cập nhật phim chiếu thành công";
+                case "show-room"->"Thay đổi phòng chiếu thành công";
+                case "show-date"->"Đổi ngày chiếu thành công";
+                case "show-time"->"Đổi giờ chiếu thành công";
+                case "show-cancel"->"Hủy suất chiếu thành công";
+                case "seat-new"->"Thêm ghế thành công";
+                case "seat-edit"->"Cập nhật thông tin ghế thành công";
+                case "seat-type"->"Phân loại ghế thành công";
+                case "room-new"->"Thêm phòng chiếu thành công";
+                case "room-edit"->"Cập nhật phòng chiếu thành công";
+                case "room-state"->"Cập nhật trạng thái phòng thành công";
+                case "price-new"->"Thiết lập giá vé thành công";
+                case "price-edit"->"Cập nhật giá vé thành công";
+                case "product-new"->"Thêm sản phẩm thành công";
+                case "product-edit"->"Cập nhật sản phẩm thành công";
+                case "product-price"->"Cập nhật giá bán thành công";
                 default->"Đã lưu thay đổi.";
             });
             return "redirect:"+location;

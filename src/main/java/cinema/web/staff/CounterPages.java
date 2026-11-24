@@ -69,16 +69,44 @@ public class CounterPages {
         model.addAttribute("byDate",byDate);
         model.addAttribute("film",film); model.addAttribute("day",day); model.addAttribute("time",time);
         model.addAttribute("cartId",id); model.addAttribute("order",order); model.addAttribute("slot",selected);
+        boolean active=order!=null && Set.of(CounterSales.WAIT,CounterSales.PAYING).contains(order.get("TrangThai"));
+        model.addAttribute("incomingSelections",active?List.of():sales.incomingCustomerSelections());
         model.addAttribute("groups",groups); model.addAttribute("heldSeats",held);
         model.addAttribute("soldOut",!groups.isEmpty()&&groups.values().stream().flatMap(Collection::stream)
                 .noneMatch(seat->"Trống".equals(seat.get("TrangThai"))&&"Sẵn sàng sử dụng".equals(seat.get("TinhTrang"))));
         model.addAttribute("title","Bán vé tại quầy");
         return "staff/sales";
     }
+    @GetMapping("/sales/incoming")
+    public String incoming(Model model,jakarta.servlet.http.HttpServletResponse response) {
+        response.setHeader("Cache-Control","no-store");
+        model.addAttribute("incomingSelections",sales.incomingCustomerSelections());
+        return "staff/incoming :: requests";
+    }
+    @PostMapping("/sales/customer-selection")
+    public String claim(@RequestParam String reference,HttpSession session,RedirectAttributes flash) {
+        try {
+            synchronized(session) {
+                var claimed=sales.claimCustomerSelection(reference,employee(session),(String)session.getAttribute("saleId"));
+                if(claimed.paid()) return "redirect:/staff/transactions/"+claimed.orderId();
+                session.setAttribute("saleId",claimed.orderId());
+                flash.addAttribute("show",claimed.show());
+            }
+            flash.addFlashAttribute("staffNotice","Đã tiếp nhận lựa chọn và giữ ghế tại quầy");
+        } catch(IllegalArgumentException ex) { flash.addFlashAttribute("staffError",ex.getMessage()); }
+        return "redirect:/staff/sales";
+    }
     @PostMapping("/sales/{action:hold|quote|payment|complete|cancel|new}")
     public String action(@PathVariable String action,@RequestParam String id,@RequestParam(defaultValue="0") int show,
                          @RequestParam(required=false) List<Integer> seats,@RequestParam(defaultValue="") String method,
+                         @RequestParam(required=false) String amount,
                          @RequestParam(defaultValue="false") boolean confirmed,HttpSession session,RedirectAttributes flash) {
+        synchronized(session) {
+            return applyAction(action,id,show,seats,method,amount,confirmed,session,flash);
+        }
+    }
+    private String applyAction(String action,String id,int show,List<Integer> seats,String method,
+                               String amount,boolean confirmed,HttpSession session,RedirectAttributes flash) {
         try {
             String actor=employee(session);
             current(session,id);
@@ -87,7 +115,17 @@ public class CounterPages {
                 case "quote" -> sales.quote(id,actor);
                 case "payment" -> sales.startPayment(id,actor);
                 case "complete" -> {
-                    sales.pay(id,actor,method,confirmed);
+                    Long parsedAmount=null;
+                    if(amount!=null) {
+                        try {
+                            String raw=amount.strip();
+                            if(raw.isEmpty()) throw new IllegalArgumentException("Vui lòng nhập số tiền hợp lệ");
+                            parsedAmount=Long.parseLong(raw);
+                        } catch(NumberFormatException ex) {
+                            throw new IllegalArgumentException("Vui lòng nhập số tiền hợp lệ");
+                        }
+                    }
+                    sales.pay(id,actor,method,parsedAmount,confirmed);
                     flash.addFlashAttribute("staffNotice","Thanh toán thành công");
                     try { sales.issue(id,actor); }
                     catch(RuntimeException ex) { flash.addFlashAttribute("staffError","Giao dịch đã thanh toán. Vui lòng tiếp tục phát hành vé từ giao dịch này."); }
@@ -139,12 +177,15 @@ public class CounterPages {
     @PostMapping("/transactions/{id}/resume")
     public String resume(@PathVariable String id,HttpSession s,RedirectAttributes flash) {
         try {
-            var previous=optional(sales,cart(s)); var order=sales.order(id);
-            if(previous!=null && !id.equals(previous.get("MaGiaoDich"))&&Set.of(CounterSales.WAIT,CounterSales.PAYING).contains(previous.get("TrangThai")))
-                throw new IllegalArgumentException("Vui lòng xử lý giao dịch đang mở tại quầy trước");
-            if(!employee(s).equals(order.get("MaNV"))||!Set.of(CounterSales.WAIT,CounterSales.PAYING).contains(order.get("TrangThai")))
-                throw new IllegalArgumentException("Không thể tiếp tục giao dịch này");
-            s.setAttribute("saleId",id); return "redirect:/staff/sales";
+            synchronized(s) {
+                var previous=optional(sales,cart(s)); var order=sales.order(id);
+                if(previous!=null && !id.equals(previous.get("MaGiaoDich"))&&Set.of(CounterSales.WAIT,CounterSales.PAYING).contains(previous.get("TrangThai")))
+                    throw new IllegalArgumentException("Vui lòng xử lý giao dịch đang mở tại quầy trước");
+                if(!employee(s).equals(order.get("MaNV"))||!Set.of(CounterSales.WAIT,CounterSales.PAYING).contains(order.get("TrangThai")))
+                    throw new IllegalArgumentException("Không thể tiếp tục giao dịch này");
+                s.setAttribute("saleId",id);
+            }
+            return "redirect:/staff/sales";
         } catch(IllegalArgumentException ex) { flash.addFlashAttribute("staffError",ex.getMessage()); return "redirect:/staff/transactions/"+id; }
     }
     @GetMapping(value="/tickets/{id}/qr",produces=MediaType.IMAGE_PNG_VALUE)

@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" th:replace="~{public/layout :: site('Phim tại rạp', ~{::main})}">
+<main id="main" tabindex="-1" th:with="featured=${!#lists.isEmpty(nowShowing) ? nowShowing[0] : (#lists.isEmpty(upcoming) ? null : upcoming[0])}">
+    <section class="marquee" aria-labelledby="feature-title" th:if="${featured != null}">
+        <img class="marquee-art" th:unless="${#strings.isEmpty(featured.Poster)}" th:src="${featured.MaPhim == 'PH001' and featured.TenPhim == 'Mắt biếc' and featured.SeedArtwork == 1 ? '/web/public-mat-biec.jpg' : '/cinema/films/' + featured.MaPhim + '/poster'}" alt="" fetchpriority="high">
+        <div class="shell marquee-inner">
+            <p class="eyebrow" th:text="${featured.TrangThai == 'Sắp chiếu' ? 'Phim sắp chiếu' : 'Phim nổi bật'}">Phim nổi bật</p>
+            <h1 id="feature-title" th:text="${featured.TenPhim}">Mắt biếc</h1>
+            <p class="metadata">
+                <span th:if="${featured.TheLoai}" th:text="${featured.TheLoai}"></span>
+                <span th:text="${featured.ThoiLuong + ' phút'}"></span>
+                <span th:text="${featured.DinhDangChieu}"></span>
+            </p>
+            <a class="button primary" th:href="@{/cinema/films/{id}(id=${featured.MaPhim})}">Xem giờ chiếu <span aria-hidden="true">↗</span></a>
+        </div>
+    </section>
+    <section class="shell program" id="phim" aria-labelledby="program-title">
+        <div class="section-heading">
+            <h1 id="program-title" th:if="${featured == null}">Phim đang chiếu</h1>
+            <h2 id="program-title" th:if="${featured != null}">Phim đang chiếu</h2>
+        </div>
+        <p class="empty" th:if="${#lists.isEmpty(nowShowing)}">Hiện chưa có phim đang chiếu.</p>
+        <th:block th:unless="${#lists.isEmpty(nowShowing)}" th:insert="~{public/film-list :: cards(${nowShowing})}"></th:block>
+    </section>
+    <section class="shell program" aria-labelledby="soon-title" th:unless="${#lists.isEmpty(upcoming)}">
+        <div class="section-heading"><h2 id="soon-title">Phim sắp chiếu</h2></div>
+        <th:block th:insert="~{public/film-list :: cards(${upcoming})}"></th:block>
+    </section>
+</main>
+</html>

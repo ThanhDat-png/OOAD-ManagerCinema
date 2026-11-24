@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" th:replace="~{public/layout :: site(${film.TenPhim}, ~{::main})}">
+<main id="main" tabindex="-1" class="shell page">
+    <a class="back-link" href="/cinema#phim"><span aria-hidden="true">←</span> Phim tại rạp</a>
+    <section class="booking-film" aria-labelledby="film-title">
+        <div class="film-poster"><img th:unless="${#strings.isEmpty(film.Poster)}" th:src="@{/cinema/films/{id}/poster(id=${film.MaPhim})}" alt="" width="560" height="840"></div>
+        <div>
+            <p class="eyebrow film-status" th:if="${film.TrangThai == 'Sắp chiếu'}">Sắp chiếu</p>
+            <h1 id="film-title" th:text="${film.TenPhim}"></h1>
+            <p class="metadata">
+                <span th:if="${film.TheLoai}" th:text="${film.TheLoai}"></span>
+                <span th:text="${film.ThoiLuong + ' phút'}"></span>
+                <span th:text="${film.DinhDangChieu}"></span>
+                <span th:text="${film.GioiHanTuoi > 0 ? 'T' + film.GioiHanTuoi : 'P'}"></span>
+            </p>
+        </div>
+    </section>
+    <section class="booking-section" aria-labelledby="dates-title" th:unless="${#lists.isEmpty(dates)}">
+        <h2 id="dates-title">Chọn ngày</h2>
+        <ul class="date-list">
+            <li th:each="date : ${dates}">
+                <a class="date-choice" th:href="@{/cinema/films/{id}(id=${film.MaPhim},date=${date})}"
+                   th:attr="aria-current=${selectedDate == date ? 'date' : null}">
+                    <time th:datetime="${date}" th:text="${#strings.substring(date,8,10) + '/' + #strings.substring(date,5,7)}"></time>
+                </a>
+            </li>
+        </ul>
+    </section>
+    <section class="booking-section" aria-labelledby="times-title">
+        <h2 id="times-title">Giờ chiếu</h2>
+        <p class="empty" th:if="${#lists.isEmpty(shows)}">Chưa có suất chiếu còn nhận đặt ghế<span th:unless="${#lists.isEmpty(dates)}"> cho ngày này</span>.</p>
+        <ul class="time-list" th:unless="${#lists.isEmpty(shows)}">
+            <li th:each="show : ${shows}">
+                <a class="button time-choice" th:href="@{/cinema/showtimes/{id}(id=${show.MaSuat})}">
+                    <time th:datetime="${#strings.replace(show.ThoiGianBatDau, ' ', 'T')}" th:text="${#strings.substring(show.ThoiGianBatDau,11,16)}"></time>
+                    <small th:text="${show.TenPhong}"></small>
+                </a>
+            </li>
+        </ul>
+    </section>
+</main>
+</html>

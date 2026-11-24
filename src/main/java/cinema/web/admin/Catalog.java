@@ -34,6 +34,8 @@ public class Catalog {
     List<Option> periods(){return options(db,"SELECT MaLoaiThoiDiem id,TenLoaiThoiDiem label FROM LOAITHOIDIEM ORDER BY id");}
     List<Option> films(){return options(db,"SELECT MaPhim id,TenPhim label FROM PHIM ORDER BY TenPhim");}
     List<Option> rooms(){return options(db,"SELECT MaPhong id,TenPhong label FROM PHONGCHIEU ORDER BY TenPhong");}
+    List<Option> schedulableFilms(){return options(db,"SELECT MaPhim id,TenPhim||' · '||ThoiLuong||' phút · '||DinhDangChieu label FROM PHIM WHERE TrangThai IN ('Sắp chiếu','Đang chiếu') ORDER BY TenPhim");}
+    List<Option> activeRooms(){return options(db,"SELECT p.MaPhong id,p.TenPhong||' · '||l.DinhDangChieu label FROM PHONGCHIEU p JOIN LOAIPHONG l ON l.MaLoaiPhong=p.MaLoaiPhong WHERE p.TrangThai='Đang hoạt động' ORDER BY p.TenPhong");}
 
     static String url(String base,String key,Object value){
         return UriComponentsBuilder.fromPath(base).queryParam(key,"{value}").encode().buildAndExpand(value).toUriString();
@@ -119,12 +121,20 @@ public class Catalog {
             return "redirect:"+EMP;
         }
         var r=rows.get(0);
-        return detail(m,own?"Hồ sơ cá nhân":r.get("HoTen").toString(),own?null:EMP,r,columns("MaNV","Mã nhân viên","HoTen","Họ tên","NgaySinh","Ngày sinh","ChucVu","Chức vụ","SoDienThoai","Điện thoại","Email","Email","DiaChi","Địa chỉ"),own?List.of():List.of(edit("Sửa hồ sơ","employee-edit",id),edit("Xóa nhân viên","employee-delete",id)));
+        String back=own?(admin(session)?SHOWS:"/staff/sales"):EMP;
+        return detail(m,own?"Hồ sơ cá nhân":r.get("HoTen").toString(),back,r,columns("MaNV","Mã nhân viên","HoTen","Họ tên","NgaySinh","Ngày sinh","ChucVu","Chức vụ","SoDienThoai","Điện thoại","Email","Email","DiaChi","Địa chỉ"),own?List.of():List.of(edit("Sửa hồ sơ","employee-edit",id),edit("Xóa nhân viên","employee-delete",id)));
     }
     @GetMapping(FILMS+"/detail")
     String film(@RequestParam String id,HttpSession session,Model m){
         var r=one(db.query(FILM_SQL+" WHERE p.MaPhim=?",id)); m.addAttribute("film",true);
-        return detail(m,r.get("TenPhim").toString(),FILMS,r,columns("MaPhim","Mã phim","DaoDien","Đạo diễn","TheLoai","Thể loại","ThoiLuong","Thời lượng (phút)","NgayKhoiChieu","Khởi chiếu","GioiHanTuoi","Giới hạn tuổi","DinhDangChieu","Định dạng","TrangThai","Trạng thái"),admin(session)?List.of(edit("Sửa tên phim","film-name",id),edit("Thay poster","film-poster",id),edit("Sửa thể loại","film-genres",id),edit("Ngừng chiếu","film-stop",id)):List.of());
+        List<Action> actions=new ArrayList<>();
+        if(admin(session)){
+            actions.add(edit("Sửa tên phim","film-name",id));
+            actions.add(edit("Thay poster","film-poster",id));
+            actions.add(edit("Sửa thể loại","film-genres",id));
+            if(!"Ngừng chiếu".equals(r.get("TrangThai")))actions.add(edit("Ngừng chiếu","film-stop",id));
+        }
+        return detail(m,r.get("TenPhim").toString(),FILMS,r,columns("MaPhim","Mã phim","DaoDien","Đạo diễn","TheLoai","Thể loại","ThoiLuong","Thời lượng (phút)","NgayKhoiChieu","Khởi chiếu","GioiHanTuoi","Giới hạn tuổi","DinhDangChieu","Định dạng","TrangThai","Trạng thái"),List.copyOf(actions));
     }
     @GetMapping(ROOMS+"/detail")
     String room(@RequestParam String id,HttpSession session,Model m){

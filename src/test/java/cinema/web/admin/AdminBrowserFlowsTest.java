@@ -104,6 +104,7 @@ class AdminBrowserFlowsTest {
         rejected(multipart("/admin/form/film-poster").file(invalid).with(csrf()).param("id", id));
         rejected(form("film-stop", "PH001"));
         saved(form("film-stop", id));
+        rejected(form("film-stop", id));
         asAdmin(get("/catalog/films").param("q", "Phim đã sửa").param("genre", "5").param("status", "Ngừng chiếu"))
                 .andExpect(content().string(containsString("Phim đã sửa")));
     }
@@ -132,6 +133,24 @@ class AdminBrowserFlowsTest {
         saved(form("room-edit", room).param("TenPhong", "Phòng đã sửa").param("MaLoaiPhong", "2").param("ThoiGianDonPhong", "20"));
         asAdmin(get("/catalog/rooms").param("q", room).param("type", "2").param("status", "Đang hoạt động"))
                 .andExpect(content().string(containsString("Phòng đã sửa")));
+        db.write(tx -> {
+            tx.update("INSERT INTO SUATCHIEU (MaPhim,MaPhong,MaLoaiThoiDiem,ThoiGianBatDau,ThoiGianTraPhong,TrangThai) VALUES ('PH001',?,1,'2020-01-01 10:00:00','2020-01-01 12:00:00','Sắp chiếu')", room);
+            String pastShow = tx.query("SELECT last_insert_rowid() id").get(0).get("id").toString();
+            tx.update("INSERT INTO GIAODICH VALUES ('PAST-PAY','NV002','2020-01-01 09:50:00',65000,'Đang thanh toán')");
+            tx.update("INSERT INTO GHE_SUATCHIEU (MaSuat,MaGhe,MaGiaoDich,TrangThai,MaGia,GiaVeChot) VALUES (?,?,'PAST-PAY','Đang giữ',1,65000)", pastShow, seat);
+            return null;
+        });
+        try {
+            rejected(form("room-state", room).param("TrangThai", "Bảo trì"));
+            rejected(form("seat-edit", seat).param("HangGhe", "Y").param("SoGhe", "3").param("TrangThai", "Bảo trì"));
+        } finally {
+            db.write(tx -> {
+                tx.update("DELETE FROM GHE_SUATCHIEU WHERE MaGiaoDich='PAST-PAY'");
+                tx.update("DELETE FROM GIAODICH WHERE MaGiaoDich='PAST-PAY'");
+                tx.update("DELETE FROM SUATCHIEU WHERE MaPhong=? AND ThoiGianBatDau='2020-01-01 10:00:00'", room);
+                return null;
+            });
+        }
     }
 
     @Test void ticketPriceCanBeCreatedAndEdited() throws Exception {
@@ -155,7 +174,7 @@ class AdminBrowserFlowsTest {
         for(var item:Map.of("/catalog/films/detail","PH001","/catalog/rooms/detail","PC01","/admin/products/detail","SP001","/admin/employees/detail","NV001","/admin/showtimes/detail","1","/admin/prices/detail","1","/admin/form/film-genres","PH001","/admin/form/seat-type","1","/admin/form/price-edit","1").entrySet()){
             mvc.perform(get(item.getKey()).param("id",item.getValue()).with(user("admin").roles("ADMIN")).sessionAttrs(ADMIN)).andExpect(status().isOk());
         }
-        for(String tab:List.of("time","film","employee","ticket","stock"))mvc.perform(get("/admin/reports").param("tab",tab).param("run","1").param("mode","range").param("from","2020-01-01").param("to","2040-01-01").with(user("admin").roles("ADMIN")).sessionAttrs(ADMIN)).andExpect(status().isOk()).andExpect(content().string(org.hamcrest.Matchers.containsString("Kết quả thống kê")));
+        for(String tab:List.of("time","film","employee","ticket","stock"))mvc.perform(get("/admin/reports").param("tab",tab).param("run","1").param("mode","range").param("from","2020-01-01").param("to","2040-01-01").with(user("admin").roles("ADMIN")).sessionAttrs(ADMIN)).andExpect(status().isOk()).andExpect(content().string(org.hamcrest.Matchers.containsString("Kết quả thống kê"))).andExpect(model().attributeExists("kpis","chartRows"));
         mvc.perform(get("/admin/employees").with(user("staff").roles("STAFF"))).andExpect(status().isForbidden());
         mvc.perform(get("/catalog/films/detail").param("id","PH001").with(user("staff").roles("STAFF")).sessionAttrs(Map.of("role","STAFF","employeeId","NV002"))).andExpect(status().isOk()).andExpect(content().string(org.hamcrest.Matchers.not(org.hamcrest.Matchers.containsString("Sửa tên phim"))));
     }

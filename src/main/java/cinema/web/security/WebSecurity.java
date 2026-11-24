@@ -14,7 +14,7 @@ class WebSecurity {
     SecurityFilterChain website(HttpSecurity http, WebAccounts accounts) throws Exception {
         http.authenticationProvider(accounts)
             .authorizeHttpRequests(auth -> auth.dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
-                .requestMatchers("/login", "/web/**", "/health", "/error", "/favicon.ico").permitAll()
+                .requestMatchers("/", "/cinema", "/cinema/**", "/login", "/web/**", "/health", "/error", "/favicon.ico").permitAll()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/staff/**").hasRole("STAFF")
                 .anyRequest().authenticated())

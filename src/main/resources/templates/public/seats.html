@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" th:replace="~{public/layout :: site('Chọn ghế', ~{::main})}">
+<main id="main" tabindex="-1" class="shell page">
+    <a class="back-link" th:if="${show}" th:href="@{/cinema/films/{id}(id=${show.MaPhim})}"><span aria-hidden="true">←</span> Đổi suất chiếu</a>
+    <a class="back-link" th:unless="${show}" href="/cinema#phim"><span aria-hidden="true">←</span> Phim tại rạp</a>
+    <header class="booking-heading">
+        <h1>Chọn ghế</h1>
+        <p class="metadata" th:if="${show}"><strong th:text="${show.TenPhim}"></strong><span th:text="${show.Lich}"></span><span th:text="${show.TenPhong}"></span></p>
+    </header>
+    <p class="empty error-notice" role="alert" id="seat-error" th:if="${error}" th:text="${error}"></p>
+    <p class="empty" th:if="${show != null and #lists.isEmpty(seats)}">Chưa có sơ đồ ghế cho suất chiếu này.</p>
+    <form th:if="${show != null and !#lists.isEmpty(seats)}" th:action="@{/cinema/showtimes/{id}(id=${show.MaSuat})}" method="post" class="seat-booking" data-seat-booking>
+        <fieldset class="seat-map" th:attr="aria-describedby=${error != null ? 'seat-error' : null}">
+            <legend class="sr-only">Sơ đồ ghế</legend>
+            <div class="screen"><span>Màn hình</span></div>
+            <div class="seat-scroll">
+                <div class="seat-rows">
+                    <div class="seat-row" th:each="row : ${groups}">
+                        <span class="seat-row-name" aria-hidden="true" th:text="${row.key}"></span>
+                        <label class="seat-choice" th:each="seat : ${row.value}" th:classappend="${seat.Available ? '' : 'unavailable'}">
+                            <input type="checkbox" name="seats" th:value="${seat.MaGhe}" th:disabled="${!seat.Available}"
+                                   th:attr="data-name=${seat.Cho},data-price=${seat.GiaVe}">
+                            <span class="seat-tile" aria-hidden="true" th:text="${seat.SoGhe}"></span>
+                            <span class="sr-only" th:text="${'Ghế ' + seat.Cho + ', ' + seat.TenLoaiGhe + (seat.Available ? ', ' + #numbers.formatInteger(seat.GiaVe,1,'POINT') + ' đồng' : ', không khả dụng')}"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <ul class="seat-key" aria-label="Chú thích sơ đồ ghế">
+                <li><i aria-hidden="true"></i> Còn trống</li>
+                <li><i class="key-selected" aria-hidden="true"></i> Đang chọn</li>
+                <li><i class="key-unavailable" aria-hidden="true"></i> Không khả dụng</li>
+            </ul>
+        </fieldset>
+        <aside class="booking-summary" aria-labelledby="summary-title">
+            <h2 id="summary-title">Ghế đã chọn</h2>
+            <div class="summary-values" aria-live="polite" aria-atomic="true">
+                <p class="summary-seats" data-selected-seats>Chưa chọn ghế</p>
+                <p class="summary-total"><span>Tạm tính</span><strong data-selected-total>—</strong></p>
+            </div>
+            <button class="button primary" type="submit">Lấy mã đặt vé <span aria-hidden="true">→</span></button>
+            <p class="summary-help">Nhân viên sẽ kiểm tra ghế trống khi bạn xuất trình mã tại quầy.</p>
+        </aside>
+    </form>
+    <script src="/web/public.js" defer></script>
+</main>
+</html>

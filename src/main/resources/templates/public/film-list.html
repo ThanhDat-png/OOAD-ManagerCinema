@@ -1,0 +1,15 @@
+<ul class="film-list" xmlns:th="http://www.thymeleaf.org" th:fragment="cards(films)">
+    <li class="film-card" th:each="film : ${films}">
+        <div class="film-poster">
+            <img th:src="@{/cinema/films/{id}/poster(id=${film.MaPhim})}" th:unless="${#strings.isEmpty(film.Poster)}" alt="" width="560" height="840" loading="lazy">
+            <span class="badge" th:text="${film.GioiHanTuoi > 0 ? 'T' + film.GioiHanTuoi : 'P'}"></span>
+        </div>
+        <div class="film-card-body">
+            <h3 class="film-title" th:text="${film.TenPhim}"></h3>
+            <p class="metadata"><span th:text="${film.ThoiLuong + ' phút'}"></span><span th:text="${film.DinhDangChieu}"></span></p>
+            <a class="button" th:href="@{/cinema/films/{id}(id=${film.MaPhim})}">
+                Xem giờ chiếu <span class="sr-only" th:text="${film.TenPhim}"></span><span aria-hidden="true">↗</span>
+            </a>
+        </div>
+    </li>
+</ul>

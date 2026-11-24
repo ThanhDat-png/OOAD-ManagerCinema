@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" th:fragment="site(title, content)">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${title + ' · Màn Ảnh Cinema'}">Màn Ảnh Cinema</title>
+    <link rel="icon" href="/web/favicon.png">
+    <link rel="stylesheet" href="/web/public.css">
+</head>
+<body>
+    <a class="skip-link" href="#main">Chuyển đến nội dung</a>
+    <header class="site-header">
+        <div class="shell header-inner">
+            <a class="wordmark" href="/cinema" aria-label="Màn Ảnh Cinema, trang chủ">
+                <i class="wordmark-icon" aria-hidden="true"></i>
+                <span>Màn Ảnh<small>CINEMA</small></span>
+            </a>
+            <nav aria-label="Điều hướng chính">
+                <a href="/cinema#phim">Phim tại rạp</a>
+            </nav>
+        </div>
+    </header>
+    <main id="main" tabindex="-1" th:replace="${content}"></main>
+    <footer class="site-footer">
+        <div class="shell footer-inner">
+            <a class="wordmark" href="/cinema">
+                <i class="wordmark-icon" aria-hidden="true"></i>
+                <span>Màn Ảnh<small>CINEMA</small></span>
+            </a>
+            <div class="footer-meta">
+                <small>Website minh họa · Đồ án quản lý rạp chiếu phim</small>
+                <a href="/login">Đăng nhập nhân viên</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

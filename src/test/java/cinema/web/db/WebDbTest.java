@@ -44,7 +44,7 @@ final class WebDbTest {
             start.countDown();
             WebDb db = tasks.get(0).get(2, TimeUnit.MINUTES);
             tasks.get(1).get(2, TimeUnit.MINUTES);
-            assertEquals(1, db.query("SELECT Name FROM WEB_MIGRATION").size());
+            assertEquals(2, db.query("SELECT Name FROM WEB_MIGRATION").size());
             assertTrue(db.query("SELECT MaTK FROM TAIKHOAN").isEmpty());
             assertThrows(IllegalArgumentException.class, () -> db.write(tx -> {
                 tx.update("INSERT INTO NHANVIEN (MaNV,HoTen) VALUES ('x','test')");
