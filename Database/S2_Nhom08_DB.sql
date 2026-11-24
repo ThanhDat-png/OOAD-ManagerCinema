@@ -562,3 +562,31 @@ INSERT INTO SANPHAM (MaSP, TenSP, MoTa, DonViTinh, GiaBan, SoLuongTon, TinhTrang
 
 COMMIT;
 
+
+-- =========================================================================
+-- 012_chon_ghe_khach.sql — Ma chon ghe cua khach de tiep nhan tai quay
+-- =========================================================================
+CREATE TABLE CHONGHE_KHACH (
+    MaChonGhe VARCHAR(24) PRIMARY KEY,
+    MaSuat INT NOT NULL,
+    MaPhim VARCHAR(10) NOT NULL,
+    MaPhong VARCHAR(10) NOT NULL,
+    ThoiGianBatDau DATETIME NOT NULL,
+    ThoiGianHetHan DATETIME NOT NULL,
+    MaGiaoDich VARCHAR(20) UNIQUE,
+    ThoiGianTao DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_chonghe_khach_hethan (ThoiGianHetHan),
+    FOREIGN KEY (MaPhim) REFERENCES PHIM(MaPhim) ON DELETE CASCADE,
+    FOREIGN KEY (MaPhong) REFERENCES PHONGCHIEU(MaPhong) ON DELETE CASCADE,
+    FOREIGN KEY (MaGiaoDich) REFERENCES GIAODICH(MaGiaoDich) ON DELETE SET NULL
+);
+
+CREATE TABLE CHONGHE_KHACH_GHE (
+    MaChonGhe VARCHAR(24) NOT NULL,
+    MaGhe INT NOT NULL,
+    ViTriGhe VARCHAR(12) NOT NULL,
+    TenLoaiGhe NVARCHAR(50) NOT NULL,
+    GiaTamTinh DECIMAL(12,0) NOT NULL CHECK (GiaTamTinh > 0),
+    PRIMARY KEY (MaChonGhe, MaGhe),
+    FOREIGN KEY (MaChonGhe) REFERENCES CHONGHE_KHACH(MaChonGhe) ON DELETE CASCADE
+);

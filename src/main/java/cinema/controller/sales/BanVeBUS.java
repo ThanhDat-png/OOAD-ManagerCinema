@@ -1,6 +1,7 @@
 package cinema.controller.sales;
 
 import cinema.controller.auth.PhienDangNhap;
+import cinema.controller.customer.KhachHangBUS;
 import cinema.controller.pricing.MoneyRules;
 import cinema.dao.*;
 import cinema.model.*;
@@ -17,12 +18,14 @@ public final class BanVeBUS {
     public static final List<String> PHUONG_THUC=List.of("Tiền mặt","Chuyển khoản","Thẻ");
     private final PhienDangNhap session;
     private final BanVeDAO dao;
+    private final KhachHangDAO customerDao;
     private final int holdMinutes;
-    public BanVeBUS(PhienDangNhap session,BanVeDAO dao) { this(session,dao,loadMinutes()); }
-    public BanVeBUS(PhienDangNhap session,BanVeDAO dao,int minutes) {
+    public BanVeBUS(PhienDangNhap session,BanVeDAO dao) { this(session,dao,new KhachHangDAO(),loadMinutes()); }
+    public BanVeBUS(PhienDangNhap session,BanVeDAO dao,int minutes) { this(session,dao,new KhachHangDAO(),minutes); }
+    public BanVeBUS(PhienDangNhap session,BanVeDAO dao,KhachHangDAO customerDao,int minutes) {
         if(session==null || session.vaiTro()==null) throw new IllegalArgumentException("Vui lòng đăng nhập");
         if(minutes<=0 || minutes>60) throw new IllegalArgumentException("Thời hạn giữ ghế cần từ 1 đến 60 phút");
-        this.session=session; this.dao=dao; this.holdMinutes=minutes;
+        this.session=session; this.dao=dao; this.customerDao=Objects.requireNonNull(customerDao); this.holdMinutes=minutes;
     }
     private void staff() { if(session.vaiTro()!=VaiTro.NHAN_VIEN) throw new IllegalArgumentException("Bạn không có quyền bán vé"); }
     private String employee() { staff(); if(session.nhanVien()==null) throw new IllegalArgumentException("Tài khoản chưa gắn hồ sơ nhân viên để ghi nhận giao dịch"); return session.nhanVien().maNV(); }
@@ -54,6 +57,16 @@ public final class BanVeBUS {
         List<VeDAO.ThongTin> result=savedTickets(id);
         if(result.stream().anyMatch(v->!v.daThanhToan() || !v.gheDaBan()))throw new IllegalArgumentException("Không được in vé chưa thanh toán hợp lệ");
         return result;
+    }
+    public List<ChonGheKhach.YeuCauCho> yeuCauChonGheKhach() throws SQLException {
+        staff();
+        return customerDao.danhSachChoTiepNhan();
+    }
+    public ChonGheKhach.KetQuaTiepNhan nhanMaChonGhe(String maChonGhe,String maGiaoDichHienTai) throws SQLException {
+        String actor=employee();
+        if(!KhachHangBUS.hopLeMaChonGhe(maChonGhe)) throw new IllegalArgumentException("Mã đặt vé không hợp lệ");
+        String current=maGiaoDichHienTai==null||maGiaoDichHienTai.isBlank()?null:id(maGiaoDichHienTai);
+        return customerDao.tiepNhanMa(maChonGhe.strip().toUpperCase(Locale.ROOT),actor,current,holdMinutes);
     }
     public List<GiaoDichDAO.Dong> transactions(String code,LocalDate from,LocalDate to) throws SQLException {
         staff(); String text=code==null || code.isBlank()?null:id(code);

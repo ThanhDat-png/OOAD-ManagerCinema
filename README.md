@@ -3,7 +3,7 @@ Object-Oriented Analysis and Design (OOAD) course project developed using Java, 
 
 ## Chạy đồ án với JDK 17 và Maven (PowerShell)
 
-Cài mới/chuyển máy theo [hướng dẫn cài đặt](docs/CAI_DAT.md): tạo database mới bằng tệp gộp [S2_Nhom08_DB.sql](Database/S2_Nhom08_DB.sql) (hoặc chạy `scripts/Import-Database.ps1` cho các tệp `001`–`011`), tạo tài khoản JDBC và cấu hình riêng, rồi chạy:
+Cài mới/chuyển máy theo [hướng dẫn cài đặt](docs/CAI_DAT.md): tạo database mới bằng tệp gộp [S2_Nhom08_DB.sql](Database/S2_Nhom08_DB.sql) (hoặc chạy `scripts/Import-Database.ps1` cho các tệp `001`–`012`), tạo tài khoản JDBC và cấu hình riêng, rồi chạy:
 
 ~~~powershell
 mvn compile exec:java
@@ -19,7 +19,7 @@ Mở pom.xml trong IDE dưới dạng dự án Maven với JDK 17, chạy cinema
 
 Trong cinema, view hiển thị dữ liệu, controller điều phối các UC01–UC09, model mô tả đối tượng, dao thực hiện truy vấn và db quản lý kết nối JDBC.
 
-`Database/S2_Nhom08_DB.sql` là bản gộp chuẩn hóa từ `Database/001`–`011` (18 bảng, 6 trigger, 22 khóa ngoại kèm dữ liệu demo cho UC01–UC09) để nhập nhanh bằng một tệp duy nhất. Có thể dùng `scripts/Import-Database.ps1` để nhập đúng thứ tự vào database chưa tồn tại theo [CAI_DAT.md](docs/CAI_DAT.md). Không nhập lại lên database đang dùng.
+`Database/S2_Nhom08_DB.sql` là bản gộp chuẩn hóa từ `Database/001`–`012` (20 bảng, 6 trigger, 26 khóa ngoại kèm dữ liệu demo cho UC01–UC09 và luồng khách chọn ghế nhận mã tại quầy) để nhập nhanh bằng một tệp duy nhất. Có thể dùng `scripts/Import-Database.ps1` để nhập đúng thứ tự vào database chưa tồn tại theo [CAI_DAT.md](docs/CAI_DAT.md). Máy đã có sẵn CSDL bản `011` chỉ cần chạy thêm [012_chon_ghe_khach.sql](Database/012_chon_ghe_khach.sql). Không nhập lại toàn bộ lên database đang dùng.
 
 ## UC01 đăng nhập
 

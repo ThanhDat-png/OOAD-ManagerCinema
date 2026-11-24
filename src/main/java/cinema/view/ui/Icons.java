@@ -19,6 +19,9 @@ public final class Icons implements Icon {
         case "exit"->{g.drawRoundRect(2,2,10,16,2,2);g.drawLine(8,10,18,10);g.drawLine(14,6,18,10);g.drawLine(14,14,18,10);}
         case "plus"->{g.drawLine(10,3,10,17);g.drawLine(3,10,17,10);}
         case "alert"->{g.drawRoundRect(2,2,16,16,5,5);g.drawLine(10,6,10,11);g.drawLine(10,14,10,14);}
+        case "eye"->{g.drawArc(2,5,16,10,0,180);g.drawArc(2,5,16,10,180,180);g.drawOval(8,8,4,4);}
+        case "copy"->{g.drawRoundRect(6,6,10,11,2,2);g.drawPolyline(new int[]{4,4,12},new int[]{14,3,3},3);}
+        case "arrow"->{g.drawLine(3,10,17,10);g.drawLine(12,5,17,10);g.drawLine(12,15,17,10);}
         case "box"->{g.drawRoundRect(3,3,14,14,3,3);g.drawLine(3,8,17,8);g.drawLine(8,3,8,8);}
         default->{g.drawRoundRect(3,3,5,5,1,1);g.drawRoundRect(12,3,5,5,1,1);g.drawRoundRect(3,12,5,5,1,1);g.drawRoundRect(12,12,5,5,1,1);}
     }}finally{g.dispose();}}

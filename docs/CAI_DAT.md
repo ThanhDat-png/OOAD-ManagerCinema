@@ -23,7 +23,7 @@ $adminFile=(Resolve-Path config/mysql-client.cnf).Path
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/Import-Database.ps1 -MySqlExe $mysqlClient -ClientConfig $adminFile -DatabaseName manager_cinema
 ~~~
 
-Điều chỉnh đường dẫn mysql.exe theo máy cài đặt thực tế. Script tạo database utf8mb4 rồi nhập đủ SQL theo thứ tự `001`–`011`, bao gồm schema, danh mục và bộ dữ liệu demo chuẩn. Ngoài ra, tệp gộp `Database/S2_Nhom08_DB.sql` chứa toàn bộ `001`–`011` để có thể nhập nhanh trực tiếp bằng MySQL client hoặc MySQL Workbench. Script đọc file bằng UTF-8 và dùng MySQL client để xử lý DELIMITER của trigger, không dùng toán tử chuyển hướng đầu vào của PowerShell.
+Điều chỉnh đường dẫn mysql.exe theo máy cài đặt thực tế. Script tạo database utf8mb4 rồi nhập đủ SQL theo thứ tự `001`–`012`, bao gồm schema, danh mục, bộ dữ liệu demo chuẩn và bảng chọn ghế khách (`012_chon_ghe_khach.sql`). Ngoài ra, tệp gộp `Database/S2_Nhom08_DB.sql` chứa toàn bộ `001`–`012` để có thể nhập nhanh trực tiếp bằng MySQL client hoặc MySQL Workbench. Máy đã nhập đến `011` chỉ cần chạy bổ sung `Database/012_chon_ghe_khach.sql` một lần. Script đọc file bằng UTF-8 và dùng MySQL client để xử lý DELIMITER của trigger, không dùng toán tử chuyển hướng đầu vào của PowerShell.
 
 Script từ chối database đã tồn tại, không có tùy chọn ghi đè/xóa và không tự chạy lại migration. Nếu nhập bị lỗi, kiểm tra lỗi và dùng database thử có tên mới hoặc xử lý riêng database nhập dở; không nhập lại lên database đang dùng. Không chạy riêng `001`–`011` lần nữa sau khi script thành công.
 

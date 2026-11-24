@@ -124,7 +124,7 @@ public class BanVeDAO {
             if("Đang thanh toán".equals(state) && !noPaymentReceived) throw new IllegalArgumentException("Đang thanh toán. Cần xác nhận chưa nhận tiền trước khi hủy");
             if(!List.of("Chờ thanh toán","Đang thanh toán").contains(state)) throw new IllegalArgumentException("Trạng thái giao dịch không cho phép hủy");
             if(order.ghe().stream().anyMatch(g -> "Đã bán".equals(g.trangThai()))) throw new IllegalArgumentException("Giao dịch có ghế đã bán, không được hủy");
-            release(c,id); execute(c,"UPDATE GIAODICH SET TrangThai='Đã hủy' WHERE MaGiaoDich=?",id); return null;
+            release(c,id); execute(c,"UPDATE GIAODICH SET TrangThai='Đã hủy' WHERE MaGiaoDich=?",id); KhachHangDAO.releaseByTransaction(c,id); return null;
         });
     }
     public List<VeDAO.ThongTin> issue(String id,String employee) throws SQLException {
@@ -214,7 +214,7 @@ public class BanVeDAO {
                 +"WHERE gs.MaSuat=? AND gs.TrangThai='Đang giữ' AND g.TrangThai='Chờ thanh toán' AND t.MaThanhToan IS NULL AND (gs.ThoiGianHetHanGiu IS NULL OR gs.ThoiGianHetHanGiu<=NOW() OR s.ThoiGianBatDau<=NOW()) ORDER BY g.MaGiaoDich")) {
             ps.setInt(1,show); try(ResultSet rs=ps.executeQuery()) { while(rs.next()) owners.add(rs.getString(1)); }
         }
-        for(String id:owners) { GiuGheDAO.releaseOwners(c,List.of(id)); execute(c,"UPDATE GIAODICH SET TrangThai='Hết hạn' WHERE MaGiaoDich=?",id); }
+        for(String id:owners) { GiuGheDAO.releaseOwners(c,List.of(id)); execute(c,"UPDATE GIAODICH SET TrangThai='Hết hạn' WHERE MaGiaoDich=?",id); KhachHangDAO.releaseByTransaction(c,id); }
     }
     private static void held(Connection c,GioHang cart,boolean deadline) throws SQLException {
         if(cart.ghe().isEmpty() || cart.suat()==null) throw new IllegalArgumentException("Giao dịch không còn ghế được giữ. Vui lòng chọn lại");

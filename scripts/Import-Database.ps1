@@ -35,7 +35,7 @@ function Invoke-MySql([string]$Sql) {
         return $outputText.Trim()
     } finally {$process.Dispose()}
 }
-$scripts=@('001_tai_khoan.sql','002_demo_uc01.sql','003_giao_dich.sql','004_phim.sql','005_demo_the_loai.sql','006_lich_chieu.sql','007_demo_lich_chieu.sql','008_bao_toan_thong_tin_ghe.sql','009_demo_danh_muc_phong_ghe.sql','010_san_pham.sql','011_demo_chuan.sql')
+$scripts=@('001_tai_khoan.sql','002_demo_uc01.sql','003_giao_dich.sql','004_phim.sql','005_demo_the_loai.sql','006_lich_chieu.sql','007_demo_lich_chieu.sql','008_bao_toan_thong_tin_ghe.sql','009_demo_danh_muc_phong_ghe.sql','010_san_pham.sql','011_demo_chuan.sql','012_chon_ghe_khach.sql')
 # Resolve and read every source before creating anything. Do not depend on the calling directory.
 $source=New-Object System.Text.StringBuilder
 $quote=[char]96
@@ -52,4 +52,4 @@ $exists=Invoke-MySql ("SELECT COUNT(*) FROM information_schema.SCHEMATA WHERE SC
 if($exists -ne '0'){throw 'Database đã tồn tại. Không nhập lại hoặc ghi đè; hãy chọn tên database mới.'}
 # CREATE without IF NOT EXISTS also rejects a database created concurrently after the check.
 $null=Invoke-MySql $source.ToString()
-Write-Output ('Đã tạo database '+$DatabaseName+' và nhập đủ SQL 001–010. Cấu hình tài khoản ứng dụng theo docs/CAI_DAT.md.')
+Write-Output ('Đã tạo database '+$DatabaseName+' và nhập đủ SQL 001–012. Cấu hình tài khoản ứng dụng theo docs/CAI_DAT.md.')

@@ -38,11 +38,17 @@ public final class BanVePanel extends JPanel {
     private final Map<Component,Boolean> enabled=new IdentityHashMap<>();
 
     public BanVePanel(PhienDangNhap session) {
-        super(new BorderLayout(8,8)); service=new BanVeBUS(session,new BanVeDAO()); service.employeeId();
+        this(session,new BanVeBUS(session,new BanVeDAO()));
+    }
+    public BanVePanel(PhienDangNhap session,BanVeBUS customService) {
+        super(new BorderLayout(8,8)); service=Objects.requireNonNull(customService); service.employeeId();
         setBorder(BorderFactory.createEmptyBorder(10,10,10,10)); seats.setLayout(new BoxLayout(seats,BoxLayout.Y_AXIS));
 
         JPanel selling=new JPanel(new BorderLayout(Theme.MD,Theme.MD));
-        JPanel top=Design.stack(identity,Design.text("01 Suất chiếu   /   02 Chọn ghế   /   03 Giữ ghế   /   04 Tính tiền   /   05 Thanh toán   /   06 Phát hành","subtitle"));selling.add(top,BorderLayout.NORTH);
+        JPanel top=new JPanel(new BorderLayout(Theme.SM,Theme.SM));
+        top.add(Design.stack(identity,Design.text("01 Suất chiếu   /   02 Chọn ghế   /   03 Giữ ghế   /   04 Tính tiền   /   05 Thanh toán   /   06 Phát hành","subtitle")),BorderLayout.CENTER);
+        JPanel claimBar=new JPanel(new FlowLayout(FlowLayout.RIGHT,0,0));button(claimBar,"Nhận mã khách",this::incomingDialog);top.add(claimBar,BorderLayout.EAST);
+        selling.add(top,BorderLayout.NORTH);
         JPanel filters=new JPanel(new Design.Wrap());filters.add(SalesViews.field("Tên phim",film));filters.add(SalesViews.field("Ngày chiếu",date));filters.add(SalesViews.field("Giờ chiếu",time));button(filters,"Tìm suất",this::search);
         JPanel schedule=new JPanel(new BorderLayout(Theme.SM,Theme.SM));schedule.add(new SalesViews.Shows(shows,this::choose));JPanel chooseAction=new JPanel(new FlowLayout(FlowLayout.RIGHT));button(chooseAction,"Chọn suất",this::choose);schedule.add(chooseAction,BorderLayout.EAST);
         JPanel searchArea=new JPanel(new BorderLayout(Theme.SM,Theme.SM));searchArea.add(filters,BorderLayout.NORTH);searchArea.add(schedule);
@@ -182,6 +188,80 @@ public final class BanVePanel extends JPanel {
         if(needsCheck) {error(new IllegalArgumentException("Cần tra cứu mã "+id+" để xác định kết quả giữ ghế trước khi chuyển giao dịch"));return false;}
         if(cart!=null && List.of("Chờ thanh toán","Đang thanh toán").contains(cart.giaoDich().trangThai())) {error(new IllegalArgumentException("Hoàn tất hoặc hủy giao dịch hiện tại trước. Nếu chưa rõ kết quả, tra cứu mã "+id));return false;}
         return true;
+    }
+    private void incomingDialog() {
+        if(!canLeave()) return;
+        run(service::yeuCauChonGheKhach,initial->{
+            paymentOpen=true;
+            JDialog dialog=new JDialog(SwingUtilities.getWindowAncestor(this),"Nhận mã chọn ghế của khách",Dialog.ModalityType.APPLICATION_MODAL);
+            JPanel root=new JPanel(new BorderLayout(Theme.MD,Theme.MD));
+            root.setBorder(BorderFactory.createEmptyBorder(Theme.LG,Theme.LG,Theme.LG,Theme.LG));
+            JLabel status=new JLabel(initial.isEmpty()?"Chưa có yêu cầu chọn ghế đang chờ.":"Đang có "+initial.size()+" yêu cầu chọn ghế chờ tiếp nhận.");
+            root.add(Design.stack(Design.text("Nhận mã chọn ghế của khách","heading"),status),BorderLayout.NORTH);
+
+            DefaultListModel<ChonGheKhach.YeuCauCho> listModel=new DefaultListModel<>();
+            initial.forEach(listModel::addElement);
+            JList<ChonGheKhach.YeuCauCho> requestList=new JList<>(listModel);
+            requestList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            if(!initial.isEmpty()) requestList.setSelectedIndex(0);
+            JScrollPane scroll=new JScrollPane(requestList);
+            scroll.setPreferredSize(new Dimension(620,210));
+            root.add(scroll,BorderLayout.CENTER);
+
+            JTextField manualCode=new JTextField(26);
+            JButton refreshBtn=new JButton("Cập nhật danh sách");
+            JButton claimSelected=new JButton("Nhận yêu cầu");
+            JButton claimManual=new JButton("Nhận lựa chọn");
+
+            Consumer<String> claimCode=raw->{
+                String currentOrder=cart==null?null:id;
+                dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+                refreshBtn.setEnabled(false);claimSelected.setEnabled(false);claimManual.setEnabled(false);manualCode.setEnabled(false);
+                run(()->service.nhanMaChonGhe(raw,currentOrder),claimed->{
+                    dialog.dispose();
+                    display(claimed.gioHang());
+                    showId=claimed.maSuat();
+                    selected.clear();
+                    claimed.gioHang().ghe().forEach(g->selected.add(g.ghe().maGhe()));
+                    message.setText(claimed.daThanhToan()?"Mã đặt vé này đã thanh toán hoàn tất":"Đã tiếp nhận lựa chọn và giữ ghế tại quầy");
+                    if(showId!=null) reload();
+                },()->{
+                    if(dialog.isDisplayable()){
+                        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+                        refreshBtn.setEnabled(true);claimSelected.setEnabled(true);claimManual.setEnabled(true);manualCode.setEnabled(true);
+                        status.setText(message.getText());
+                    }
+                });
+            };
+
+            refreshBtn.addActionListener(e->run(service::yeuCauChonGheKhach,rows->{
+                listModel.clear();rows.forEach(listModel::addElement);
+                if(!rows.isEmpty()) requestList.setSelectedIndex(0);
+                status.setText(rows.isEmpty()?"Chưa có yêu cầu chọn ghế đang chờ.":"Đang có "+rows.size()+" yêu cầu chọn ghế chờ tiếp nhận.");
+            }));
+            claimSelected.addActionListener(e->{
+                var chosen=requestList.getSelectedValue();
+                if(chosen==null){status.setText("Vui lòng chọn một yêu cầu trong danh sách hoặc nhập mã");return;}
+                claimCode.accept(chosen.maChonGhe());
+            });
+            claimManual.addActionListener(e->claimCode.accept(manualCode.getText()));
+            manualCode.addActionListener(e->claimCode.accept(manualCode.getText()));
+
+            JPanel listActions=new JPanel(new FlowLayout(FlowLayout.RIGHT,8,0));
+            listActions.add(refreshBtn);listActions.add(claimSelected);
+            JPanel manualRow=new JPanel(new BorderLayout(8,0));
+            manualRow.add(new JLabel("Mã chọn ghế:"),BorderLayout.WEST);
+            manualRow.add(manualCode,BorderLayout.CENTER);
+            manualRow.add(claimManual,BorderLayout.EAST);
+            root.add(Design.stack(listActions,manualRow),BorderLayout.SOUTH);
+
+            dialog.setContentPane(root);
+            Theme.apply(root);
+            dialog.pack();
+            dialog.setLocationRelativeTo(this);
+            dialog.setVisible(true);
+            paymentOpen=false;
+        });
     }
     private void newTransaction() {if(!canLeave())return;cart=null;id=BanVeBUS.newId();selected.clear();cartText.setText("");identity();if(showId!=null)reload();}
     public boolean requestClose() {
