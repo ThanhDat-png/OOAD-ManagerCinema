@@ -35,7 +35,7 @@ public final class CinemaWindow {
                     ?new String[]{"Quản lý nhân viên","Quản lý phim","Quản lý lịch chiếu",
                         "Quản lý phòng chiếu","Quản lý giá vé và F&B","Báo cáo và thống kê"}
                     :new String[]{"Hồ sơ cá nhân","Tra cứu phim","Tra cứu phòng chiếu",
-                        "Soát vé","Bán vé tại quầy"};
+                        "Soát vé","Bán vé tại quầy","Tra cứu F&B"};
             frame=new JFrame("Quản lý rạp chiếu phim — "+session.vaiTro().getTen());
             menu=new JList<>(functions);
             menu.setSelectedIndex(0);
@@ -101,6 +101,7 @@ public final class CinemaWindow {
                 case 2->new PhongChieuPanel(session);
                 case 3->new KiemTraVePanel(session);
                 case 4->{if(sales==null)sales=new BanVePanel(session);yield sales;}
+                case 5->new TraCuuFnBPanel(session);
                 default->throw new IllegalArgumentException("Chức năng không hợp lệ");
             };
         }

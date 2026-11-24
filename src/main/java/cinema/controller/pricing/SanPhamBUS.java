@@ -17,6 +17,9 @@ public final class SanPhamBUS {
     }
     private void admin() { if(session.vaiTro()!=VaiTro.ADMIN) throw new IllegalArgumentException("Bạn không có quyền quản lý F&B"); }
     public List<SanPham> search(String text,Boolean inStock) throws SQLException { admin(); return dao.search(text==null?"":text.trim(),inStock); }
+    public List<SanPham> catalog(String text,Boolean inStock) throws SQLException {
+        return dao.search(text==null?"":text.trim(),inStock);
+    }
     public SanPham detail(String id) throws SQLException { admin(); return dao.find(id); }
     public void create(SanPham input) throws SQLException {
         admin(); SanPham product=validate(input);

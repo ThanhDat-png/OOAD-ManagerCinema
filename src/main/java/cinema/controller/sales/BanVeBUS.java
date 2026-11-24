@@ -35,6 +35,7 @@ public final class BanVeBUS {
     public List<BanVeDAO.SuatBan> search(String film,LocalDate date,LocalTime time) throws SQLException { staff(); return dao.search(film==null?"":film.trim(),date,time); }
     public List<GheSuatChieu> selectShow(int show) throws SQLException {staff();if(show<=0)throw new IllegalArgumentException("Vui lòng chọn suất chiếu");return dao.selectShow(show);}
     public List<GheSuatChieu> seats(int show) throws SQLException { staff(); if(show<=0) throw new IllegalArgumentException("Vui lòng chọn suất chiếu"); return dao.map(show); }
+    public Map<Integer,BigDecimal> seatPrices(int show) throws SQLException { staff(); if(show<=0) throw new IllegalArgumentException("Vui lòng chọn suất chiếu"); return dao.seatPrices(show); }
     public BanVeDAO.GioHang hold(String id,int show,Collection<Integer> seats) throws SQLException {
         String actor=employee(); id=id(id);
         if(show<=0 || seats==null || seats.isEmpty() || seats.stream().anyMatch(n -> n==null || n<=0)) throw new IllegalArgumentException("Vui lòng chọn ghế còn trống");
@@ -69,7 +70,9 @@ public final class BanVeBUS {
         return customerDao.tiepNhanMa(maChonGhe.strip().toUpperCase(Locale.ROOT),actor,current,holdMinutes);
     }
     public List<GiaoDichDAO.Dong> transactions(String code,LocalDate from,LocalDate to) throws SQLException {
-        staff(); String text=code==null || code.isBlank()?null:id(code);
+        staff();
+        String raw=code==null?"":code.trim();
+        String text=raw.isEmpty()?null:(KhachHangBUS.hopLeMaChonGhe(raw)?raw.toUpperCase(Locale.ROOT):id(raw));
         if(text==null && from==null && to==null) throw new IllegalArgumentException("Vui lòng nhập mã giao dịch, mã vé hoặc khoảng thời gian");
         if((from==null)!=(to==null) || (from!=null && (from.isAfter(to) || from.getYear()<1000 || to.getYear()>9999))) throw new IllegalArgumentException("Khoảng thời gian không hợp lệ");
         return new GiaoDichDAO().search(text,from,to);

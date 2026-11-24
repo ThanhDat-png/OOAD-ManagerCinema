@@ -95,6 +95,8 @@ public final class BaoCaoPanel extends JPanel {
         private long revision;
         Report(String name){
             super(new BorderLayout(8,8));filters.setName(name+".filters");table.setName(name+".table");submit.setName(name+".run");summary.setName(name+".message");
+            summary.setBorder(BorderFactory.createEmptyBorder(Theme.s(Theme.XS),Theme.s(Theme.XS),Theme.s(Theme.XS),Theme.s(Theme.XS)));
+            summary.putClientProperty("cinema.text","subtitle");
             JPanel top=new JPanel(new BorderLayout());top.add(filters);top.add(note,BorderLayout.SOUTH);add(top,BorderLayout.NORTH);
             table.setAutoCreateRowSorter(true);table.setRowHeight(26);table.setDefaultRenderer(BigDecimal.class,new javax.swing.table.DefaultTableCellRenderer(){@Override protected void setValue(Object value){setHorizontalAlignment(SwingConstants.RIGHT);setText(value instanceof BigDecimal amount?money(amount):"");}});
             add(new ReportVisuals(table,summary,name));add(summary,BorderLayout.SOUTH);

@@ -70,6 +70,8 @@ public final class PhimPanel extends JPanel {
         top.add(actions); add(top, BorderLayout.NORTH);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         table.setAutoCreateRowSorter(true);
+        int[] widths = {135, 260, 65, 165, 110, 65, 145, 90};
+        for (int i = 0; i < widths.length; i++) table.getColumnModel().getColumn(i).setPreferredWidth(widths[i]);
         add(new JScrollPane(table), BorderLayout.CENTER); add(message, BorderLayout.SOUTH);
         run(service::genres, items -> {
             genres = items;

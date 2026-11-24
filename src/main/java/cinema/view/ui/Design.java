@@ -1,42 +1,317 @@
 package cinema.view.ui;
+
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.RoundRectangle2D;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.*;
+
 public final class Design {
-    private Design(){}
-    public static JLabel text(String value,String type){JLabel label=new JLabel(value);label.putClientProperty("cinema.text",type);return label;}
-    public static JPanel stack(Component... children){JPanel panel=new JPanel();panel.setLayout(new BoxLayout(panel,BoxLayout.Y_AXIS));for(Component child:children){if(child instanceof JComponent c)c.setAlignmentX(Component.LEFT_ALIGNMENT);panel.add(child);panel.add(Box.createVerticalStrut(8));}return panel;}
+    private Design() {}
+
+    public static JLabel text(String value, String type) {
+        JLabel label = new JLabel(value);
+        label.putClientProperty("cinema.text", type);
+        return label;
+    }
+
+    public static JPanel stack(Component... children) {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        for (Component child : children) {
+            if (child instanceof JComponent c) c.setAlignmentX(Component.LEFT_ALIGNMENT);
+            panel.add(child);
+            panel.add(Box.createVerticalStrut(8));
+        }
+        return panel;
+    }
+
     public static final class WrappingLabel extends JLabel {
-        public WrappingLabel(String text){super(text);setPreferredSize(new Dimension(360,56));}
-        @Override protected void paintComponent(Graphics graphics){Graphics2D g=Skin.graphics(graphics);try{g.setColor(getForeground());g.setFont(Theme.font(12));int x=getIcon()==null?0:28,y=16;if(getIcon()!=null)getIcon().paintIcon(this,g,0,2);String line="";for(String word:getText().split(" ")){if(g.getFontMetrics().stringWidth(line+word)>getWidth()-x-8&&!line.isEmpty()){g.drawString(line,x,y);y+=18;line="";}line+=word+" ";}g.drawString(line,x,y);}finally{g.dispose();}}
+        public WrappingLabel(String text) {
+            super(text == null ? "" : text);
+            setPreferredSize(new Dimension(360, Theme.s(54)));
+            setMinimumSize(new Dimension(200, Theme.s(46)));
+        }
+
+        @Override public void setText(String text) {
+            super.setText(text == null ? "" : text);
+            revalidate();
+            repaint();
+        }
+
+        private List<String> wrapLines(FontMetrics fm, String text, int maxWidth) {
+            List<String> lines = new ArrayList<>();
+            if (text == null || text.isBlank()) return lines;
+            int limit = Math.max(40, maxWidth);
+            StringBuilder line = new StringBuilder();
+            for (String word : text.trim().split("\\s+")) {
+                String candidate = line.length() == 0 ? word : line + " " + word;
+                if (fm.stringWidth(candidate) > limit && line.length() > 0) {
+                    lines.add(line.toString());
+                    line.setLength(0);
+                    line.append(word);
+                } else {
+                    line.setLength(0);
+                    line.append(candidate);
+                }
+            }
+            if (line.length() > 0) lines.add(line.toString());
+            return lines;
+        }
+
+        @Override public Dimension getPreferredSize() {
+            int width = getWidth() > 0 ? getWidth() : Theme.s(360);
+            FontMetrics fm = getFontMetrics(Theme.font(12));
+            int padX = Theme.s(12);
+            int iconW = getIcon() == null ? 0 : getIcon().getIconWidth() + Theme.s(10);
+            List<String> lines = wrapLines(fm, getText(), width - padX * 2 - iconW);
+            int lineH = Math.max(Theme.s(17), fm.getHeight());
+            int minH = Math.max(Theme.s(46), Math.max(1, lines.size()) * lineH + Theme.s(20));
+            return new Dimension(width, minH);
+        }
+
+        @Override public Dimension getMinimumSize() {
+            Dimension pref = getPreferredSize();
+            return new Dimension(Theme.s(200), pref.height);
+        }
+
+        @Override public Dimension getMaximumSize() {
+            Dimension pref = getPreferredSize();
+            return new Dimension(Integer.MAX_VALUE, pref.height);
+        }
+
+        @Override protected void paintComponent(Graphics graphics) {
+            Graphics2D g = Skin.graphics(graphics);
+            try {
+                int w = getWidth(), h = getHeight();
+                boolean alert = Boolean.TRUE.equals(getClientProperty("cinema.alert"));
+                Color fg = getForeground();
+                boolean isDanger = Tokens.danger().equals(fg);
+                boolean isWarning = Tokens.warning().equals(fg);
+                boolean showBanner = alert || isDanger || isWarning;
+
+                int padX = showBanner ? Theme.s(12) : 0;
+                int padY = showBanner ? Theme.s(10) : Theme.s(2);
+                if (showBanner) {
+                    Color toneSource = isDanger ? Tokens.danger()
+                            : isWarning ? Tokens.warning() : Tokens.border();
+                    Color fill = isDanger || isWarning ? Tokens.tone(toneSource)
+                            : Tokens.mix(Tokens.surface(), Tokens.raised(), 0.7);
+                    Color stroke = isDanger || isWarning
+                            ? Tokens.mix(Tokens.surface(), toneSource, Tokens.dark ? 0.45 : 0.35)
+                            : Tokens.border();
+                    int arc = Theme.s(10);
+                    g.setColor(fill);
+                    g.fillRoundRect(0, 0, w - 1, h - 1, arc, arc);
+                    g.setColor(stroke);
+                    g.drawRoundRect(0, 0, w - 2, h - 2, arc, arc);
+                }
+
+                g.setFont(Theme.font(12));
+                FontMetrics fm = g.getFontMetrics();
+                int iconX = padX;
+                int textX = padX + (getIcon() != null ? getIcon().getIconWidth() + Theme.s(10) : 0);
+
+                List<String> lines = wrapLines(fm, getText(), w - textX - padX);
+                int lineH = Math.max(Theme.s(17), fm.getHeight());
+                int totalTextH = Math.max(lineH, lines.size() * lineH);
+                int topY = Math.max(padY, (h - totalTextH) / 2);
+                if (getIcon() != null) {
+                    int iconY = topY + Math.max(0, (lineH - getIcon().getIconHeight()) / 2);
+                    getIcon().paintIcon(this, g, iconX, iconY);
+                }
+
+                g.setColor(fg);
+                int startY = topY + fm.getAscent();
+                for (int i = 0; i < lines.size(); i++) {
+                    g.drawString(lines.get(i), textX, startY + i * lineH);
+                }
+            } finally {
+                g.dispose();
+            }
+        }
     }
+
     public static final class SearchField extends JTextField {
-        private final String hint;public SearchField(int columns,String hint){super(columns);this.hint=hint;}
-        @Override protected void paintComponent(Graphics graphics){super.paintComponent(graphics);if(getText().isEmpty()&&!hasFocus()){Graphics2D g=Skin.graphics(graphics);try{g.setColor(Tokens.muted());g.setFont(Tokens.font(12));g.drawString(hint,14,(getHeight()+g.getFontMetrics().getAscent()-g.getFontMetrics().getDescent())/2);}finally{g.dispose();}}}
+        private final String hint;
+        private final JLabel iconProxy = new JLabel();
+
+        public SearchField(int columns, String hint) {
+            super(columns);
+            this.hint = hint;
+        }
+
+        @Override public Insets getInsets() { return pad(super.getInsets()); }
+        @Override public Insets getInsets(Insets insets) { return pad(super.getInsets(insets)); }
+
+        private Insets pad(Insets in) {
+            in.left += Theme.s(22);
+            return in;
+        }
+
+        @Override protected void paintComponent(Graphics graphics) {
+            super.paintComponent(graphics);
+            Graphics2D g = Skin.graphics(graphics);
+            try {
+                iconProxy.setForeground(Tokens.muted());
+                Icons searchIcon = new Icons("search", 14);
+                int iconY = (getHeight() - searchIcon.getIconHeight()) / 2;
+                searchIcon.paintIcon(iconProxy, g, Theme.s(10), iconY);
+                if (getText().isEmpty() && !hasFocus()) {
+                    g.setColor(Tokens.muted());
+                    g.setFont(Tokens.font(12));
+                    FontMetrics fm = g.getFontMetrics();
+                    int x = getInsets().left;
+                    int y = (getHeight() + fm.getAscent() - fm.getDescent()) / 2;
+                    g.drawString(hint, x, y);
+                }
+            } finally {
+                g.dispose();
+            }
+        }
     }
-    public static void status(JLabel label){Runnable update=()->{String value=label.getText()==null?"":label.getText();boolean error=(value.startsWith("Không thể")||value.startsWith("Không tải"))||value.contains("không hợp lệ")||value.contains("không chính xác")||value.contains("không được phép");boolean hint=value.startsWith("Vui lòng");boolean loading=value.startsWith("Đang");label.setForeground(error?Tokens.danger():hint?Tokens.warning():Tokens.muted());label.setIcon(new Icons(error||hint?"alert":loading?"calendar":value.startsWith("Đã")?"check":"box"));label.setIconTextGap(8);label.setFont(Tokens.font(12));};label.putClientProperty("cinema.statusRefresh",update);label.addPropertyChangeListener("text",e->update.run());update.run();}
+
+    public static void status(JLabel label) {
+        Runnable update = () -> {
+            String value = label.getText() == null ? "" : label.getText();
+            boolean error = value.startsWith("Không thể") || value.startsWith("Không tải")
+                    || value.contains("không hợp lệ") || value.contains("không chính xác")
+                    || value.contains("không được phép") || value.contains("gián đoạn");
+            boolean hint = !error && value.startsWith("Vui lòng");
+            boolean loading = value.startsWith("Đang");
+            label.setForeground(error ? Tokens.danger() : hint ? Tokens.warning() : Tokens.muted());
+            label.setIcon(new Icons(error || hint ? "alert" : loading ? "calendar" : value.startsWith("Đã") ? "check" : "box"));
+            label.setIconTextGap(8);
+            label.setFont(Tokens.font(12));
+            label.repaint();
+        };
+        label.putClientProperty("cinema.statusRefresh", update);
+        label.addPropertyChangeListener("text", e -> update.run());
+        update.run();
+    }
+
     public static final class Card extends JPanel {
-        public Card(LayoutManager layout){super(layout);setOpaque(false);setBorder(BorderFactory.createEmptyBorder(Theme.s(Theme.LG),Theme.s(Theme.LG),Theme.s(Theme.LG),Theme.s(Theme.LG)));}
-        @Override protected void paintComponent(Graphics graphics){Graphics2D g=Skin.graphics(graphics);try{g.setColor(Tokens.surface());g.fillRoundRect(0,0,getWidth(),getHeight(),16,16);g.setColor(Tokens.border());g.drawRoundRect(0,0,getWidth()-1,getHeight()-1,16,16);}finally{g.dispose();}super.paintComponent(graphics);}
+        public Card(LayoutManager layout) {
+            super(layout);
+            setOpaque(false);
+            putClientProperty("cinema.background", "none");
+            setBorder(BorderFactory.createEmptyBorder(Theme.s(Theme.LG), Theme.s(Theme.LG), Theme.s(Theme.LG), Theme.s(Theme.LG)));
+        }
+
+        @Override protected void paintComponent(Graphics graphics) {
+            Graphics2D g = Skin.graphics(graphics);
+            try {
+                int w = getWidth(), h = getHeight();
+                int r = Theme.s(Theme.RADIUS);
+                g.setColor(Tokens.shadow());
+                g.fillRoundRect(1, 2, Math.max(0, w - 2), Math.max(0, h - 2), r, r);
+                g.setColor(Tokens.surface());
+                g.fillRoundRect(0, 0, Math.max(0, w - 2), Math.max(0, h - 3), r, r);
+                Shape prev = g.getClip();
+                g.setClip(new RoundRectangle2D.Float(1, 1, Math.max(0, w - 4), Math.max(0, h - 5), Math.max(2, r - 1), Math.max(2, r - 1)));
+                g.setColor(new Color(255, 255, 255, Tokens.dark ? 16 : 165));
+                g.drawLine(r / 2, 1, Math.max(r / 2, w - 2 - r / 2), 1);
+                g.setClip(prev);
+                g.setColor(Tokens.border());
+                g.drawRoundRect(0, 0, Math.max(0, w - 3), Math.max(0, h - 4), r, r);
+            } finally {
+                g.dispose();
+            }
+            super.paintComponent(graphics);
+        }
     }
+
     public static final class Wrap extends FlowLayout {
-        public Wrap(){super(FlowLayout.LEFT,8,8);}
-        @Override public Dimension preferredLayoutSize(Container target){return size(target);}@Override public Dimension minimumLayoutSize(Container target){return size(target);}
-        private Dimension size(Container target){synchronized(target.getTreeLock()){int width=target.getWidth();Container p=target;while(width<=0&&p.getParent()!=null){p=p.getParent();width=p.getWidth();}if(width<=0)width=1024;Insets in=target.getInsets();int max=width-in.left-in.right-16,x=0,y=8,h=0,best=0;for(Component c:target.getComponents())if(c.isVisible()){Dimension d=c.getPreferredSize();if(x>0&&x+d.width>max){best=Math.max(best,x);y+=h+8;x=0;h=0;}x+=d.width+8;h=Math.max(h,d.height);}return new Dimension(Math.min(width,Math.max(best,x)+in.left+in.right+8),y+h+in.top+in.bottom+8);}}
+        public Wrap() { super(FlowLayout.LEFT, 8, 8); }
+        @Override public Dimension preferredLayoutSize(Container target) { return size(target); }
+        @Override public Dimension minimumLayoutSize(Container target) { return size(target); }
+
+        private Dimension size(Container target) {
+            synchronized (target.getTreeLock()) {
+                int width = target.getWidth();
+                Container p = target;
+                while (width <= 0 && p.getParent() != null) { p = p.getParent(); width = p.getWidth(); }
+                if (width <= 0) width = 1024;
+                Insets in = target.getInsets();
+                int max = width - in.left - in.right - 16, x = 0, y = 8, h = 0, best = 0;
+                for (Component c : target.getComponents()) {
+                    if (c.isVisible()) {
+                        Dimension d = c.getPreferredSize();
+                        if (x > 0 && x + d.width > max) { best = Math.max(best, x); y += h + 8; x = 0; h = 0; }
+                        x += d.width + 8;
+                        h = Math.max(h, d.height);
+                    }
+                }
+                return new Dimension(Math.min(width, Math.max(best, x) + in.left + in.right + 8), y + h + in.top + in.bottom + 8);
+            }
+        }
     }
-    public static void page(JPanel root,String title,String subtitle,JLabel status){
-        if(!(root.getLayout() instanceof BorderLayout layout))return;
-        Component top=layout.getLayoutComponent(BorderLayout.NORTH);if(top!=null)root.remove(top);
-        JPanel head=stack(text(title,"title"),text(subtitle,"subtitle"));
-        if(top instanceof JPanel panel&&panel.getComponentCount()==0)top=null;
-        if(top!=null){Card filters=new Card(new BorderLayout());filters.setAlignmentX(Component.LEFT_ALIGNMENT);filters.add(top);head.add(filters);}
-        root.add(head,BorderLayout.NORTH);root.setBorder(BorderFactory.createEmptyBorder(Theme.s(Theme.XL),Theme.s(Theme.XL),Theme.s(Theme.LG),Theme.s(Theme.XL)));
-        if(status!=null){status(status);status.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(1,0,0,0,Tokens.border()),BorderFactory.createEmptyBorder(Theme.s(Theme.MD),Theme.s(Theme.XS),Theme.s(Theme.XS),Theme.s(Theme.XS))));status.getAccessibleContext().setAccessibleName("Thông báo trạng thái");for(Component c:all(root))if(c instanceof JTable table){if(table.getClientProperty("cinema.stateLabel")==null)table.putClientProperty("cinema.stateLabel",status);status.addPropertyChangeListener("text",e->table.repaint());}}
-        for(Component c:all(root))if(c instanceof JPanel panel&&panel.getLayout() instanceof FlowLayout)panel.setLayout(new Wrap());
-        root.addComponentListener(new ComponentAdapter(){public void componentResized(ComponentEvent e){root.revalidate();for(Component c:all(root))if(c instanceof JSplitPane split){int direction=root.getWidth()<Theme.s(900)?JSplitPane.VERTICAL_SPLIT:JSplitPane.HORIZONTAL_SPLIT;if(split.getOrientation()!=direction){split.setOrientation(direction);split.setDividerLocation(.55);}}}});
-        root.putClientProperty("cinema.background","canvas");head.putClientProperty("cinema.background","canvas");
-        Component center=layout.getLayoutComponent(BorderLayout.CENTER);if(center instanceof JScrollPane scroll&&scroll.getViewport().getView() instanceof JTable){root.remove(center);Card card=new Card(new BorderLayout());card.add(center);root.add(card,BorderLayout.CENTER);}
-        Theme.apply(root);root.setBackground(Tokens.bg());head.setBackground(Tokens.bg());
+
+    public static void page(JPanel root, String title, String subtitle, JLabel status) {
+        if (!(root.getLayout() instanceof BorderLayout layout)) return;
+        Component top = layout.getLayoutComponent(BorderLayout.NORTH);
+        if (top != null) root.remove(top);
+        JPanel head = stack(text(title, "title"), text(subtitle, "subtitle"));
+        if (top instanceof JPanel panel && panel.getComponentCount() == 0) top = null;
+        if (top != null) {
+            Card filters = new Card(new BorderLayout());
+            filters.setAlignmentX(Component.LEFT_ALIGNMENT);
+            filters.add(top);
+            head.add(filters);
+        }
+        root.add(head, BorderLayout.NORTH);
+        root.setBorder(BorderFactory.createEmptyBorder(Theme.s(Theme.XL), Theme.s(Theme.XL), Theme.s(Theme.LG), Theme.s(Theme.XL)));
+        if (status != null) {
+            status(status);
+            status.setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createMatteBorder(1, 0, 0, 0, Tokens.border()),
+                    BorderFactory.createEmptyBorder(Theme.s(Theme.MD), Theme.s(Theme.XS), Theme.s(Theme.XS), Theme.s(Theme.XS))));
+            status.getAccessibleContext().setAccessibleName("Thông báo trạng thái");
+            for (Component c : all(root)) {
+                if (c instanceof JTable table) {
+                    if (table.getClientProperty("cinema.stateLabel") == null) table.putClientProperty("cinema.stateLabel", status);
+                    status.addPropertyChangeListener("text", e -> table.repaint());
+                }
+            }
+        }
+        for (Component c : all(root)) {
+            if (c instanceof JPanel panel && panel.getLayout() instanceof FlowLayout) panel.setLayout(new Wrap());
+        }
+        root.addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent e) {
+                root.revalidate();
+                for (Component c : all(root)) {
+                    if (c instanceof JSplitPane split) {
+                        int direction = root.getWidth() < Theme.s(900) ? JSplitPane.VERTICAL_SPLIT : JSplitPane.HORIZONTAL_SPLIT;
+                        if (split.getOrientation() != direction) {
+                            split.setOrientation(direction);
+                            split.setDividerLocation(.55);
+                        }
+                    }
+                }
+            }
+        });
+        root.putClientProperty("cinema.background", "canvas");
+        head.putClientProperty("cinema.background", "canvas");
+        Component center = layout.getLayoutComponent(BorderLayout.CENTER);
+        if (center instanceof JScrollPane scroll && scroll.getViewport().getView() instanceof JTable) {
+            root.remove(center);
+            Card card = new Card(new BorderLayout());
+            card.add(center);
+            root.add(card, BorderLayout.CENTER);
+        }
+        Theme.apply(root);
+        root.setBackground(Tokens.bg());
+        head.setBackground(Tokens.bg());
     }
-    public static java.util.List<Component> all(Container root){java.util.List<Component> result=new java.util.ArrayList<>();for(Component c:root.getComponents()){result.add(c);if(c instanceof Container container)result.addAll(all(container));}return result;}
+
+    public static List<Component> all(Container root) {
+        List<Component> result = new ArrayList<>();
+        for (Component c : root.getComponents()) {
+            result.add(c);
+            if (c instanceof Container container) result.addAll(all(container));
+        }
+        return result;
+    }
 }

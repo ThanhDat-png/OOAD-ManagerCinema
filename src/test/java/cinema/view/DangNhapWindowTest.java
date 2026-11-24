@@ -60,7 +60,7 @@ class DangNhapWindowTest {
                         .map(f -> (JFrame)f).findFirst().orElseThrow();
                 JList<?> list = components(workspace).stream().filter(c -> c instanceof JList)
                         .map(c -> (JList<?>)c).findFirst().orElseThrow();
-                assertEquals(role == VaiTro.ADMIN ? 6 : 5, list.getModel().getSize());
+                assertEquals(6, list.getModel().getSize());
                 workspace.dispose();
             });
         }

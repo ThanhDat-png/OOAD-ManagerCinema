@@ -110,5 +110,6 @@ class KhachHangBUSTest {
         ChonGheKhach.KetQuaTiepNhan claimed = staffBus.nhanMaChonGhe(" 1234567890abcdef12345678 ", "G_CURRENT");
         assertEquals(7, claimed.maSuat());
         assertEquals("G1234567890123456789", claimed.gioHang().giaoDich().maGiaoDich());
+        assertThrows(IllegalArgumentException.class, () -> staffBus.transactions("INVALID_LONG_CODE_25_CHRS", null, null));
     }
 }

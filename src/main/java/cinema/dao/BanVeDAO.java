@@ -33,6 +33,23 @@ public class BanVeDAO {
     public List<GheSuatChieu> map(int show) throws SQLException {
         return tx(c -> { slot(c,show,true); lockSeats(c,show); expire(c,show); return seats(c,show,null); });
     }
+    public Map<Integer,BigDecimal> seatPrices(int show) throws SQLException {
+        String sql="""
+                SELECT b.MaLoaiGhe,b.GiaVe
+                FROM SUATCHIEU s
+                JOIN PHONGCHIEU r ON r.MaPhong=s.MaPhong
+                JOIN BANGGIAVE b ON b.MaLoaiPhong=r.MaLoaiPhong AND b.MaLoaiThoiDiem=s.MaLoaiThoiDiem
+                WHERE s.MaSuat=?
+                """;
+        try(Connection c=Database.connect();PreparedStatement ps=c.prepareStatement(sql)) {
+            ps.setInt(1,show);
+            try(ResultSet rs=ps.executeQuery()) {
+                Map<Integer,BigDecimal> prices=new HashMap<>();
+                while(rs.next()) prices.put(rs.getInt("MaLoaiGhe"),rs.getBigDecimal("GiaVe"));
+                return prices;
+            }
+        }
+    }
     public GioHang inspect(String id) throws SQLException {
         try(Connection c=Database.connect()) {
             c.setTransactionIsolation(Connection.TRANSACTION_REPEATABLE_READ); c.setReadOnly(true); c.setAutoCommit(false);
