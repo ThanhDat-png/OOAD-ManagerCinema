@@ -35,7 +35,7 @@ function Invoke-MySql([string]$Sql) {
         return $outputText.Trim()
     } finally {$process.Dispose()}
 }
-$scripts=@('001_tai_khoan.sql','002_demo_uc01.sql','003_giao_dich.sql','004_phim.sql','005_demo_the_loai.sql','006_lich_chieu.sql','007_demo_lich_chieu.sql','008_bao_toan_thong_tin_ghe.sql','009_demo_danh_muc_phong_ghe.sql','010_san_pham.sql')
+$scripts=@('001_tai_khoan.sql','002_demo_uc01.sql','003_giao_dich.sql','004_phim.sql','005_demo_the_loai.sql','006_lich_chieu.sql','007_demo_lich_chieu.sql','008_bao_toan_thong_tin_ghe.sql','009_demo_danh_muc_phong_ghe.sql','010_san_pham.sql','011_demo_chuan.sql')
 # Resolve and read every source before creating anything. Do not depend on the calling directory.
 $source=New-Object System.Text.StringBuilder
 $quote=[char]96

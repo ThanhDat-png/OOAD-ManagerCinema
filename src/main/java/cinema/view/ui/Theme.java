@@ -10,7 +10,7 @@ import javax.swing.plaf.FontUIResource;
 public class Theme {
     private static boolean installed;
     protected Theme(){}
-    public static boolean dark=true;
+    public static boolean dark=false;
     public static final int XS=4,SM=8,MD=12,LG=16,XL=24,XXL=32,CONTROL=40,ROW=44,RADIUS=16;
     public static final String FAMILY="Segoe UI",NUMBERS="Consolas";
     private static Color c(String value){return Color.decode(value);}
@@ -33,7 +33,7 @@ public class Theme {
     public static Font bold(int size){return new Font(FAMILY,Font.BOLD,s(size));}
     public static Font number(){return number(14);}
     public static Font number(int size){return new Font(NUMBERS,Font.PLAIN,s(size));}
-    public static Color semantic(String text){if(text==null)return muted();if(text.contains("hủy")||text.contains("Hủy")||text.contains("Ngừng")||text.contains("Bảo trì")||text.contains("Đã bán")||text.contains("Không khả dụng")||text.contains("Hết hàng"))return danger();if(text.contains("Đang giữ")||text.contains("Chờ")||text.contains("chờ")||text.contains("Hết hạn")||text.contains("Đang thanh toán"))return warning();if(text.contains("Đang chọn"))return accent();if(text.contains("Đã sử dụng")||text.contains("Chưa sử dụng"))return info();return success();}
+    public static Color semantic(String text){if(text==null)return muted();if(text.contains("hủy")||text.contains("Hủy")||text.contains("Ngừng")||text.contains("Bảo trì")||text.contains("Đã bán")||text.contains("Không khả dụng")||text.contains("Hết hàng"))return danger();if(text.contains("Đang giữ")||text.contains("Chờ")||text.contains("chờ")||text.contains("Hết hạn")||text.contains("Đang thanh toán"))return warning();if(text.contains("Đang chọn"))return accent();if(text.contains("Đã kết thúc"))return muted();if(text.contains("Đã sử dụng")||text.contains("Chưa sử dụng"))return info();return success();}
 
     public static int s(int value){return com.formdev.flatlaf.util.UIScale.scale(value);}
     private static void lookAndFeel(){com.formdev.flatlaf.FlatLaf.setUseNativeWindowDecorations(false);JFrame.setDefaultLookAndFeelDecorated(false);JDialog.setDefaultLookAndFeelDecorated(false);if(dark)com.formdev.flatlaf.FlatDarkLaf.setup();else com.formdev.flatlaf.FlatLightLaf.setup();}

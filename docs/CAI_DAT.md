@@ -23,11 +23,11 @@ $adminFile=(Resolve-Path config/mysql-client.cnf).Path
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/Import-Database.ps1 -MySqlExe $mysqlClient -ClientConfig $adminFile -DatabaseName manager_cinema
 ~~~
 
-Điều chỉnh đường dẫn mysql.exe theo máy cài đặt thực tế. Script tạo database utf8mb4 rồi nhập đủ SQL theo thứ tự 001–010, bao gồm tài khoản/danh mục demo. Script đọc file bằng UTF-8 và dùng MySQL client để xử lý DELIMITER của trigger, không dùng toán tử chuyển hướng đầu vào của PowerShell.
+Điều chỉnh đường dẫn mysql.exe theo máy cài đặt thực tế. Script tạo database utf8mb4 rồi nhập đủ SQL theo thứ tự `001`–`011`, bao gồm schema, danh mục và bộ dữ liệu demo chuẩn. Ngoài ra, tệp gộp `Database/S2_Nhom08_DB.sql` chứa toàn bộ `001`–`011` để có thể nhập nhanh trực tiếp bằng MySQL client hoặc MySQL Workbench. Script đọc file bằng UTF-8 và dùng MySQL client để xử lý DELIMITER của trigger, không dùng toán tử chuyển hướng đầu vào của PowerShell.
 
-Script từ chối database đã tồn tại, không có tùy chọn ghi đè/xóa và không tự chạy lại migration. Nếu nhập bị lỗi, kiểm tra lỗi và dùng database thử có tên mới hoặc xử lý riêng database nhập dở; không nhập lại lên database đang dùng. Không chạy riêng 001–010 lần nữa sau khi script thành công.
+Script từ chối database đã tồn tại, không có tùy chọn ghi đè/xóa và không tự chạy lại migration. Nếu nhập bị lỗi, kiểm tra lỗi và dùng database thử có tên mới hoặc xử lý riêng database nhập dở; không nhập lại lên database đang dùng. Không chạy riêng `001`–`011` lần nữa sau khi script thành công.
 
-Kết quả đầy đủ: **18 bảng, 6 trigger, 22 khóa ngoại**. Có tài khoản Admin/Nhân viên và phòng DEMO01 với 5 ghế sẵn sàng, 1 ghế bảo trì; có danh mục loại phòng, ghế, thể loại, thời điểm. Cài mới chưa có phim/lịch chiếu, bảng giá bán hoặc sản phẩm F&B. Các phần này được tạo qua chức năng Admin, không phải lỗi cài đặt.
+Kết quả đầy đủ: **18 bảng, 6 trigger, 22 khóa ngoại**. Đã có sẵn tài khoản Admin/Nhân viên (`admin_demo`, `staff_demo`, `bao_demo`, `locked_demo`, `inactive_demo`), 4 phòng chiếu (`DEMO01`, `PHONG01`, `PHONG02`, `PHONG03` bảo trì, tổng 38 ghế), 5 phim mẫu kèm ảnh poster trong `data/posters/`, đầy đủ 18 mức giá vé, 7 suất chiếu (gồm suất trong cửa sổ ±15 phút tại `DEMO01` với vé `VE_DEMO_001` / `QR-DEMO-001` cho UC07, các suất tương lai cho UC08, và dữ liệu lịch sử 3 giao dịch/7 vé cho UC09) cùng 5 sản phẩm F&B.
 
 ## 3. Tạo tài khoản kết nối ứng dụng
 
