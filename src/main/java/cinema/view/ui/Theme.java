@@ -191,6 +191,10 @@ public class Theme {
         if (component instanceof JComponent c) {
             c.setForeground(Tokens.text());
             if (!(c instanceof JPasswordField)) c.setFont(Tokens.font(14));
+            if (c instanceof JCheckBox || c instanceof JRadioButton) {
+                ((AbstractButton) c).setContentAreaFilled(false);
+                c.setOpaque(false);
+            }
             if (c instanceof JPanel || c instanceof JViewport) {
                 Object bgMode = c.getClientProperty("cinema.background");
                 if (!"none".equals(bgMode)) {
@@ -212,7 +216,15 @@ public class Theme {
                     g.gridx = i % 2;
                     g.gridy = i / 2;
                     g.weightx = i % 2 == 0 ? .3 : .7;
-                    g.fill = GridBagConstraints.HORIZONTAL;
+                    if (children[i] instanceof JScrollPane scroll) {
+                        g.fill = GridBagConstraints.BOTH;
+                        Dimension min = scroll.getMinimumSize();
+                        if (min == null || min.height < 88) {
+                            scroll.setMinimumSize(new Dimension(min == null ? 240 : Math.max(min.width, 240), 96));
+                        }
+                    } else {
+                        g.fill = GridBagConstraints.HORIZONTAL;
+                    }
                     g.anchor = GridBagConstraints.NORTHWEST;
                     g.insets = new Insets(4, 4, 4, 8);
                     panel.add(children[i], g);
@@ -334,7 +346,9 @@ public class Theme {
                 }
                 Component view = scroll.getViewport() != null ? scroll.getViewport().getView() : null;
                 Color vpBg = view instanceof JComponent vc && Boolean.TRUE.equals(vc.getClientProperty("cinema.nav"))
-                        ? (Tokens.dark ? Tokens.surface() : Tokens.raised()) : Tokens.surface();
+                        ? (Tokens.dark ? Tokens.surface() : Tokens.raised())
+                        : "raised".equals(scroll.getViewport().getClientProperty("cinema.background")) ? Tokens.raised()
+                        : Tokens.surface();
                 scroll.getViewport().setBackground(vpBg);
                 scroll.getVerticalScrollBar().setUnitIncrement(24);
                 scroll.getHorizontalScrollBar().setUnitIncrement(24);

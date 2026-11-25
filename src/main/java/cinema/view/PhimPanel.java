@@ -418,7 +418,7 @@ public final class PhimPanel extends JPanel {
         private final JTextField age = new JTextField("0");
         private final JTextField format = new JTextField("2D");
         private final JComboBox<String> status = new JComboBox<>(PhimBUS.TRANG_THAI.toArray(String[]::new));
-        private final JList<TheLoai> selectedGenres = new JList<>(genres.toArray(TheLoai[]::new));
+        private final List<JCheckBox> genreChecks = new ArrayList<>();
         private final JLabel preview = new JLabel("Chọn ảnh PNG/JPEG", SwingConstants.CENTER);
         private final JButton choose = new JButton("Chọn poster");
         private final JButton save = new JButton("Lưu");
@@ -437,10 +437,7 @@ public final class PhimPanel extends JPanel {
                 row(fields, "Định dạng chiếu", format); row(fields, "Trạng thái", status);
             }
             if (mode == Mode.ADD || mode == Mode.GENRES) {
-                selectedGenres.setVisibleRowCount(5);
-                if (existing != null) selectedGenres.setSelectedIndices(java.util.stream.IntStream.range(0, genres.size())
-                        .filter(i -> existing.theLoai().stream().anyMatch(g -> g.maTheLoai() == genres.get(i).maTheLoai())).toArray());
-                row(fields, "Thể loại (Ctrl để chọn nhiều)", new JScrollPane(selectedGenres));
+                row(fields, "Thể loại", buildGenrePicker(existing));
             }
             JPanel body = new JPanel(new BorderLayout(12, 12));
             body.setBorder(BorderFactory.createEmptyBorder(16, 16, 16, 16));
@@ -457,6 +454,52 @@ public final class PhimPanel extends JPanel {
             body.add(buttons, BorderLayout.SOUTH); add(body);
             save.addActionListener(event -> save()); cancel.addActionListener(event -> dispose());
             setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE); pack(); setLocationRelativeTo(PhimPanel.this);
+        }
+
+        private JScrollPane buildGenrePicker(Phim existing) {
+            JPanel grid = new JPanel(new GridLayout(0, 2, Theme.s(12), Theme.s(6)));
+            grid.putClientProperty("cinema.background", "raised");
+            grid.setBorder(BorderFactory.createEmptyBorder(Theme.s(4), Theme.s(6), Theme.s(4), Theme.s(6)));
+            for (TheLoai g : genres) {
+                JCheckBox box = new JCheckBox(g.tenTheLoai());
+                box.setOpaque(false);
+                box.setContentAreaFilled(false);
+                box.putClientProperty("cinema.statusRefresh", (Runnable) () -> {
+                    box.setOpaque(false);
+                    box.setContentAreaFilled(false);
+                    box.setFont(Tokens.font(13));
+                    box.setForeground(Tokens.text());
+                });
+                box.setFont(Tokens.font(13));
+                box.setForeground(Tokens.text());
+                if (existing != null && existing.theLoai().stream().anyMatch(t -> t.maTheLoai() == g.maTheLoai())) {
+                    box.setSelected(true);
+                }
+                genreChecks.add(box);
+                grid.add(box);
+            }
+            int rows = Math.max(2, (genres.size() + 1) / 2);
+            int innerH = Math.max(grid.getPreferredSize().height, rows * Theme.s(28) + Theme.s(12));
+            int prefH = Math.min(Theme.s(230), innerH + Theme.s(26));
+            JScrollPane scroll = new JScrollPane(grid);
+            scroll.putClientProperty("cinema.customBorder", true);
+            scroll.setBorder(new Skin.ControlBorder());
+            scroll.getViewport().putClientProperty("cinema.background", "raised");
+            scroll.getViewport().setBackground(Tokens.raised());
+            scroll.putClientProperty("cinema.statusRefresh", (Runnable) () -> scroll.setBorder(new Skin.ControlBorder()));
+            scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+            scroll.setPreferredSize(new Dimension(Theme.s(370), prefH));
+            scroll.setMinimumSize(new Dimension(Theme.s(310), Math.min(prefH, Theme.s(144))));
+            scroll.setToolTipText("Chọn một hoặc nhiều thể loại cho phim");
+            return scroll;
+        }
+
+        private List<TheLoai> selectedGenreValues() {
+            List<TheLoai> result = new ArrayList<>();
+            for (int i = 0; i < genreChecks.size() && i < genres.size(); i++) {
+                if (genreChecks.get(i).isSelected()) result.add(genres.get(i));
+            }
+            return result;
         }
 
         private void row(JPanel panel, String label, Component field) { panel.add(new JLabel(label)); panel.add(field); }
@@ -491,15 +534,15 @@ public final class PhimPanel extends JPanel {
 
         private void save() {
             final Phim draft;
+            List<TheLoai> newGenres = selectedGenreValues();
             try {
                 draft = mode == Mode.ADD ? new Phim(null, filmName.getText(), Integer.parseInt(duration.getText().trim()),
                         director.getText(), LocalDate.parse(release.getText().trim()), Integer.parseInt(age.getText().trim()),
-                        null, (String)status.getSelectedItem(), format.getText(), selectedGenres.getSelectedValuesList()) : null;
+                        null, (String)status.getSelectedItem(), format.getText(), newGenres) : null;
             } catch (NumberFormatException | DateTimeParseException e) {
                 JOptionPane.showMessageDialog(this, "Kiểm tra thời lượng, giới hạn tuổi và ngày khởi chiếu (yyyy-MM-dd)."); return;
             }
             String newName = filmName.getText();
-            List<TheLoai> newGenres = selectedGenres.getSelectedValuesList();
             Path image = selectedPoster;
             save.setEnabled(false); cancel.setEnabled(false); choose.setEnabled(false);
             setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
