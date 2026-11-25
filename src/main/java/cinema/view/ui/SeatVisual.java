@@ -16,8 +16,10 @@ public final class SeatVisual {
         button.putClientProperty("cinema.seatOwn", own);
         button.putClientProperty("cinema.noIcon", true);
         button.setUI(new SeatUI());
-        button.setPreferredSize(new Dimension(Theme.s(82), Theme.s(78)));
-        button.setBorder(BorderFactory.createEmptyBorder(Theme.s(Theme.XS), Theme.s(Theme.XS), Theme.s(Theme.XS), Theme.s(Theme.XS)));
+        button.setPreferredSize(new Dimension(Theme.s(54), Theme.s(46)));
+        button.setMinimumSize(new Dimension(Theme.s(54), Theme.s(46)));
+        button.setMaximumSize(new Dimension(Theme.s(54), Theme.s(46)));
+        button.setBorder(BorderFactory.createEmptyBorder(Theme.s(2), Theme.s(2), Theme.s(2), Theme.s(2)));
         button.getAccessibleContext().setAccessibleName(button.getText() + " · " + type + " · " + state + (own ? " · Giao dịch này" : ""));
     }
 
@@ -189,76 +191,53 @@ public final class SeatVisual {
                     captionColor = semantic;
                 }
 
-                // Backrest cushion
-                int seatX = 6, seatY = 4, seatW = w - 12, seatH = h - 14;
-                int r = Theme.s(10);
+                // Compact rounded web seat block
+                int seatX = 2, seatY = 2, seatW = w - 4, seatH = h - 4;
+                int r = Theme.s(8);
                 g.setColor(fill);
                 g.fillRoundRect(seatX, seatY, seatW, seatH, r, r);
-
-                if (!unavailable) {
-                    Shape prev = g.getClip();
-                    g.setClip(new RoundRectangle2D.Float(seatX + 1, seatY + 1, seatW - 2, seatH - 2, r - 1, r - 1));
-                    g.setColor(new Color(255, 255, 255, current ? 55 : (Theme.dark ? 16 : 130)));
-                    g.drawLine(seatX + 6, seatY + 1, seatX + seatW - 6, seatY + 1);
-                    g.setClip(prev);
-                }
 
                 g.setColor(stroke);
                 g.setStroke(new BasicStroke(current || button.hasFocus() ? 1.8f : 1.1f));
                 g.drawRoundRect(seatX, seatY, seatW - 1, seatH - 1, r, r);
 
-                // Side armrests
-                int armW = 4, armH = Math.max(12, seatH / 2), armY = seatY + seatH - armH - 3;
-                g.setColor(current ? Theme.mix(Theme.accent(), Theme.accentInk(), 0.25)
-                        : unavailable ? Theme.mix(Theme.border(), Theme.bg(), 0.65)
-                        : Theme.mix(stroke, fill, 0.35));
-                g.fillRoundRect(2, armY, armW, armH, 3, 3);
-                g.fillRoundRect(w - 6, armY, armW, armH, 3, 3);
-
-                // Seat base cushion lip
-                g.fillRoundRect(seatX + 4, h - 9, seatW - 8, 5, 4, 4);
-
-                // VIP / Couple trim
+                // VIP / Couple trim at bottom
                 String lowerType = type.toLowerCase();
                 if (lowerType.contains("vip")) {
                     g.setColor(current ? Theme.accentInk() : Theme.warning());
-                    g.setStroke(new BasicStroke(1.3f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-                    g.drawLine(seatX + 7, seatY + seatH - 6, seatX + seatW - 7, seatY + seatH - 6);
+                    g.setStroke(new BasicStroke(2f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+                    g.drawLine(seatX + 10, seatY + seatH - 5, seatX + seatW - 10, seatY + seatH - 5);
                 } else if (lowerType.contains("đôi")) {
-                    g.setColor(stroke);
-                    g.drawLine(w / 2, seatY + seatH - 10, w / 2, seatY + seatH - 2);
+                    g.setColor(current ? Theme.accentInk() : Theme.info());
+                    g.setStroke(new BasicStroke(2f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+                    g.drawLine(seatX + 10, seatY + seatH - 5, seatX + seatW - 10, seatY + seatH - 5);
                 }
 
                 if (unavailable) {
-                    g.setColor(new Color(Theme.muted().getRed(), Theme.muted().getGreen(), Theme.muted().getBlue(), 60));
-                    g.setStroke(new BasicStroke(1.1f));
-                    g.drawLine(seatX + 8, seatY + seatH - 8, seatX + seatW - 8, seatY + 8);
+                    g.setColor(new Color(Theme.muted().getRed(), Theme.muted().getGreen(), Theme.muted().getBlue(), 75));
+                    g.setStroke(new BasicStroke(1.2f));
+                    g.drawLine(seatX + 6, seatY + seatH - 6, seatX + seatW - 6, seatY + 6);
                 }
 
-                // State symbol corner mark
-                g.setColor(current ? Theme.accentInk() : captionColor);
-                g.setStroke(new BasicStroke(1.4f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-                symbol(g, current ? "Giao dịch này" : state, w - 20, seatY + 6);
+                // State symbol corner mark (kept clean in top-right)
+                if (!available) {
+                    g.setColor(current ? Theme.accentInk() : captionColor);
+                    g.setStroke(new BasicStroke(1.2f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+                    symbol(g, current ? "Giao dịch này" : state, w - 13, seatY + 4);
+                }
 
-                // Seat code & micro-caption
+                // Centered seat code
                 String raw = button.getText() == null ? "" : button.getText();
                 String title = raw.split(" · ")[0];
-                g.setFont(Theme.bold(14));
+                g.setFont(Theme.bold(13));
+                FontMetrics fm = g.getFontMetrics();
                 g.setColor(titleColor);
-                g.drawString(title, (w - g.getFontMetrics().stringWidth(title)) / 2, seatY + 27);
-
-                String caption = current ? "Đang chọn"
-                        : unavailable ? "Khóa"
-                        : state.equals("Đang giữ") ? "Đang giữ"
-                        : state.equals("Đã bán") ? "Đã bán" : "Trống";
-                g.setFont(Theme.font(11));
-                g.setColor(captionColor);
-                g.drawString(caption, (w - g.getFontMetrics().stringWidth(caption)) / 2, seatY + 44);
+                g.drawString(title, (w - fm.stringWidth(title)) / 2, (h + fm.getAscent() - fm.getDescent()) / 2 - 1);
 
                 if (button.hasFocus()) {
                     g.setColor(Theme.accent());
                     g.setStroke(new BasicStroke(1.5f));
-                    g.drawRoundRect(1, 1, w - 3, h - 3, r + 2, r + 2);
+                    g.drawRoundRect(0, 0, w - 1, h - 1, r + 2, r + 2);
                 }
             } finally {
                 g.dispose();

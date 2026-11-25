@@ -42,8 +42,8 @@ public final class DangNhapWindow extends JFrame {
                 },
                 BorderFactory.createEmptyBorder(14, 36, 14, 36)));
 
-        JLabel topBrand = Design.text("CINEMA WORKSPACE", "heading");
-        topBrand.setIcon(new Icons("film", 20));
+        JLabel topBrand = Design.text("Cinema Workspace", "heading");
+        topBrand.setIcon(Shell.brandGlyph());
         topBrand.setIconTextGap(10);
         topHeader.add(topBrand, BorderLayout.WEST);
 
@@ -329,7 +329,7 @@ public final class DangNhapWindow extends JFrame {
                 String title = "Rạp chiếu phim";
                 g2.drawString(title, left, bottom);
                 int dotX = left + g2.getFontMetrics().stringWidth(title) + 2;
-                g2.setColor(Color.decode("#F0A463"));
+                g2.setColor(Color.decode("#BEA8FA"));
                 g2.drawString(".", dotX, bottom);
             } finally {
                 g2.dispose();

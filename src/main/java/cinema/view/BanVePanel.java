@@ -25,20 +25,26 @@ public final class BanVePanel extends JPanel {
     static { Theme.install(); }
 
     private static final String[] STEP_LABELS = {
-            "01 Suất chiếu", "02 Chọn ghế", "03 Thanh toán", "04 Phát hành"
+            "Suất chiếu", "Chọn ghế", "Thanh toán", "Phát hành vé"
     };
     private static final Locale VI_VN = Locale.forLanguageTag("vi-VN");
+    private static final java.time.format.DateTimeFormatter TIME_HM = java.time.format.DateTimeFormatter.ofPattern("HH:mm");
+    private static final java.time.format.DateTimeFormatter GROUP_DATE = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     private final BanVeBUS service;
     private final JTextField film = new JTextField(14), date = new JTextField(9), time = new JTextField(5);
     private final JComboBox<BanVeDAO.SuatBan> shows = new JComboBox<>();
+    private final JPanel showGroupsPanel = new JPanel();
+    private final CardLayout saleCards = new CardLayout();
+    private final JPanel saleStage = new JPanel(saleCards);
     private final JPanel seats = new JPanel();
     private final JTextArea cartText = new JTextArea(), historyText = new JTextArea();
     private final SalesViews.Details summaryPanel = new SalesViews.Details(cartText, "Tóm tắt giao dịch");
     private final JLabel message = new JLabel(" "), identity = new JLabel();
-    private final JLabel showBadge = Design.text("Chưa chọn suất chiếu", "subtitle");
+    private final JLabel showMetaLabel = Design.text("Chưa chọn suất chiếu", "subtitle");
+    private final JLabel showTitleLabel = Design.text("Sơ đồ ghế", "heading");
     private final JLabel nextStepEyebrow = Design.text("BƯỚC 1/3 · CHỌN SUẤT CHIẾU", "eyebrow");
-    private final JLabel nextStepBody = new Design.WrappingLabel("Chọn suất chiếu ở bảng bên trái rồi bấm «Chọn suất» (hoặc nhấp đúp).");
+    private final JLabel nextStepBody = new Design.WrappingLabel("Chọn suất chiếu ở danh sách để mở sơ đồ phòng chiếu.");
     private final JTextField code = new JTextField(22), from = new JTextField(10), to = new JTextField(10);
     private final DefaultListModel<GiaoDichDAO.Dong> historyModel = new DefaultListModel<>();
     private final JList<GiaoDichDAO.Dong> history = new JList<>(historyModel);
@@ -75,85 +81,88 @@ public final class BanVePanel extends JPanel {
         seats.setLayout(new BoxLayout(seats, BoxLayout.Y_AXIS));
         seats.setOpaque(false);
 
-        JPanel selling = new JPanel(new BorderLayout(Theme.SM, Theme.SM));
+        JPanel selling = new JPanel(new BorderLayout(Theme.SM, Theme.s(10)));
         selling.putClientProperty("cinema.background", "canvas");
 
-        JPanel top = new JPanel(new BorderLayout(Theme.SM, Theme.XS));
+        JPanel top = new JPanel(new BorderLayout(Theme.SM, Theme.s(8)));
         top.putClientProperty("cinema.background", "canvas");
 
-        JPanel idBadge = new JPanel(new BorderLayout(Theme.SM, 0)) {
-            @Override protected void paintComponent(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g.create();
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                int w = getWidth(), h = getHeight(), arc = Theme.s(10);
-                g2.setColor(Tokens.raised());
-                g2.fillRoundRect(0, 0, w - 1, h - 1, arc, arc);
-                g2.setColor(Tokens.border());
-                g2.drawRoundRect(0, 0, w - 1, h - 1, arc, arc);
-                g2.dispose();
-            }
-        };
-        idBadge.setOpaque(false);
-        idBadge.setBorder(BorderFactory.createEmptyBorder(Theme.s(5), Theme.s(Theme.MD), Theme.s(5), Theme.s(Theme.MD)));
-        JLabel idIcon = new JLabel(new Icons("ticket", 16));
-        idIcon.putClientProperty("cinema.statusRefresh", (Runnable) () -> idIcon.setForeground(Tokens.accent()));
+        Design.Card claimBarCard = new Design.Card(new BorderLayout(Theme.SM, 0));
+        claimBarCard.setBorder(BorderFactory.createEmptyBorder(Theme.s(8), Theme.s(14), Theme.s(8), Theme.s(14)));
+        JPanel claimLeft = new JPanel(new FlowLayout(FlowLayout.LEFT, Theme.s(10), 0));
+        claimLeft.setOpaque(false);
+        JLabel claimTitle = Design.text("Nhận mã chọn ghế của khách", "heading");
         identity.putClientProperty("cinema.statusRefresh", (Runnable) () -> {
-            identity.setFont(Theme.number(13));
-            identity.setForeground(Tokens.text());
+            identity.setFont(Theme.number(12));
+            identity.setForeground(Tokens.muted());
         });
-        idBadge.add(idIcon, BorderLayout.WEST);
-        idBadge.add(identity, BorderLayout.CENTER);
-        idBadge.putClientProperty("cinema.statusRefresh", (Runnable) () -> idBadge.setOpaque(false));
-
-        JPanel headerRow = new JPanel(new BorderLayout(Theme.SM, 0));
-        headerRow.setOpaque(false);
-        headerRow.putClientProperty("cinema.statusRefresh", (Runnable) () -> headerRow.setOpaque(false));
-        headerRow.add(idBadge, BorderLayout.CENTER);
+        claimLeft.add(claimTitle);
+        claimLeft.add(identity);
+        claimBarCard.add(claimLeft, BorderLayout.CENTER);
         JButton claimBtn = new JButton("Nhận mã khách");
         claimBtn.addActionListener(event -> incomingDialog());
-        headerRow.add(claimBtn, BorderLayout.EAST);
+        claimBarCard.add(claimBtn, BorderLayout.EAST);
 
-        top.add(headerRow, BorderLayout.NORTH);
+        top.add(claimBarCard, BorderLayout.NORTH);
         top.add(stepsBar, BorderLayout.SOUTH);
         selling.add(top, BorderLayout.NORTH);
 
+        // Card 1: Grouped Showtime Selection (matching staff/sales.html Step 1)
+        shows.setVisible(false);
         JPanel filters = new JPanel(new Design.Wrap());
         filters.setOpaque(false);
         filters.add(SalesViews.field("Tên phim", film));
         filters.add(SalesViews.field("Ngày chiếu", date));
         filters.add(SalesViews.field("Giờ chiếu", time));
         button(filters, "Tìm suất", this::search);
-
-        JPanel schedule = new JPanel(new BorderLayout(Theme.SM, Theme.SM));
-        schedule.setOpaque(false);
-        schedule.add(new SalesViews.Shows(shows, this::choose), BorderLayout.CENTER);
-        JPanel chooseAction = new JPanel(new BorderLayout());
-        chooseAction.setOpaque(false);
         chooseBtn.addActionListener(event -> choose());
-        chooseAction.add(chooseBtn, BorderLayout.NORTH);
-        schedule.add(chooseAction, BorderLayout.EAST);
+        filters.add(chooseBtn);
+        filters.add(shows);
 
-        Design.Card searchCard = new Design.Card(new BorderLayout(Theme.SM, Theme.XS));
-        searchCard.setBorder(BorderFactory.createEmptyBorder(Theme.s(10), Theme.s(Theme.MD), Theme.s(10), Theme.s(Theme.MD)));
-        searchCard.add(filters, BorderLayout.NORTH);
-        searchCard.add(schedule, BorderLayout.CENTER);
+        showGroupsPanel.setLayout(new BoxLayout(showGroupsPanel, BoxLayout.Y_AXIS));
+        showGroupsPanel.setOpaque(false);
+        JScrollPane groupScroll = new JScrollPane(showGroupsPanel);
+        groupScroll.setOpaque(false);
+        groupScroll.getViewport().setOpaque(false);
+        groupScroll.getVerticalScrollBar().setUnitIncrement(28);
 
+        Design.Card showsStepCard = new Design.Card(new BorderLayout(Theme.SM, Theme.s(12)));
+        JPanel showsHead = new JPanel(new BorderLayout(0, Theme.s(10)));
+        showsHead.setOpaque(false);
+        showsHead.add(Design.text("Tìm suất chiếu", "heading"), BorderLayout.NORTH);
+        showsHead.add(filters, BorderLayout.CENTER);
+        showsStepCard.add(showsHead, BorderLayout.NORTH);
+        showsStepCard.add(groupScroll, BorderLayout.CENTER);
+
+        // Card 2: Full 2-Column Seat Map & Cart (matching staff/sales.html?show=...)
         Design.Card seatCard = new Design.Card(new BorderLayout(Theme.SM, Theme.XS));
-        seatCard.setBorder(BorderFactory.createEmptyBorder(Theme.s(8), Theme.s(Theme.MD), Theme.s(8), Theme.s(Theme.MD)));
-        seatCard.setPreferredSize(new Dimension(0, Theme.s(220)));
-        seatCard.setMinimumSize(new Dimension(0, Theme.s(180)));
+        seatCard.setBorder(BorderFactory.createEmptyBorder(Theme.s(12), Theme.s(16), Theme.s(12), Theme.s(16)));
         JPanel seatHead = new JPanel(new BorderLayout(Theme.SM, 0));
         seatHead.setOpaque(false);
         seatHead.putClientProperty("cinema.statusRefresh", (Runnable) () -> seatHead.setOpaque(false));
-        JPanel seatTitleBox = new JPanel(new FlowLayout(FlowLayout.LEFT, Theme.s(8), 0));
+        JPanel seatTitleBox = Design.stack(showMetaLabel, showTitleLabel);
         seatTitleBox.setOpaque(false);
         seatTitleBox.putClientProperty("cinema.statusRefresh", (Runnable) () -> seatTitleBox.setOpaque(false));
-        seatTitleBox.add(Design.text("Sơ đồ ghế", "heading"));
-        seatTitleBox.add(showBadge);
         seatHead.add(seatTitleBox, BorderLayout.CENTER);
+
+        JPanel seatHeadActions = new JPanel(new FlowLayout(FlowLayout.RIGHT, Theme.s(8), 0));
+        seatHeadActions.setOpaque(false);
+        JButton changeShowBtn = new JButton("← Đổi suất chiếu");
+        changeShowBtn.putClientProperty("cinema.customBorder", true);
+        changeShowBtn.putClientProperty("cinema.background", "none");
+        changeShowBtn.putClientProperty("cinema.noIcon", true);
+        changeShowBtn.putClientProperty("cinema.role", "link");
+        changeShowBtn.setOpaque(false);
+        changeShowBtn.setContentAreaFilled(false);
+        changeShowBtn.setBorderPainted(false);
+        changeShowBtn.setForeground(Tokens.accent());
+        changeShowBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        changeShowBtn.addActionListener(event -> returnToShowSelection());
         JButton reloadBtn = new JButton("Cập nhật ghế");
         reloadBtn.addActionListener(event -> reload());
-        seatHead.add(reloadBtn, BorderLayout.EAST);
+        seatHeadActions.add(changeShowBtn);
+        seatHeadActions.add(reloadBtn);
+        seatHead.add(seatHeadActions, BorderLayout.EAST);
         seatCard.add(seatHead, BorderLayout.NORTH);
 
         JScrollPane seatScroll = new JScrollPane(seats);
@@ -161,11 +170,6 @@ public final class BanVePanel extends JPanel {
         seatScroll.getViewport().setOpaque(false);
         seatCard.add(seatScroll, BorderLayout.CENTER);
         renderEmptySeatPrompt();
-
-        JPanel main = new JPanel(new BorderLayout(Theme.SM, Theme.SM));
-        main.putClientProperty("cinema.background", "canvas");
-        main.add(searchCard, BorderLayout.NORTH);
-        main.add(seatCard, BorderLayout.CENTER);
 
         JPanel nextStepCard = new JPanel(new BorderLayout(Theme.SM, Theme.XS)) {
             @Override protected void paintComponent(Graphics g) {
@@ -205,7 +209,7 @@ public final class BanVePanel extends JPanel {
         cartText.setWrapStyleWord(true);
 
         Design.Card actionsCard = new Design.Card(new BorderLayout(Theme.SM, Theme.XS));
-        actionsCard.setBorder(BorderFactory.createEmptyBorder(Theme.s(8), Theme.s(10), Theme.s(8), Theme.s(10)));
+        actionsCard.setBorder(BorderFactory.createEmptyBorder(Theme.s(6), Theme.s(10), Theme.s(6), Theme.s(10)));
         holdBtn.addActionListener(event -> hold());
         quoteBtn.addActionListener(event -> {
             if (savedSelection()) run(() -> service.quote(id), this::display);
@@ -263,16 +267,21 @@ public final class BanVePanel extends JPanel {
 
         JPanel rightRail = new JPanel(new BorderLayout(0, Theme.XS));
         rightRail.putClientProperty("cinema.background", "canvas");
-        rightRail.setPreferredSize(new Dimension(Theme.s(452), Theme.s(360)));
-        rightRail.setMinimumSize(new Dimension(Theme.s(395), Theme.s(300)));
+        rightRail.setPreferredSize(new Dimension(Theme.s(415), Theme.s(310)));
+        rightRail.setMinimumSize(new Dimension(Theme.s(365), Theme.s(260)));
         rightRail.add(nextStepCard, BorderLayout.NORTH);
         rightRail.add(summaryPanel, BorderLayout.CENTER);
         rightRail.add(actionsCard, BorderLayout.SOUTH);
 
-        JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, main, rightRail);
-        split.setResizeWeight(.56);
-        split.setDividerLocation(.56);
-        selling.add(split, BorderLayout.CENTER);
+        JSplitPane seatsStepSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, seatCard, rightRail);
+        seatsStepSplit.setResizeWeight(.62);
+        seatsStepSplit.setDividerLocation(.62);
+
+        saleStage.putClientProperty("cinema.background", "canvas");
+        saleStage.add(showsStepCard, "shows");
+        saleStage.add(seatsStepSplit, "seats");
+        saleCards.show(saleStage, "shows");
+        selling.add(saleStage, BorderLayout.CENTER);
 
         for (JTextField field : List.of(film, date, time)) {
             field.addActionListener(event -> { if (!busy) search(); });
@@ -312,33 +321,46 @@ public final class BanVePanel extends JPanel {
         bar.putClientProperty("cinema.statusRefresh", (Runnable) () -> bar.setOpaque(false));
         for (int i = 0; i < STEP_LABELS.length; i++) {
             final int stepIndex = i;
-            JLabel pill = new JLabel(STEP_LABELS[i]) {
+            final String num = String.valueOf(i + 1);
+            JLabel step = new JLabel(STEP_LABELS[i]) {
                 @Override protected void paintComponent(Graphics g) {
                     Graphics2D g2 = (Graphics2D) g.create();
                     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                     int active = activeStep();
                     boolean isCurrent = stepIndex == active;
                     boolean isDone = stepIndex < active;
-                    int w = getWidth(), h = getHeight();
-                    Color fill = isCurrent ? Tokens.tone(Tokens.accent())
-                            : isDone ? Tokens.mix(Tokens.surface(), Tokens.success(), .12) : Tokens.raised();
-                    Color stroke = isCurrent ? Tokens.accent()
-                            : isDone ? Tokens.mix(Tokens.surface(), Tokens.success(), .45) : Tokens.border();
-                    g2.setColor(fill);
-                    g2.fillRoundRect(0, 0, w - 1, h - 1, h, h);
-                    g2.setColor(stroke);
-                    g2.drawRoundRect(0, 0, w - 1, h - 1, h, h);
+                    int d = Theme.s(22);
+                    int cy = (getHeight() - d) / 2;
+                    g2.setColor(isCurrent ? Tokens.tone(Tokens.accent())
+                            : isDone ? Tokens.mix(Tokens.surface(), Tokens.success(), .15) : Tokens.raised());
+                    g2.fillOval(0, cy, d, d);
+                    g2.setColor(isCurrent ? Tokens.accent()
+                            : isDone ? Tokens.success() : Tokens.border());
+                    g2.drawOval(0, cy, d, d);
+                    g2.setFont(Theme.bold(11));
+                    FontMetrics fm = g2.getFontMetrics();
+                    g2.setColor(isCurrent ? Tokens.accent() : isDone ? Tokens.success() : Tokens.muted());
+                    g2.drawString(num, (d - fm.stringWidth(num)) / 2, cy + (d + fm.getAscent() - fm.getDescent()) / 2);
                     g2.dispose();
                     super.paintComponent(g);
                 }
             };
-            pill.setOpaque(false);
-            pill.setBorder(BorderFactory.createEmptyBorder(4, 10, 4, 10));
-            pill.putClientProperty("cinema.statusRefresh", (Runnable) () -> applyStepStyle(pill, stepIndex));
-            applyStepStyle(pill, stepIndex);
-            bar.add(pill);
+            step.setOpaque(false);
+            step.setBorder(BorderFactory.createEmptyBorder(Theme.s(4), Theme.s(28), Theme.s(4), Theme.s(8)));
+            step.putClientProperty("cinema.statusRefresh", (Runnable) () -> applyStepStyle(step, stepIndex));
+            applyStepStyle(step, stepIndex);
+            bar.add(step);
             if (i < STEP_LABELS.length - 1) {
-                bar.add(Box.createHorizontalStrut(6));
+                JComponent line = new JComponent() {
+                    @Override public Dimension getPreferredSize() { return new Dimension(Theme.s(24), Theme.s(2)); }
+                    @Override public Dimension getMaximumSize() { return new Dimension(Theme.s(32), Theme.s(2)); }
+                    @Override protected void paintComponent(Graphics g) {
+                        g.setColor(Tokens.border());
+                        g.fillRect(0, 0, getWidth(), 1);
+                    }
+                };
+                bar.add(line);
+                bar.add(Box.createHorizontalStrut(Theme.s(6)));
             }
         }
         bar.add(Box.createHorizontalGlue());
@@ -647,7 +669,10 @@ public final class BanVePanel extends JPanel {
             selected.clear();
             cart.ghe().forEach(g -> selected.add(g.ghe().maGhe()));
             tabs.setSelectedIndex(0);
-            if (showId != null) reload();
+            if (showId != null) {
+                saleCards.show(saleStage, "seats");
+                reload();
+            }
         });
         resumeBtn.putClientProperty("cinema.role", "primary");
         button(actions, "In lại vé đã lưu", () -> {
@@ -703,7 +728,10 @@ public final class BanVePanel extends JPanel {
                 showId = value.suat() == null ? null : value.suat().maSuat();
                 selected.clear();
                 value.ghe().forEach(g -> selected.add(g.ghe().maGhe()));
-                if (showId != null) reload();
+                if (showId != null) {
+                    saleCards.show(saleStage, "seats");
+                    reload();
+                }
             }
         });
     }
@@ -716,6 +744,7 @@ public final class BanVePanel extends JPanel {
             run(() -> service.search(name, d, t), rows -> {
                 shows.removeAllItems();
                 rows.forEach(shows::addItem);
+                rebuildGroupedShows(rows);
                 message.setText(rows.isEmpty() ? "Không tìm thấy suất chiếu phù hợp" : "Tìm thấy " + rows.size() + " suất chiếu");
             });
         } catch (RuntimeException e) {
@@ -723,10 +752,118 @@ public final class BanVePanel extends JPanel {
         }
     }
 
+    private void rebuildGroupedShows(List<BanVeDAO.SuatBan> rows) {
+        showGroupsPanel.removeAll();
+        if (rows.isEmpty()) {
+            JPanel empty = new JPanel(new FlowLayout(FlowLayout.LEFT));
+            empty.setOpaque(false);
+            empty.add(Design.text("Không tìm thấy suất chiếu phù hợp", "subtitle"));
+            showGroupsPanel.add(empty);
+        } else {
+            Map<LocalDate, List<BanVeDAO.SuatBan>> byDay = new LinkedHashMap<>();
+            for (var row : rows) {
+                byDay.computeIfAbsent(row.suat().thoiGianBatDau().toLocalDate(), k -> new ArrayList<>()).add(row);
+            }
+            for (var entry : byDay.entrySet()) {
+                JLabel dayHdr = Design.text("▾ " + dayHeading(entry.getKey()), "heading");
+                dayHdr.setAlignmentX(Component.LEFT_ALIGNMENT);
+                dayHdr.setBorder(BorderFactory.createEmptyBorder(Theme.s(10), Theme.s(2), Theme.s(6), 0));
+                showGroupsPanel.add(dayHdr);
+                for (var item : entry.getValue()) {
+                    showGroupsPanel.add(buildShowRowCard(item));
+                    showGroupsPanel.add(Box.createVerticalStrut(Theme.s(8)));
+                }
+            }
+        }
+        showGroupsPanel.revalidate();
+        showGroupsPanel.repaint();
+    }
+
+    private static String dayHeading(LocalDate d) {
+        String dow = switch (d.getDayOfWeek()) {
+            case MONDAY -> "Thứ Hai";
+            case TUESDAY -> "Thứ Ba";
+            case WEDNESDAY -> "Thứ Tư";
+            case THURSDAY -> "Thứ Năm";
+            case FRIDAY -> "Thứ Sáu";
+            case SATURDAY -> "Thứ Bảy";
+            case SUNDAY -> "Chủ Nhật";
+        };
+        return dow + ", " + d.format(GROUP_DATE);
+    }
+
+    private JPanel buildShowRowCard(BanVeDAO.SuatBan item) {
+        JPanel card = new JPanel(new BorderLayout(Theme.s(18), 0)) {
+            @Override protected void paintComponent(Graphics graphics) {
+                Graphics2D g = (Graphics2D) graphics.create();
+                try {
+                    g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                    int w = getWidth(), h = getHeight(), r = Theme.s(10);
+                    g.setColor(Tokens.raised());
+                    g.fillRoundRect(0, 0, w - 1, h - 1, r, r);
+                    g.setColor(Tokens.border());
+                    g.drawRoundRect(0, 0, w - 2, h - 2, r, r);
+                } finally {
+                    g.dispose();
+                }
+            }
+        };
+        card.setOpaque(false);
+        card.putClientProperty("cinema.background", "none");
+        card.setAlignmentX(Component.LEFT_ALIGNMENT);
+        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, Theme.s(74)));
+        card.setBorder(BorderFactory.createEmptyBorder(Theme.s(12), Theme.s(18), Theme.s(12), Theme.s(18)));
+
+        JLabel timeLbl = new JLabel(item.suat().thoiGianBatDau().format(TIME_HM));
+        timeLbl.putClientProperty("cinema.statusRefresh", (Runnable) () -> {
+            timeLbl.setFont(Theme.bold(20));
+            timeLbl.setForeground(Tokens.text());
+        });
+        card.add(timeLbl, BorderLayout.WEST);
+
+        JLabel movieLbl = Design.text(item.tenPhim(), "heading");
+        JLabel roomLbl = Design.text("Suất #" + item.suat().maSuat() + " · " + item.tenPhong(), "subtitle");
+        JPanel info = Design.stack(movieLbl, roomLbl);
+        info.setOpaque(false);
+        info.putClientProperty("cinema.background", "none");
+        card.add(info, BorderLayout.CENTER);
+
+        JButton selectLink = new JButton("Chọn suất →");
+        selectLink.putClientProperty("cinema.customBorder", true);
+        selectLink.putClientProperty("cinema.background", "none");
+        selectLink.putClientProperty("cinema.noIcon", true);
+        selectLink.setOpaque(false);
+        selectLink.setContentAreaFilled(false);
+        selectLink.setBorderPainted(false);
+        selectLink.setForeground(Tokens.accent());
+        selectLink.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        selectLink.addActionListener(e -> {
+            shows.setSelectedItem(item);
+            choose();
+        });
+        card.add(selectLink, BorderLayout.EAST);
+        Theme.apply(card);
+        selectLink.setForeground(Tokens.accent());
+        return card;
+    }
+
+    private void returnToShowSelection() {
+        if (!canLeave()) return;
+        showId = null;
+        selected.clear();
+        activeShowSummary = "";
+        showMetaLabel.setText("Chưa chọn suất chiếu");
+        showTitleLabel.setText("Sơ đồ ghế");
+        renderEmptySeatPrompt();
+        saleCards.show(saleStage, "shows");
+        refreshStepsBar();
+    }
+
     private void choose() {
         var choice = (BanVeDAO.SuatBan) shows.getSelectedItem();
         if (choice == null) return;
         if (showId != null && showId == choice.suat().maSuat()) {
+            saleCards.show(saleStage, "seats");
             reload();
             return;
         }
@@ -738,13 +875,17 @@ public final class BanVePanel extends JPanel {
         int next = choice.suat().maSuat();
         String summary = "Suất #" + next + " · " + choice.tenPhim() + " · " + choice.tenPhong()
                 + " · " + choice.suat().thoiGianBatDau().toLocalTime();
+        String metaLine = choice.tenPhong() + " · " + choice.suat().thoiGianBatDau().toLocalDate().format(GROUP_DATE)
+                + " · " + choice.suat().thoiGianBatDau().format(TIME_HM);
         run(() -> new ShowLoad(service.selectShow(next), service.seatPrices(next)), data -> {
             showId = next;
             activeShowSummary = summary;
-            showBadge.setText(summary);
+            showMetaLabel.setText(metaLine);
+            showTitleLabel.setText(choice.tenPhim());
             seatPrices = data.prices();
             selected.clear();
             lastSeatSignature = "";
+            saleCards.show(saleStage, "seats");
             renderSeats(data.seats());
             refreshStepsBar();
         });
@@ -813,13 +954,8 @@ public final class BanVePanel extends JPanel {
         boolean editable = cart == null || "Chờ thanh toán".equals(cart.giaoDich().trangThai());
         Set<Integer> selectable = new HashSet<>();
         JComponent screen = SeatVisual.screen();
-        screen.setAlignmentX(Component.LEFT_ALIGNMENT);
+        screen.setAlignmentX(Component.CENTER_ALIGNMENT);
         seats.add(screen);
-        seats.add(Box.createVerticalStrut(4));
-        JPanel legend = SeatVisual.legend();
-        legend.setOpaque(false);
-        legend.setAlignmentX(Component.LEFT_ALIGNMENT);
-        seats.add(legend);
         seats.add(Box.createVerticalStrut(6));
 
         Map<String, JPanel> rowsByName = new LinkedHashMap<>();
@@ -834,18 +970,18 @@ public final class BanVePanel extends JPanel {
             if (free) selectable.add(g.maGhe());
             String state = !"Sẵn sàng sử dụng".equals(g.trangThai()) ? "Không khả dụng" : row.trangThai();
             JPanel line = rowsByName.computeIfAbsent(g.hangGhe(), name -> {
-                JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 6, 4));
+                JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, Theme.s(6), Theme.s(4)));
                 panel.setOpaque(false);
-                panel.setAlignmentX(Component.LEFT_ALIGNMENT);
-                panel.setMaximumSize(new Dimension(Integer.MAX_VALUE, Theme.s(92)));
-                JLabel rowLbl = Design.text("Hàng " + name, "subtitle");
-                rowLbl.setPreferredSize(new Dimension(Theme.s(64), Theme.s(36)));
+                panel.setAlignmentX(Component.CENTER_ALIGNMENT);
+                panel.setMaximumSize(new Dimension(Integer.MAX_VALUE, Theme.s(56)));
+                JLabel rowLbl = Design.text(name, "subtitle");
+                rowLbl.setPreferredSize(new Dimension(Theme.s(26), Theme.s(36)));
+                rowLbl.setHorizontalAlignment(SwingConstants.CENTER);
                 panel.add(rowLbl);
                 seats.add(panel);
                 return panel;
             });
             JToggleButton chair = new JToggleButton(codeLabel, selected.contains(g.maGhe()));
-            chair.setPreferredSize(new Dimension(82, 42));
             SeatVisual.install(chair, state, g.loaiGhe().tenLoaiGhe(), own);
             chair.putClientProperty("seatId", g.maGhe());
             chair.setEnabled(editable && free);
@@ -863,6 +999,11 @@ public final class BanVePanel extends JPanel {
             });
             line.add(chair);
         }
+        seats.add(Box.createVerticalStrut(10));
+        JPanel legend = SeatVisual.legend();
+        legend.setOpaque(false);
+        legend.setAlignmentX(Component.CENTER_ALIGNMENT);
+        seats.add(legend);
         selected.retainAll(selectable);
         lastSeatSignature = seatSignature(rows, cart);
         seats.revalidate();
@@ -1088,7 +1229,10 @@ public final class BanVePanel extends JPanel {
                     message.setText(claimed.daThanhToan()
                             ? "Mã đặt vé này đã thanh toán hoàn tất"
                             : "Đã tiếp nhận lựa chọn và giữ ghế tại quầy");
-                    if (showId != null) reload();
+                    if (showId != null) {
+                        saleCards.show(saleStage, "seats");
+                        reload();
+                    }
                 }, () -> {
                     if (dialog.isDisplayable()) {
                         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -1174,7 +1318,10 @@ public final class BanVePanel extends JPanel {
         if (value.suat() != null) {
             activeShowSummary = "Suất #" + value.suat().maSuat() + " · " + value.tenPhim()
                     + " · " + value.phong().tenPhong() + " · " + value.suat().thoiGianBatDau().toLocalTime();
-            showBadge.setText(activeShowSummary);
+            showMetaLabel.setText(value.phong().tenPhong() + " · "
+                    + value.suat().thoiGianBatDau().toLocalDate().format(GROUP_DATE)
+                    + " · " + value.suat().thoiGianBatDau().format(TIME_HM));
+            showTitleLabel.setText(value.tenPhim());
         }
         identity();
         cartText.setText(description(value));
@@ -1199,7 +1346,7 @@ public final class BanVePanel extends JPanel {
     }
 
     private void identity() {
-        identity.setText("Mã giao dịch hiện tại: " + id + " · Lưu mã này để tra cứu nếu mất kết nối.");
+        identity.setText("Mã giao dịch hiện tại: " + id);
     }
 
     private static String description(BanVeDAO.GioHang value) {

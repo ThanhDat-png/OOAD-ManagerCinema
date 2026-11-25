@@ -248,6 +248,50 @@ public final class Design {
         }
     }
 
+    public static void webPage(JPanel root, String title, JComponent rightCta, JComponent filterBar, JLabel status) {
+        if (!(root.getLayout() instanceof BorderLayout layout)) return;
+        Component top = layout.getLayoutComponent(BorderLayout.NORTH);
+        if (top != null) root.remove(top);
+
+        JPanel headRow = new JPanel(new BorderLayout(Theme.s(16), 0));
+        headRow.setOpaque(false);
+        headRow.putClientProperty("cinema.background", "canvas");
+        headRow.add(text(title, "title"), BorderLayout.WEST);
+        if (rightCta != null) {
+            JPanel ctaWrap = new JPanel(new BorderLayout());
+            ctaWrap.setOpaque(false);
+            ctaWrap.add(rightCta, BorderLayout.NORTH);
+            headRow.add(ctaWrap, BorderLayout.EAST);
+        }
+
+        JPanel head = new JPanel(new BorderLayout(0, Theme.s(14)));
+        head.putClientProperty("cinema.background", "canvas");
+        head.add(headRow, BorderLayout.NORTH);
+        if (filterBar != null) {
+            filterBar.putClientProperty("cinema.background", "canvas");
+            head.add(filterBar, BorderLayout.CENTER);
+        }
+        root.add(head, BorderLayout.NORTH);
+        root.setBorder(BorderFactory.createEmptyBorder(Theme.s(Theme.XL), Theme.s(28), Theme.s(Theme.LG), Theme.s(28)));
+        if (status != null) {
+            status(status);
+            status.setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createMatteBorder(1, 0, 0, 0, Tokens.border()),
+                    BorderFactory.createEmptyBorder(Theme.s(Theme.MD), Theme.s(Theme.XS), Theme.s(Theme.XS), Theme.s(Theme.XS))));
+            status.getAccessibleContext().setAccessibleName("Thông báo trạng thái");
+            for (Component c : all(root)) {
+                if (c instanceof JTable table) {
+                    if (table.getClientProperty("cinema.stateLabel") == null) table.putClientProperty("cinema.stateLabel", status);
+                    status.addPropertyChangeListener("text", e -> table.repaint());
+                }
+            }
+        }
+        root.putClientProperty("cinema.background", "canvas");
+        Theme.apply(root);
+        root.setBackground(Tokens.bg());
+        head.setBackground(Tokens.bg());
+    }
+
     public static void page(JPanel root, String title, String subtitle, JLabel status) {
         if (!(root.getLayout() instanceof BorderLayout layout)) return;
         Component top = layout.getLayoutComponent(BorderLayout.NORTH);

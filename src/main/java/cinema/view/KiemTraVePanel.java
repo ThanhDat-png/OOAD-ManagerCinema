@@ -47,10 +47,62 @@ public final class KiemTraVePanel extends JPanel {
         super(new BorderLayout(8,8)); service=new VeBUS(session,new VeDAO());
         setBorder(BorderFactory.createEmptyBorder(12,12,12,12));
 
-        JPanel top=Design.stack();JPanel location=new JPanel(new Design.Wrap());location.add(SalesViews.field("Ngày kiểm soát",date));room.setPreferredSize(new Dimension(200,40));location.add(SalesViews.field("Phòng kiểm soát",room));show.setPreferredSize(new Dimension(340,40));location.add(SalesViews.field("Suất đang kiểm soát",show));controls.add(date);controls.add(room);controls.add(show);button(location,"Tải suất chiếu",this::reloadContext);top.add(location);
-        JPanel input=new JPanel(new Design.Wrap());code.putClientProperty("cinema.text","scan");code.putClientProperty("JTextField.placeholderText","Nhập mã vé hoặc quét QR");code.setToolTipText("Nhập mã rồi nhấn Enter để tra cứu");input.add(codeType);input.add(code);controls.add(codeType);controls.add(code);button(input,"Tra cứu vé",this::lookup);button(input,"Đọc QR từ ảnh",this::readImage);top.add(input);
-        JPanel actions=new JPanel(new Design.Wrap());button(actions,"Kiểm tra tính hợp lệ",this::check);confirm.setEnabled(false);confirm.addActionListener(event->confirm());confirm.putClientProperty("cinema.role","primary");actions.add(confirm);button(actions,"Hủy xác nhận",this::cancelCheck);top.add(actions);top.add(Design.text("Cho phép vào từ "+service.window().truocPhut()+" phút trước đến "+service.window().sauPhut()+" phút sau giờ bắt đầu.","subtitle"));
-        add(top,BorderLayout.NORTH);detail.setEditable(false);detail.setLineWrap(true);detail.setWrapStyleWord(true);add(new ReadOnlyViews.Gate(detail,message),BorderLayout.CENTER);add(message,BorderLayout.SOUTH);DateInputs.attach(date,false,false);SwingUtilities.invokeLater(()->code.requestFocusInWindow());
+        Design.Card leftCard=new Design.Card(new BorderLayout(Theme.SM, Theme.MD));
+        JPanel formStack=Design.stack();
+        formStack.setOpaque(false);
+        formStack.add(Design.text("Kiểm tra vé tại cửa","heading"));
+
+        JPanel dayRow=new JPanel(new BorderLayout(Theme.SM, 0));
+        dayRow.setOpaque(false);
+        dayRow.add(SalesViews.field("Ngày kiểm soát",date), BorderLayout.CENTER);
+        JPanel loadBtnWrap=new JPanel(new BorderLayout());
+        loadBtnWrap.setOpaque(false);
+        loadBtnWrap.setBorder(BorderFactory.createEmptyBorder(Theme.s(20), 0, 0, 0));
+        button(loadBtnWrap,"Tải suất chiếu",this::reloadContext);
+        dayRow.add(loadBtnWrap, BorderLayout.EAST);
+        formStack.add(dayRow);
+
+        room.setPreferredSize(new Dimension(200,40));
+        formStack.add(SalesViews.field("Phòng kiểm soát",room));
+        show.setPreferredSize(new Dimension(340,40));
+        formStack.add(SalesViews.field("Suất đang kiểm soát",show));
+        controls.add(date);controls.add(room);controls.add(show);
+
+        code.putClientProperty("cinema.text","scan");
+        code.putClientProperty("JTextField.placeholderText","Nhập mã vé hoặc quét QR");
+        code.setToolTipText("Nhập mã rồi nhấn Enter để tra cứu");
+        JPanel scanRow=new JPanel(new BorderLayout(Theme.SM, 0));
+        scanRow.setOpaque(false);
+        scanRow.add(SalesViews.field("Loại mã",codeType), BorderLayout.WEST);
+        scanRow.add(SalesViews.field("Mã vé hoặc mã QR",code), BorderLayout.CENTER);
+        controls.add(codeType);controls.add(code);
+        formStack.add(scanRow);
+
+        JPanel lookupRow=new JPanel(new Design.Wrap());
+        lookupRow.setOpaque(false);
+        button(lookupRow,"Tra cứu vé",this::lookup);
+        button(lookupRow,"Kiểm tra tính hợp lệ",this::check);
+        button(lookupRow,"Đọc QR từ ảnh",this::readImage);
+        formStack.add(lookupRow);
+
+        JPanel confirmRow=new JPanel(new Design.Wrap());
+        confirmRow.setOpaque(false);
+        confirm.setEnabled(false);confirm.addActionListener(event->confirm());
+        confirm.putClientProperty("cinema.role","primary");
+        confirmRow.add(confirm);
+        button(confirmRow,"Hủy xác nhận",this::cancelCheck);
+        formStack.add(confirmRow);
+
+        leftCard.add(formStack, BorderLayout.NORTH);
+        JLabel windowHint=Design.text("Cho phép vào từ "+service.window().truocPhut()+" phút trước đến "+service.window().sauPhut()+" phút sau giờ bắt đầu.","subtitle");
+        leftCard.add(windowHint, BorderLayout.SOUTH);
+
+        detail.setEditable(false);detail.setLineWrap(true);detail.setWrapStyleWord(true);
+        ReadOnlyViews.Gate gatePanel=new ReadOnlyViews.Gate(detail,message);
+        JSplitPane split=new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftCard, gatePanel);
+        split.setResizeWeight(.52);
+        split.setDividerLocation(.52);
+        add(split,BorderLayout.CENTER);add(message,BorderLayout.SOUTH);DateInputs.attach(date,false,false);SwingUtilities.invokeLater(()->code.requestFocusInWindow());
         show.setRenderer(new DefaultListCellRenderer() {
             @Override public Component getListCellRendererComponent(JList<?> list,Object value,int index,boolean selected,boolean focus) {
                 JLabel label=(JLabel)super.getListCellRendererComponent(list,value,index,selected,focus);

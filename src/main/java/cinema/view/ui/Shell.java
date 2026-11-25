@@ -11,14 +11,133 @@ import javax.swing.*;
 import javax.swing.border.AbstractBorder;
 
 public final class Shell extends JPanel {
-    private final JPanel sidebar = new JPanel(new BorderLayout(8, 16));
+    private final JPanel sidebar = new JPanel(new BorderLayout(8, 12));
     private final JLabel account;
     private final JLabel pageTitle;
+
+    public static Icon brandGlyph() {
+        return new Icon() {
+            @Override public int getIconWidth() { return Theme.s(32); }
+            @Override public int getIconHeight() { return Theme.s(32); }
+            @Override public void paintIcon(Component c, Graphics graphics, int x, int y) {
+                Graphics2D g = Skin.graphics(graphics);
+                try {
+                    int w = getIconWidth(), h = getIconHeight();
+                    g.translate(x + w / 2.0, y + h / 2.0);
+                    g.rotate(Math.toRadians(-6));
+                    g.setColor(Tokens.accent());
+                    g.fillRoundRect(-w / 2, -h / 2, w, h, Theme.s(9), Theme.s(9));
+                    g.setColor(Tokens.accentInk());
+                    int barW = Math.max(3, Theme.s(4));
+                    int h1 = Theme.s(15);
+                    int h2 = Theme.s(21);
+                    g.shear(-0.25, 0);
+                    g.fillRect(-Theme.s(5), -h1 / 2, barW, h1);
+                    g.fillRect(Theme.s(1), -h2 / 2, barW, h2);
+                } finally {
+                    g.dispose();
+                }
+            }
+        };
+    }
 
     public Shell(PhienDangNhap session, JComponent content, JList<String> menu, IntConsumer navigate, String title) {
         super(new BorderLayout(0, 0));
         Theme.install();
 
+        String name = session.nhanVien() == null ? session.tenDangNhap() : session.nhanVien().hoTen();
+        account = Design.text(name, "heading");
+        pageTitle = Design.text(title, "heading");
+
+        // Full-width top bar matching layout.html (.app-top)
+        JPanel topBar = new JPanel(new BorderLayout(Theme.s(16), 0));
+        topBar.putClientProperty("cinema.background", "surface");
+        topBar.setBorder(BorderFactory.createCompoundBorder(
+                new AbstractBorder() {
+                    @Override public Insets getBorderInsets(Component c) { return new Insets(0, 0, 1, 0); }
+                    @Override public Insets getBorderInsets(Component c, Insets i) { i.set(0, 0, 1, 0); return i; }
+                    @Override public void paintBorder(Component c, Graphics g, int x, int y, int w, int h) {
+                        g.setColor(Tokens.border());
+                        g.drawLine(x, y + h - 1, x + w - 1, y + h - 1);
+                    }
+                },
+                BorderFactory.createEmptyBorder(Theme.s(10), Theme.s(22), Theme.s(10), Theme.s(22))));
+
+        JPanel brandBox = new JPanel();
+        brandBox.setLayout(new BoxLayout(brandBox, BoxLayout.X_AXIS));
+        brandBox.setOpaque(false);
+        brandBox.putClientProperty("cinema.background", "none");
+        JLabel brandGlyphLbl = new JLabel(brandGlyph());
+        JLabel brandStrong = new JLabel("Cinema");
+        brandStrong.putClientProperty("cinema.statusRefresh", (Runnable) () -> {
+            brandStrong.setFont(Tokens.bold(19));
+            brandStrong.setForeground(Tokens.text());
+        });
+        JLabel brandLight = new JLabel("Workspace");
+        brandLight.putClientProperty("cinema.statusRefresh", (Runnable) () -> {
+            brandLight.setFont(Tokens.font(18));
+            brandLight.setForeground(Tokens.muted());
+        });
+        pageTitle.putClientProperty("cinema.statusRefresh", (Runnable) () -> {
+            pageTitle.setFont(Tokens.font(14));
+            pageTitle.setForeground(Tokens.muted());
+        });
+        brandBox.add(brandGlyphLbl);
+        brandBox.add(Box.createHorizontalStrut(Theme.s(10)));
+        brandBox.add(brandStrong);
+        brandBox.add(Box.createHorizontalStrut(Theme.s(4)));
+        brandBox.add(brandLight);
+        brandBox.add(Box.createHorizontalStrut(Theme.s(16)));
+        brandBox.add(pageTitle);
+        topBar.add(brandBox, BorderLayout.WEST);
+
+        JToggleButton customerSite = new JToggleButton("Trang khách", new Icons("film", 16));
+        customerSite.putClientProperty("cinema.noIcon", true);
+        customerSite.setMaximumSize(new Dimension(Theme.s(144), Theme.s(38)));
+        customerSite.addActionListener(e -> {
+            customerSite.setSelected(false);
+            KhachHangWindow.open();
+        });
+
+        JButton themeBtn = Theme.toggleButton();
+        themeBtn.putClientProperty("cinema.iconOnly", true);
+        themeBtn.setText("");
+        themeBtn.setToolTipText("Chuyển giao diện sáng hoặc tối");
+        themeBtn.setPreferredSize(new Dimension(Theme.s(40), Theme.s(38)));
+        themeBtn.setMaximumSize(new Dimension(Theme.s(40), Theme.s(38)));
+        themeBtn.setMargin(new Insets(0, 0, 0, 0));
+
+        JPanel userChip = new JPanel();
+        userChip.setLayout(new BoxLayout(userChip, BoxLayout.X_AXIS));
+        userChip.setOpaque(false);
+        userChip.putClientProperty("cinema.background", "none");
+        userChip.setAlignmentY(Component.CENTER_ALIGNMENT);
+        JLabel userIcon = new JLabel(new Icons("people", 16));
+        userIcon.putClientProperty("cinema.statusRefresh", (Runnable) () -> userIcon.setForeground(Tokens.accent()));
+        account.putClientProperty("cinema.statusRefresh", (Runnable) () -> {
+            account.setFont(Tokens.bold(13));
+            account.setForeground(Tokens.text());
+        });
+        userChip.add(userIcon);
+        userChip.add(Box.createHorizontalStrut(Theme.s(7)));
+        userChip.add(account);
+
+        customerSite.setAlignmentY(Component.CENTER_ALIGNMENT);
+        themeBtn.setAlignmentY(Component.CENTER_ALIGNMENT);
+
+        JPanel barTools = new JPanel();
+        barTools.setLayout(new BoxLayout(barTools, BoxLayout.X_AXIS));
+        barTools.setOpaque(false);
+        barTools.putClientProperty("cinema.background", "none");
+        barTools.add(customerSite);
+        barTools.add(Box.createHorizontalStrut(Theme.s(10)));
+        barTools.add(themeBtn);
+        barTools.add(Box.createHorizontalStrut(Theme.s(14)));
+        barTools.add(userChip);
+        topBar.add(barTools, BorderLayout.EAST);
+        add(topBar, BorderLayout.NORTH);
+
+        // Sidebar matching layout.html (.app-side + .sidebar-role + nav + .logout)
         sidebar.putClientProperty("cinema.background", "sidebar");
         sidebar.setBorder(BorderFactory.createCompoundBorder(
                 new AbstractBorder() {
@@ -29,75 +148,47 @@ public final class Shell extends JPanel {
                         g.drawLine(x + w - 1, y, x + w - 1, y + h - 1);
                     }
                 },
-                BorderFactory.createEmptyBorder(Theme.s(Theme.XL), Theme.s(Theme.LG), Theme.s(20), Theme.s(Theme.LG))));
-        sidebar.setPreferredSize(new Dimension(Theme.s(244), 0));
+                BorderFactory.createEmptyBorder(Theme.s(16), Theme.s(14), Theme.s(18), Theme.s(14))));
+        sidebar.setPreferredSize(new Dimension(Theme.s(236), 0));
 
-        JLabel logo = Design.text("CINEMA", "title");
-        JLabel caption = Design.text("WORKSPACE / NỘI BỘ", "eyebrow");
-        String name = session.nhanVien() == null ? session.tenDangNhap() : session.nhanVien().hoTen();
-        account = Design.text(name, "heading");
-        JLabel role = Design.text(session.vaiTro().getTen(), "subtitle");
-
-        JPanel profileCard = new JPanel(new BorderLayout(Theme.s(10), 0)) {
+        JPanel roleRow = new JPanel(new FlowLayout(FlowLayout.LEFT, Theme.s(8), Theme.s(4)));
+        roleRow.setOpaque(false);
+        roleRow.putClientProperty("cinema.background", "none");
+        JComponent statusDot = new JComponent() {
+            @Override public Dimension getPreferredSize() { return new Dimension(Theme.s(9), Theme.s(9)); }
             @Override protected void paintComponent(Graphics graphics) {
                 Graphics2D g = Skin.graphics(graphics);
                 try {
-                    int w = getWidth(), h = getHeight(), r = Theme.s(10);
-                    g.setColor(Tokens.bg());
-                    g.fillRoundRect(0, 0, w - 1, h - 1, r, r);
-                    g.setColor(Tokens.border());
-                    g.drawRoundRect(0, 0, w - 2, h - 2, r, r);
-                } finally {
-                    g.dispose();
-                }
-            }
-        };
-        profileCard.setOpaque(false);
-        profileCard.putClientProperty("cinema.background", "none");
-        profileCard.setBorder(BorderFactory.createEmptyBorder(Theme.s(10), Theme.s(10), Theme.s(10), Theme.s(10)));
-
-        String initials = initialsOf(name);
-        JLabel avatar = new JLabel(initials, SwingConstants.CENTER) {
-            @Override protected void paintComponent(Graphics graphics) {
-                Graphics2D g = Skin.graphics(graphics);
-                try {
-                    int d = Math.min(getWidth(), getHeight()) - 1;
-                    g.setColor(Tokens.tone(Tokens.accent()));
+                    g.setColor(Tokens.success());
+                    int d = Math.min(getWidth(), getHeight());
                     g.fillOval(0, 0, d, d);
-                    g.setColor(Tokens.mix(Tokens.surface(), Tokens.accent(), 0.35));
-                    g.drawOval(0, 0, d, d);
-                    Font f = Tokens.bold(13);
-                    g.setFont(f);
-                    g.setColor(Tokens.accent());
-                    var gv = f.createGlyphVector(g.getFontRenderContext(), initials);
-                    var bounds = gv.getVisualBounds();
-                    double tx = (d - bounds.getWidth()) / 2.0 - bounds.getX();
-                    double ty = (d - bounds.getHeight()) / 2.0 - bounds.getY();
-                    g.drawGlyphVector(gv, (float) tx, (float) ty);
                 } finally {
                     g.dispose();
                 }
             }
         };
-        avatar.setPreferredSize(new Dimension(Theme.s(34), Theme.s(34)));
-        avatar.putClientProperty("cinema.text", "avatar");
-        avatar.setFont(Tokens.bold(13));
-        profileCard.add(avatar, BorderLayout.WEST);
-
-        JPanel userMeta = new JPanel(new GridLayout(2, 1, 0, Theme.s(2)));
-        userMeta.putClientProperty("cinema.background", "none");
-        userMeta.setOpaque(false);
-        userMeta.add(account);
-        userMeta.add(role);
-        profileCard.add(userMeta, BorderLayout.CENTER);
-
-        JPanel identity = Design.stack(logo, caption, Box.createVerticalStrut(Theme.s(10)), profileCard);
-        identity.putClientProperty("cinema.background", "sidebar");
-        sidebar.add(identity, BorderLayout.NORTH);
+        JLabel roleLabel = new JLabel(session.vaiTro() == VaiTro.ADMIN ? "Quản trị viên" : "Nhân viên");
+        roleLabel.putClientProperty("cinema.statusRefresh", (Runnable) () -> {
+            roleLabel.setFont(Tokens.bold(12));
+            roleLabel.setForeground(Tokens.muted());
+        });
+        roleRow.add(statusDot);
+        roleRow.add(roleLabel);
+        roleRow.setBorder(BorderFactory.createCompoundBorder(
+                new AbstractBorder() {
+                    @Override public Insets getBorderInsets(Component c) { return new Insets(0, 0, Theme.s(8), 0); }
+                    @Override public Insets getBorderInsets(Component c, Insets i) { i.set(0, 0, Theme.s(8), 0); return i; }
+                    @Override public void paintBorder(Component c, Graphics g, int x, int y, int w, int h) {
+                        g.setColor(Tokens.border());
+                        g.drawLine(x, y + h - 1, x + w - 1, y + h - 1);
+                    }
+                },
+                BorderFactory.createEmptyBorder(0, Theme.s(6), 0, 0)));
+        sidebar.add(roleRow, BorderLayout.NORTH);
 
         menu.putClientProperty("cinema.nav", true);
         menu.setBorder(BorderFactory.createEmptyBorder(Theme.s(4), 0, Theme.s(4), 0));
-        menu.setFixedCellHeight(Theme.s(50));
+        menu.setFixedCellHeight(Theme.s(48));
         menu.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         menu.setCellRenderer(new NavCellRenderer());
         menu.addMouseListener(new MouseAdapter() {
@@ -116,94 +207,45 @@ public final class Shell extends JPanel {
         navigation.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         sidebar.add(navigation, BorderLayout.CENTER);
 
-        JButton theme = Theme.toggleButton();
-        theme.setMaximumSize(new Dimension(Integer.MAX_VALUE, Theme.s(40)));
         JButton exit = new JButton("Đăng xuất", new Icons("exit"));
+        exit.putClientProperty("cinema.customBorder", true);
+        exit.putClientProperty("cinema.background", "none");
+        exit.setOpaque(false);
+        exit.setContentAreaFilled(false);
+        exit.setBorderPainted(false);
+        exit.setHorizontalAlignment(SwingConstants.LEFT);
+        exit.setBorder(BorderFactory.createEmptyBorder(Theme.s(8), Theme.s(12), Theme.s(8), Theme.s(12)));
         exit.setMaximumSize(new Dimension(Integer.MAX_VALUE, Theme.s(40)));
+        exit.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         exit.addActionListener(e -> logout());
-        JPanel footer = new JPanel(new GridLayout(2, 1, 0, Theme.s(8)));
+        JPanel footer = new JPanel(new GridLayout(1, 1, 0, 0));
         footer.putClientProperty("cinema.background", "sidebar");
-        footer.add(theme);
         footer.add(exit);
         sidebar.add(footer, BorderLayout.SOUTH);
-        add(sidebar, BorderLayout.WEST);
 
         JPanel workspace = new JPanel(new BorderLayout());
         workspace.putClientProperty("cinema.background", "canvas");
-
-        JPanel bar = new JPanel(new BorderLayout(16, 0));
-        bar.setBorder(BorderFactory.createCompoundBorder(
-                new AbstractBorder() {
-                    @Override public Insets getBorderInsets(Component c) { return new Insets(0, 0, 1, 0); }
-                    @Override public Insets getBorderInsets(Component c, Insets i) { i.set(0, 0, 1, 0); return i; }
-                    @Override public void paintBorder(Component c, Graphics g, int x, int y, int w, int h) {
-                        g.setColor(Tokens.border());
-                        g.drawLine(x, y + h - 1, x + w - 1, y + h - 1);
-                    }
-                },
-                BorderFactory.createEmptyBorder(Theme.s(Theme.MD), Theme.s(Theme.XL), Theme.s(Theme.MD), Theme.s(Theme.XL))));
-        pageTitle = Design.text(title, "heading");
-        bar.add(pageTitle, BorderLayout.WEST);
-
-        JTextField search = new Design.SearchField(18, "Tìm chức năng · Ctrl+K");
-        search.setToolTipText("Tìm chức năng được phép · Ctrl+K");
-        search.getAccessibleContext().setAccessibleName("Tìm chức năng");
-        search.setText("");
-        search.setBorder(new Skin.ControlBorder());
-        search.setMaximumSize(new Dimension(Theme.s(240), Theme.s(40)));
-        search.addActionListener(e -> {
-            String text = search.getText().trim().toLowerCase();
-            for (int i = 0; i < menu.getModel().getSize(); i++) {
-                if (menu.getModel().getElementAt(i).toLowerCase().contains(text)) {
-                    menu.setSelectedIndex(i);
-                    navigate.accept(i);
-                    break;
-                }
-            }
-        });
-
-        JToggleButton customerSite = new JToggleButton("Trang khách", new Icons("film", 16));
-        customerSite.putClientProperty("cinema.noIcon", true);
-        customerSite.setMaximumSize(new Dimension(Theme.s(150), Theme.s(40)));
-        customerSite.addActionListener(e -> {
-            customerSite.setSelected(false);
-            KhachHangWindow.open();
-        });
-
-        JPanel barTools = new JPanel();
-        barTools.setLayout(new BoxLayout(barTools, BoxLayout.X_AXIS));
-        barTools.add(customerSite);
-        barTools.add(Box.createHorizontalStrut(Theme.s(10)));
-        barTools.add(search);
-        bar.add(barTools, BorderLayout.EAST);
+        workspace.add(sidebar, BorderLayout.WEST);
 
         JScrollPane pageScroll = new JScrollPane(new AdaptivePage(content));
         pageScroll.setBorder(BorderFactory.createEmptyBorder());
         workspace.add(pageScroll, BorderLayout.CENTER);
-        workspace.add(bar, BorderLayout.NORTH);
         add(workspace, BorderLayout.CENTER);
 
         getInputMap(WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(
                 KeyStroke.getKeyStroke(KeyEvent.VK_K, InputEvent.CTRL_DOWN_MASK), "cinema.search");
         getActionMap().put("cinema.search", new AbstractAction() {
-            public void actionPerformed(ActionEvent e) { search.requestFocusInWindow(); }
+            public void actionPerformed(ActionEvent e) { menu.requestFocusInWindow(); }
         });
 
         addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent e) {
-                int width = getWidth() < Theme.s(1120) ? Theme.s(208) : Theme.s(244);
+                int width = getWidth() < Theme.s(1120) ? Theme.s(204) : Theme.s(236);
                 sidebar.setPreferredSize(new Dimension(width, 0));
                 revalidate();
             }
         });
         Theme.apply(this);
-    }
-
-    private static String initialsOf(String name) {
-        if (name == null || name.isBlank()) return "NV";
-        String[] parts = name.trim().split("\\s+");
-        if (parts.length == 1) return parts[0].substring(0, Math.min(2, parts[0].length())).toUpperCase();
-        return (parts[0].substring(0, 1) + parts[parts.length - 1].substring(0, 1)).toUpperCase();
     }
 
     private static final class NavCellRenderer extends JPanel implements ListCellRenderer<String> {

@@ -11,24 +11,24 @@ import javax.swing.text.JTextComponent;
 public class Theme {
     private static boolean installed;
     protected Theme() {}
-    public static boolean dark = false;
+    public static boolean dark = true;
     public static final int XS = 4, SM = 8, MD = 12, LG = 16, XL = 24, XXL = 32, CONTROL = 40, ROW = 44, RADIUS = 14;
     public static final String FAMILY = "Segoe UI", NUMBERS = "Consolas";
 
     private static Color c(String value) { return Color.decode(value); }
-    public static Color bg() { return c(dark ? "#121110" : "#F6F3EE"); }
-    public static Color surface() { return c(dark ? "#1B1918" : "#FFFFFF"); }
-    public static Color raised() { return c(dark ? "#262321" : "#EFEAE2"); }
-    public static Color border() { return c(dark ? "#3D3834" : "#D8D1C7"); }
-    public static Color text() { return c(dark ? "#F5F0E8" : "#1C1917"); }
-    public static Color muted() { return c(dark ? "#B8AFA4" : "#575047"); }
-    public static Color accent() { return c(dark ? "#F0A463" : "#9E1F34"); }
-    public static Color accentInk() { return c(dark ? "#1B1209" : "#FFFFFF"); }
-    public static Color success() { return c(dark ? "#6EE7B7" : "#166544"); }
-    public static Color warning() { return c(dark ? "#F6C86E" : "#7C4A03"); }
-    public static Color danger() { return c(dark ? "#FCA5A5" : "#A61B2B"); }
-    public static Color info() { return c(dark ? "#93C5FD" : "#1E4E8C"); }
-    public static Color shadow() { return new Color(0, 0, 0, dark ? 68 : 16); }
+    public static Color bg() { return c(dark ? "#10111B" : "#F3F3F8"); }
+    public static Color surface() { return c(dark ? "#191B2A" : "#FFFFFF"); }
+    public static Color raised() { return c(dark ? "#222536" : "#F1F1F8"); }
+    public static Color border() { return c(dark ? "#34374A" : "#D9D9E3"); }
+    public static Color text() { return c(dark ? "#F4F2FA" : "#202031"); }
+    public static Color muted() { return c(dark ? "#B1B0C3" : "#605E70"); }
+    public static Color accent() { return c(dark ? "#B7A1FF" : "#6245A5"); }
+    public static Color accentInk() { return c(dark ? "#211631" : "#FFFFFF"); }
+    public static Color success() { return c(dark ? "#84DAB8" : "#1E634B"); }
+    public static Color warning() { return c(dark ? "#F5CF83" : "#785100"); }
+    public static Color danger() { return c(dark ? "#FFA9A8" : "#A73337"); }
+    public static Color info() { return c(dark ? "#9EC4FF" : "#254E98"); }
+    public static Color shadow() { return new Color(0, 0, 0, dark ? 76 : 16); }
 
     public static Color mix(Color a, Color b, double amount) {
         return new Color(
@@ -37,7 +37,7 @@ public class Theme {
                 (int) (a.getBlue() * (1 - amount) + b.getBlue() * amount));
     }
 
-    public static Color tone(Color color) { return mix(surface(), color, dark ? .13 : .08); }
+    public static Color tone(Color color) { return mix(surface(), color, dark ? .16 : .09); }
 
     public static Font font(int size) {
         Font base = new Font(FAMILY, Font.PLAIN, s(size));
@@ -273,7 +273,7 @@ public class Theme {
                 }
                 String t = button.getText() == null ? "" : button.getText();
                 if (button.getClientProperty("cinema.role") == null) {
-                    if (t.startsWith("Xóa") || t.startsWith("Ngừng") || t.equals("Hủy suất chiếu") || t.equals("Hủy giao dịch")) {
+                    if ((t.startsWith("Xóa") && !t.equals("Xóa bộ lọc")) || t.startsWith("Ngừng") || t.equals("Hủy suất chiếu") || t.equals("Hủy giao dịch")) {
                         button.putClientProperty("cinema.role", "danger");
                     } else if (t.startsWith("Thêm") || t.startsWith("Tạo") || t.equals("Lưu") || t.equals("Đăng nhập")
                             || t.equals("Mở chức năng") || t.equals("Hoàn tất giao dịch") || t.startsWith("Thanh toán")) {
@@ -286,10 +286,15 @@ public class Theme {
                             : "danger".equals(role) ? Tokens.tone(Tokens.danger()) : Tokens.raised());
                 }
                 button.setForeground("primary".equals(role) ? Tokens.accentInk()
-                        : "danger".equals(role) ? Tokens.danger() : Tokens.text());
+                        : "danger".equals(role) ? Tokens.danger()
+                        : "link".equals(role) ? Tokens.accent() : Tokens.text());
                 if (button.getClientProperty("cinema.seatState") != null) button.setUI(new SeatVisual.SeatUI());
                 if (Boolean.TRUE.equals(button.getClientProperty("cinema.themeToggle"))) {
-                    button.setText(Tokens.dark ? "Giao diện sáng" : "Giao diện tối");
+                    if (Boolean.TRUE.equals(button.getClientProperty("cinema.iconOnly"))) {
+                        button.setText("");
+                    } else {
+                        button.setText(Tokens.dark ? "Giao diện sáng" : "Giao diện tối");
+                    }
                     button.setIcon(new Icons(Tokens.dark ? "sun" : "moon"));
                     button.revalidate();
                 }

@@ -9,13 +9,18 @@ import cinema.dao.PhimDAO;
 import cinema.dao.TheLoaiDAO;
 import cinema.model.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -33,46 +38,140 @@ public final class PhimPanel extends JPanel {
     private final List<Component> controls = new ArrayList<>();
     private List<TheLoai> genres = List.of();
     private final JLabel message = new JLabel(" ");
+    private final JLabel countBadge = new JLabel("0");
     private final DefaultTableModel model = new DefaultTableModel(
             new String[]{"Mã phim", "Tên phim", "Phút", "Thể loại", "Khởi chiếu", "Tuổi", "Trạng thái", "Định dạng"}, 0) {
         @Override public boolean isCellEditable(int row, int column) { return false; }
     };
     private final JTable table = new JTable(model);
     private final PosterCells posterCells=new PosterCells(table,posters);
+    private final CardLayout viewCards = new CardLayout();
+    private final JPanel viewStage = new JPanel(viewCards);
+    private final JPanel filmGrid = new JPanel(new Design.Wrap());
+    private final JToggleButton viewToggle = new JToggleButton("Xem dạng bảng");
+    private final JButton addBtn;
+    private final JPanel filterBar = new JPanel(new Design.Wrap());
+    private final JPanel actionBar = new JPanel(new Design.Wrap());
+    private final List<JPanel> filmCards = new ArrayList<>();
+    private final Map<String, ImageIcon> cardPosterCache = new ConcurrentHashMap<>();
+    private final boolean isAdmin;
+    private String selectedFilmId;
     private boolean busy;
 
-    @Override public void addNotify() { super.addNotify(); if(getClientProperty("cinema.page")==null){putClientProperty("cinema.page",true);Design.page(this,"Thư viện phim","Tìm phim, quản lý thông tin và hình ảnh",message);} }
+    @Override public void addNotify() {
+        super.addNotify();
+        if(getClientProperty("cinema.page")==null){
+            putClientProperty("cinema.page",true);
+            Design.webPage(this, isAdmin ? "Quản lý phim" : "Tra cứu phim", addBtn, filterBar, message);
+        }
+    }
 
     public PhimPanel(PhienDangNhap session) {
-        super(new BorderLayout(8, 8));
+        super(new BorderLayout(8, Theme.s(14)));
         service = new PhimBUS(session, new PhimDAO(), new TheLoaiDAO(), posters);
+        isAdmin = session.vaiTro() == VaiTro.ADMIN;
         setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
-        JPanel top = new JPanel(new GridLayout(0, 1, 4, 4));
-        JPanel filters = new JPanel();
-        filters.add(new JLabel("Tên phim")); filters.add(name);
-        filters.add(new JLabel("Thể loại")); filters.add(genre);
+
+        if (isAdmin) {
+            addBtn = new JButton("Thêm phim");
+            addBtn.putClientProperty("cinema.role", "primary");
+            addBtn.addActionListener(event -> { if (!busy) new Editor(Mode.ADD, null).setVisible(true); });
+            controls.add(addBtn);
+        } else {
+            addBtn = null;
+        }
+
+        filterBar.setOpaque(false);
+        filterBar.add(SalesViews.field("Tên phim", name));
+        filterBar.add(SalesViews.field("Thể loại", genre));
         statusFilter.addItem("Tất cả trạng thái");
         PhimBUS.TRANG_THAI.forEach(statusFilter::addItem);
-        filters.add(statusFilter);
+        filterBar.add(SalesViews.field("Trạng thái", statusFilter));
         controls.add(name); controls.add(genre); controls.add(statusFilter);
-        button(filters, "Tìm kiếm", this::refresh);
+        button(filterBar, "Tìm kiếm", this::refresh);
+
+        JButton clearBtn = new JButton("Xóa bộ lọc");
+        clearBtn.putClientProperty("cinema.customBorder", true);
+        clearBtn.putClientProperty("cinema.background", "none");
+        clearBtn.putClientProperty("cinema.noIcon", true);
+        clearBtn.putClientProperty("cinema.role", "link");
+        clearBtn.setOpaque(false);
+        clearBtn.setContentAreaFilled(false);
+        clearBtn.setBorderPainted(false);
+        clearBtn.setForeground(Tokens.accent());
+        clearBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        clearBtn.addActionListener(e -> {
+            if (busy) return;
+            name.setText("");
+            genre.setSelectedIndex(0);
+            statusFilter.setSelectedIndex(0);
+            refresh();
+        });
+        controls.add(clearBtn);
+        filterBar.add(clearBtn);
+
+        viewToggle.addActionListener(e -> {
+            boolean showTable = viewToggle.isSelected();
+            viewToggle.setText(showTable ? "Xem dạng lưới" : "Xem dạng bảng");
+            viewCards.show(viewStage, showTable ? "table" : "grid");
+        });
+        filterBar.add(viewToggle);
         name.addActionListener(event -> { if (!busy) refresh(); });
-        top.add(filters);
-        JPanel actions = new JPanel();
-        button(actions, "Xem chi tiết", () -> selected(id -> run(() -> service.detail(id), this::detail)));
-        if (session.vaiTro() == VaiTro.ADMIN) {
-            button(actions, "Thêm phim", () -> new Editor(Mode.ADD, null).setVisible(true));
-            button(actions, "Sửa tên phim", () -> edit(Mode.NAME));
-            button(actions, "Cập nhật poster", () -> edit(Mode.POSTER));
-            button(actions, "Cập nhật thể loại", () -> edit(Mode.GENRES));
-            button(actions, "Ngừng chiếu", () -> selected(this::stop));
-        }
-        top.add(actions); add(top, BorderLayout.NORTH);
+        add(filterBar, BorderLayout.NORTH);
+
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         table.setAutoCreateRowSorter(true);
         int[] widths = {135, 260, 65, 165, 110, 65, 145, 90};
         for (int i = 0; i < widths.length; i++) table.getColumnModel().getColumn(i).setPreferredWidth(widths[i]);
-        add(new JScrollPane(table), BorderLayout.CENTER); add(message, BorderLayout.SOUTH);
+        table.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                int r = table.getSelectedRow();
+                selectedFilmId = r >= 0 ? (String) model.getValueAt(table.convertRowIndexToModel(r), 0) : null;
+                actionBar.setVisible(selectedFilmId != null);
+                filmCards.forEach(Component::repaint);
+            }
+        });
+
+        filmGrid.putClientProperty("cinema.background", "canvas");
+        filmGrid.setLayout(new Design.Wrap());
+        JScrollPane gridScroll = new JScrollPane(filmGrid);
+        gridScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        gridScroll.getVerticalScrollBar().setUnitIncrement(28);
+        JScrollPane tableScroll = new JScrollPane(table);
+        viewStage.putClientProperty("cinema.background", "canvas");
+        viewStage.add(gridScroll, "grid");
+        viewStage.add(tableScroll, "table");
+
+        JPanel bodyWrap = new JPanel(new BorderLayout(0, Theme.s(12)));
+        bodyWrap.putClientProperty("cinema.background", "canvas");
+
+        JPanel sectionHead = new JPanel(new FlowLayout(FlowLayout.LEFT, Theme.s(10), 0));
+        sectionHead.setOpaque(false);
+        sectionHead.add(Design.text("Thư viện phim", "heading"));
+        countBadge.setOpaque(true);
+        countBadge.setBorder(BorderFactory.createEmptyBorder(2, 9, 2, 9));
+        countBadge.putClientProperty("cinema.statusRefresh", (Runnable) () -> {
+            countBadge.setFont(Theme.bold(12));
+            countBadge.setBackground(Tokens.tone(Tokens.accent()));
+            countBadge.setForeground(Tokens.accent());
+        });
+        sectionHead.add(countBadge);
+        bodyWrap.add(sectionHead, BorderLayout.NORTH);
+        bodyWrap.add(viewStage, BorderLayout.CENTER);
+
+        actionBar.setOpaque(false);
+        button(actionBar, "Xem chi tiết", () -> selected(id -> run(() -> service.detail(id), this::detail)));
+        if (isAdmin) {
+            button(actionBar, "Sửa tên phim", () -> edit(Mode.NAME));
+            button(actionBar, "Cập nhật poster", () -> edit(Mode.POSTER));
+            button(actionBar, "Cập nhật thể loại", () -> edit(Mode.GENRES));
+            button(actionBar, "Ngừng chiếu", () -> selected(this::stop));
+        }
+        actionBar.setVisible(false);
+        bodyWrap.add(actionBar, BorderLayout.SOUTH);
+
+        add(bodyWrap, BorderLayout.CENTER);
+        add(message, BorderLayout.SOUTH);
         run(service::genres, items -> {
             genres = items;
             genre.addItem(new TheLoai(0, "Tất cả thể loại"));
@@ -98,8 +197,169 @@ public final class PhimPanel extends JPanel {
                     film.theLoai().stream().map(TheLoai::tenTheLoai).collect(Collectors.joining(", ")),
                     film.ngayKhoiChieu(), film.gioiHanTuoi(), film.trangThai(), film.dinhDangChieu()});
             posterCells.update(films);
+            countBadge.setText(String.valueOf(films.size()));
+            rebuildFilmGrid(films);
+            actionBar.setVisible(table.getSelectedRow() >= 0);
             message.setText(films.isEmpty() ? "Không tìm thấy phim phù hợp" : "Số phim: " + films.size());
         });
+    }
+
+    private void rebuildFilmGrid(List<Phim> films) {
+        filmGrid.removeAll();
+        filmCards.clear();
+        if (films.isEmpty()) {
+            filmGrid.add(Design.text("Không tìm thấy phim phù hợp.", "subtitle"));
+        } else {
+            for (int i = 0; i < films.size(); i++) {
+                JPanel card = createFilmCard(films.get(i), i);
+                filmCards.add(card);
+                filmGrid.add(card);
+            }
+        }
+        filmGrid.revalidate();
+        filmGrid.repaint();
+    }
+
+    private JPanel createFilmCard(Phim film, int modelRowIndex) {
+        int cardW = Theme.s(228), cardH = Theme.s(416), imgH = Theme.s(306);
+        JPanel card = new JPanel(new BorderLayout(0, 0)) {
+            @Override protected void paintComponent(Graphics graphics) {
+                Graphics2D g = (Graphics2D) graphics.create();
+                try {
+                    g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                    boolean isSel = film.maPhim().equals(selectedFilmId);
+                    int w = getWidth(), h = getHeight(), r = Theme.s(14);
+                    g.setColor(Tokens.surface());
+                    g.fillRoundRect(0, 0, w - 1, h - 1, r, r);
+                    g.setColor(isSel ? Tokens.accent() : Tokens.border());
+                    g.setStroke(new BasicStroke(isSel ? 2f : 1f));
+                    g.drawRoundRect(0, 0, w - 2, h - 2, r, r);
+                } finally {
+                    g.dispose();
+                }
+            }
+        };
+        card.setOpaque(false);
+        card.putClientProperty("cinema.background", "none");
+        card.setPreferredSize(new Dimension(cardW, cardH));
+        card.setMinimumSize(new Dimension(cardW, cardH));
+        card.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        card.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+
+        JLabel posterLabel = new JLabel(film.dinhDangChieu(), SwingConstants.CENTER) {
+            @Override protected void paintComponent(Graphics graphics) {
+                Graphics2D g = (Graphics2D) graphics.create();
+                try {
+                    g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                    int w = getWidth(), h = getHeight(), r = Theme.s(13);
+                    Shape clip = new RoundRectangle2D.Float(0, 0, w, h + r, r, r);
+                    g.setClip(clip);
+                    g.setColor(Tokens.raised());
+                    g.fillRect(0, 0, w, h);
+                    if (getIcon() != null) {
+                        getIcon().paintIcon(this, g, 0, 0);
+                    }
+                } finally {
+                    g.dispose();
+                }
+                if (getIcon() == null) {
+                    super.paintComponent(graphics);
+                }
+                Graphics2D badgeG = (Graphics2D) graphics.create();
+                try {
+                    badgeG.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                    String fmt = film.dinhDangChieu() == null ? "2D" : film.dinhDangChieu();
+                    badgeG.setFont(Theme.bold(11));
+                    int bw = badgeG.getFontMetrics().stringWidth(fmt) + Theme.s(14);
+                    int bh = Theme.s(22);
+                    int bx = Theme.s(10), by = getHeight() - bh - Theme.s(10);
+                    badgeG.setColor(new Color(16, 17, 27, 215));
+                    badgeG.fillRoundRect(bx, by, bw, bh, Theme.s(7), Theme.s(7));
+                    badgeG.setColor(Color.WHITE);
+                    badgeG.drawString(fmt, bx + Theme.s(7), by + Theme.s(15));
+                } finally {
+                    badgeG.dispose();
+                }
+            }
+        };
+        posterLabel.setPreferredSize(new Dimension(cardW - 2, imgH));
+        posterLabel.setForeground(Tokens.muted());
+        loadCardPoster(film.poster(), posterLabel, cardW - 2, imgH);
+        card.add(posterLabel, BorderLayout.CENTER);
+
+        String genresText = film.theLoai().stream().map(TheLoai::tenTheLoai).collect(Collectors.joining(", "));
+        if (genresText.isBlank()) genresText = "Chưa phân loại";
+        JLabel stateLbl = Design.text(film.trangThai(), "eyebrow");
+        stateLbl.setForeground(Tokens.accent());
+        JLabel titleLbl = new JLabel("<html><body style='width:" + Theme.s(160) + "px'>" + escapeHtml(film.tenPhim()) + "</body></html>");
+        titleLbl.putClientProperty("cinema.statusRefresh", (Runnable) () -> {
+            titleLbl.setFont(Theme.bold(14));
+            titleLbl.setForeground(Tokens.text());
+        });
+        JLabel metaLbl = Design.text(film.thoiLuong() + " phút · " + genresText, "subtitle");
+        metaLbl.setPreferredSize(new Dimension(cardW - Theme.s(26), Theme.s(18)));
+
+        JPanel caption = new JPanel(new BorderLayout(0, Theme.s(4)));
+        caption.setOpaque(false);
+        caption.putClientProperty("cinema.background", "none");
+        caption.setBorder(BorderFactory.createEmptyBorder(Theme.s(10), Theme.s(12), Theme.s(12), Theme.s(12)));
+        caption.add(stateLbl, BorderLayout.NORTH);
+        caption.add(titleLbl, BorderLayout.CENTER);
+        caption.add(metaLbl, BorderLayout.SOUTH);
+        card.add(caption, BorderLayout.SOUTH);
+
+        card.addMouseListener(new MouseAdapter() {
+            @Override public void mouseClicked(MouseEvent e) {
+                selectedFilmId = film.maPhim();
+                int viewRow = table.convertRowIndexToView(modelRowIndex);
+                if (viewRow >= 0 && viewRow < table.getRowCount()) {
+                    table.setRowSelectionInterval(viewRow, viewRow);
+                }
+                actionBar.setVisible(true);
+                filmCards.forEach(Component::repaint);
+                if (e.getClickCount() == 2 && !busy) {
+                    run(() -> service.detail(film.maPhim()), PhimPanel.this::detail);
+                }
+            }
+        });
+        Theme.apply(card);
+        stateLbl.setForeground(Tokens.accent());
+        return card;
+    }
+
+    private void loadCardPoster(String key, JLabel target, int w, int h) {
+        if (key == null || key.isBlank()) return;
+        ImageIcon cached = cardPosterCache.get(key);
+        if (cached != null) {
+            target.setText(null);
+            target.setIcon(cached);
+            return;
+        }
+        new SwingWorker<ImageIcon, Void>() {
+            @Override protected ImageIcon doInBackground() {
+                BufferedImage img = posters.load(key);
+                if (img == null) return null;
+                Image scaled = img.getScaledInstance(Math.max(1, w), Math.max(1, h), Image.SCALE_SMOOTH);
+                return new ImageIcon(scaled);
+            }
+            @Override protected void done() {
+                try {
+                    ImageIcon icon = get();
+                    if (icon != null) {
+                        cardPosterCache.put(key, icon);
+                        target.setText(null);
+                        target.setIcon(icon);
+                    }
+                } catch (Exception ignored) {
+                    // Keep placeholder badge when poster fails to load.
+                }
+            }
+        }.execute();
+    }
+
+    private static String escapeHtml(String s) {
+        if (s == null) return "";
+        return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
     }
 
     private void selected(Consumer<String> action) {
